@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/andela/indiana-ah-backend.svg?branch=staging)](https://travis-ci.org/andela/indiana-ah-backend)
-
 [![Coverage Status](https://coveralls.io/repos/github/andela/indiana-ah-backend/badge.svg?branch=staging)](https://coveralls.io/github/andela/indiana-ah-backend?branch=staging)
+
 Authors Haven - A Social platform for the creative at heart.
 
 ## Vision
@@ -179,8 +179,14 @@ If a request fails any validations, expect errors in the following format:
 
 404 for Not found requests, when a resource can't be found to fulfill the request
 
+<<<<<<< HEAD
 ## Endpoints:
 
+=======
+
+Endpoints:
+----
+>>>>>>> chore(coveralls): fixing merge conflict
 ### Authentication:
 
 `POST /api/users/login`
