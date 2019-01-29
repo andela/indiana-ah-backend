@@ -4,7 +4,8 @@
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "NODE_ENV=test",
+    "start": "nodemon --exec babel-node index.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls && nyc report --reporter=lcov"
   },
   "author": "Andela Simulations Programme",
@@ -21,11 +22,11 @@
     "jsonwebtoken": "^8.3.0",
     "method-override": "^2.3.10",
     "methods": "^1.1.2",
-    "mongoose": "^5.2.2",
-    "mongoose-unique-validator": "^2.0.1",
     "morgan": "^1.9.1",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
+    "pg": "^7.8.0",
+    "pg-hstore": "^2.3.2",
     "request": "^2.87.0",
     "slug": "^0.9.3",
     "underscore": "^1.9.1"
@@ -33,6 +34,14 @@
   "devDependencies": {
     "eslint": "^5.12.1",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.15.0"
+    "eslint-plugin-import": "^2.15.0",
+    "sequelize": "^4.42.0",
+    "slug": "^0.9.1",
+    "underscore": "^1.9.1",
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/node": "^7.2.2",
+    "@babel/preset-env": "^7.3.1",
+    "nodemon": "^1.18.9"
   }
 }

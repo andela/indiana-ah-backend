@@ -1,6 +1,6 @@
 const router = require("express").Router();
 
-router.use("/", require("./users"));
+router.use("/", (req, res) => res.send('Welcome to users page') );
 
 router.use(function(err, req, res, next) {
     if (err.name === "ValidationError") {
