@@ -5,7 +5,7 @@ const addNumbers = (a, b) => a + b;
 
 // test function addNumbers
 describe('A function to add numbers', () => {
-  it('should add two numbera', () => {
+  it('should add two numbers', () => {
     const result = addNumbers(3, 4);
     expect(result).to.equal(7);
   });
