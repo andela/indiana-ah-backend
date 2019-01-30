@@ -4,8 +4,11 @@
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test nyc mocha server/test/**/*.js --require @babel/register --timeout 6000 --exit",
-    "start": "nodemon --exec babel-node index.js",
+    "test": "NODE_ENV=test",
+    "clean": "rm -rf build",
+    "build": "npm run clean && mkdir build && babel ./ --ignore 'node_modules' -s -d build",
+    "start": "npm run build && node ./build/index.js",
+    "dev": "nodemon --exec babel-node index.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls && nyc report --reporter=lcov"
   },
   "author": "Andela Simulations Programme",
