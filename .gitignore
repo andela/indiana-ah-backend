@@ -3,6 +3,7 @@ logs
 *.log
 .DS_Store
 .env 
+.nyc_output
 npm-debug.log*
 
 # Runtime data

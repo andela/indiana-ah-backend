@@ -4,16 +4,21 @@
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=test",
+    "test": "cross-env NODE_ENV=test nyc mocha server/test/**/*.js --require @babel/register --timeout 6000 --exit",
     "start": "nodemon --exec babel-node index.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls && nyc report --reporter=lcov"
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",
   "dependencies": {
+    "@babel/register": "^7.0.0",
     "body-parser": "^1.18.3",
+    "chai": "^4.2.0",
     "cors": "^2.8.4",
+    "cross-env": "^5.2.0",
     "dotenv": "^6.0.0",
+    "mocha": "^5.2.0",
+    "nyc": "^13.1.0",
     "ejs": "^2.6.1",
     "errorhandler": "^1.5.0",
     "express": "^4.16.3",
@@ -27,9 +32,7 @@
     "passport-local": "^1.0.0",
     "pg": "^7.8.0",
     "pg-hstore": "^2.3.2",
-    "request": "^2.87.0",
-    "slug": "^0.9.3",
-    "underscore": "^1.9.1"
+    "request": "^2.87.0"
   },
   "devDependencies": {
     "eslint": "^5.12.1",
