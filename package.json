@@ -7,9 +7,12 @@
     "test": "NODE_ENV=test",
     "clean": "rm -rf build",
     "build": "npm run clean && mkdir build && babel ./ --ignore 'node_modules' -s -d build",
-    "start": "npm run build && node ./build/index.js",
+    "start": "node --require babel-register index.js",
     "dev": "nodemon --exec babel-node index.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls && nyc report --reporter=lcov"
+  },
+  "engines": {
+    "node": "10.x"
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",
