@@ -2,7 +2,11 @@
 logs
 *.log
 .DS_Store
+<<<<<<< HEAD
 .env 
+=======
+.nyc_output
+>>>>>>> chore: add comments to dummy test
 npm-debug.log*
 
 # Runtime data
