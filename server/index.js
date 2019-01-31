@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 
 app.use(require('method-override')());
 
-app.use(express.static(`${__dirname  }/public`));
+app.use(express.static(`${__dirname}/public`));
 
 app.use(
   session({
@@ -35,11 +35,11 @@ app.use(
   })
 );
 
-app.get('/' , (req, res)=> {
-res.status(200).send({
-    "message":"welcome to Author's haven"
-})
-})
+app.get('/', (req, res) => {
+  res.status(200).send({
+    message: "welcome to Author's haven"
+  });
+});
 
 if (!isProduction) {
   app.use(errorhandler());
@@ -48,9 +48,9 @@ if (!isProduction) {
 
 // / catch 404 and forward to error handler
 app.use((req, res, next) => {
-    const err = new Error("Not Found");
-    err.status = 404;
-    next(err);
+  const err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
 
 // / error handlers
@@ -59,32 +59,32 @@ app.use((req, res, next) => {
 // will print stacktrace
 if (!isProduction) {
   app.use((err, req, res, next) => {
-        console.log(err.stack);
+    console.log(err.stack);
 
-        res.status(err.status || 500);
+    res.status(err.status || 500);
 
-        res.json({
-            errors: {
-                message: err.message,
-                error: err
-            }
-        });
+    res.json({
+      errors: {
+        message: err.message,
+        error: err
+      }
     });
+  });
 }
 
 // production error handler
 // no stacktraces leaked to user
 app.use((err, req, res, next) => {
-    res.status(err.status || 500);
-    res.json({
-        errors: {
-            message: err.message,
-            error: {}
-        }
-    });
+  res.status(err.status || 500);
+  res.json({
+    errors: {
+      message: err.message,
+      error: {}
+    }
+  });
 });
 
 // finally, let's start our server...
 const server = app.listen(process.env.PORT || 3000, () => {
-    console.log("Listening on port " + server.address().port);
+  console.log(`Listening on port ${server.address().port}`);
 });
