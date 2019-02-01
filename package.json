@@ -45,7 +45,7 @@
 		"pg-hstore": "^2.3.2",
 		"regenerator-runtime": "^0.13.1",
 		"request": "^2.87.0",
-		"slug": "^0.9.3",
+		"sequelize": "^4.42.0",
 		"underscore": "^1.9.1"
 	},
 	"devDependencies": {
@@ -53,8 +53,6 @@
 		"eslint-config-airbnb-base": "^13.1.0",
 		"eslint-plugin-import": "^2.15.0",
 		"nodemon": "^1.18.9",
-		"sequelize": "^4.42.0",
-		"slug": "^0.9.1",
 		"underscore": "^1.9.1"
 	}
 }
