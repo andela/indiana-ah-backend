@@ -6,11 +6,14 @@ export default {
       primaryKey: true,
       type: Sequelize.INTEGER
     },
-    content: {
-      type: Sequelize.STRING
+    articleId: {
+      type: Sequelize.INTEGER
     },
-    complete: {
-      type: Sequelize.BOOLEAN
+    userId: {
+      type: Sequelize.INTEGER
+    },
+    reactionType: {
+      type: Sequelize.STRING
     },
     createdAt: {
       allowNull: false,
