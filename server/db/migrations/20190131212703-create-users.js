@@ -10,12 +10,20 @@ export default {
       allowNull: true,
       type: Sequelize.STRING
     },
+    username: {
+      allowNull: true,
+      type: Sequelize.STRING
+    },
     email: {
       unique: true,
       allowNull: false,
       type: Sequelize.STRING
     },
     password: {
+      allowNull: false,
+      type: Sequelize.STRING
+    },
+    bio: {
       allowNull: false,
       type: Sequelize.STRING
     },

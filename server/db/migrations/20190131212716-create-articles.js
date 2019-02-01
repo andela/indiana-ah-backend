@@ -14,8 +14,13 @@ export default {
       allowNull: false,
       type: Sequelize.STRING
     },
+    imageUrl: {
+      allowNull: true,
+      type: Sequelize.STRING
+    },
     numberOfRead: {
       allowNull: false,
+      defaultValue: 0,
       type: Sequelize.INTEGER
     },
     articleSlug: {

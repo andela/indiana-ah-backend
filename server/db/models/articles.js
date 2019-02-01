@@ -16,8 +16,13 @@ export default (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.STRING
       },
+      imageUrl: {
+        allowNull: true,
+        type: DataTypes.STRING
+      },
       numberOfRead: {
         allowNull: false,
+        defaultValue: 0,
         type: DataTypes.INTEGER
       },
       articleSlug: {
@@ -35,21 +40,23 @@ export default (sequelize, DataTypes) => {
     },
     {}
   );
-  Articles.associate = (models) => {
-    Articles.belongsTo(models.Users, {
+  Articles.associate = ({
+    Users, Comments, Reactions, Reports, Bookmarks
+  }) => {
+    Articles.belongsTo(Users, {
       foreignKey: 'userId',
       onDelete: 'CASCADE'
     });
-    Articles.hasMany(models.Comments, {
+    Articles.hasMany(Comments, {
       foreignKey: 'articleId'
     });
-    Articles.hasMany(models.Reactions, {
+    Articles.hasMany(Reactions, {
       foreignKey: 'articleId'
     });
-    Articles.hasMany(models.Reports, {
+    Articles.hasMany(Reports, {
       foreignKey: 'articleId'
     });
-    Articles.hasMany(models.Bookmarks, {
+    Articles.hasMany(Bookmarks, {
       foreignKey: 'articleId'
     });
   };

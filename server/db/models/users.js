@@ -12,12 +12,20 @@ export default (sequelize, DataTypes) => {
         allowNull: true,
         type: DataTypes.STRING
       },
+      username: {
+        allowNull: true,
+        type: DataTypes.STRING
+      },
       email: {
         unique: true,
         allowNull: false,
         type: DataTypes.STRING
       },
       password: {
+        allowNull: false,
+        type: DataTypes.STRING
+      },
+      bio: {
         allowNull: false,
         type: DataTypes.STRING
       },
@@ -40,23 +48,25 @@ export default (sequelize, DataTypes) => {
     },
     {}
   );
-  Users.associate = (models) => {
-    Users.hasMany(models.Articles, {
+  Users.associate = ({
+    Articles, Comments, Reactions, Follows, Bookmarks, Reports
+  }) => {
+    Users.hasMany(Articles, {
       foreignKey: 'userId'
     });
-    Users.hasMany(models.Comments, {
+    Users.hasMany(Comments, {
       foreignKey: 'userId'
     });
-    Users.hasMany(models.Reactions, {
+    Users.hasMany(Reactions, {
       foreignKey: 'userId'
     });
-    Users.hasMany(models.Follows, {
+    Users.hasMany(Follows, {
       foreignKey: 'userId'
     });
-    Users.hasMany(models.Bookmarks, {
+    Users.hasMany(Bookmarks, {
       foreignKey: 'userId'
     });
-    Users.hasMany(models.Reports, {
+    Users.hasMany(Reports, {
       foreignKey: 'userId'
     });
   };
