@@ -7,10 +7,22 @@ export default {
       type: Sequelize.INTEGER
     },
     articleId: {
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
+      onDelete: 'CASCADE',
+      references: {
+        model: 'Articles',
+        key: 'id',
+        as: 'articleId'
+      }
     },
     userId: {
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
+      onDelete: 'CASCADE',
+      references: {
+        model: 'Users',
+        key: 'id',
+        as: 'userId'
+      }
     },
     reactionType: {
       type: Sequelize.STRING

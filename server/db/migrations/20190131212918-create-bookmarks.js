@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   up: (queryInterface, Sequelize) => queryInterface.createTable('Bookmarks', {
     id: {
       allowNull: false,
@@ -7,10 +7,22 @@ module.exports = {
       type: Sequelize.INTEGER
     },
     articleId: {
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
+      onDelete: 'CASCADE',
+      references: {
+        model: 'Articles',
+        key: 'id',
+        as: 'articleId'
+      }
     },
     userId: {
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
+      onDelete: 'CASCADE',
+      references: {
+        model: 'Users',
+        key: 'id',
+        as: 'userId'
+      }
     },
     createdAt: {
       allowNull: false,
