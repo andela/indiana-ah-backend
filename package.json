@@ -9,7 +9,10 @@
 		"build": "npm run clean && mkdir build && cd build && mkdir server && babel ./server  -s -d server",
 		"start": "npm run build && node --require @babel/register ./server/index.js",
 		"dev": "nodemon --exec babel-node server/index.js",
-		"coverage": "nyc report --reporter=text-lcov | coveralls && nyc report --reporter=lcov"
+		"coverage": "nyc report --reporter=text-lcov | coveralls && nyc report --reporter=lcov",
+		"migrate": "sequelize db:migrate",
+		"clean:db": "sequelize db:migrate:undo:all",
+		"migrate:refresh": "npm run clean:db && npm run migrate"
 	},
 	"engines": {
 		"node": "10.x"
@@ -49,6 +52,7 @@
 		"underscore": "^1.9.1"
 	},
 	"devDependencies": {
+		"coveralls": "^3.0.2",
 		"eslint": "^5.12.1",
 		"eslint-config-airbnb-base": "^13.1.0",
 		"eslint-plugin-import": "^2.15.0",

@@ -32,7 +32,7 @@ export default {
       type: Sequelize.STRING
     },
     isVerified: {
-      allowNull: true,
+      defaultValue: false,
       type: Sequelize.BOOLEAN
     },
     imageUrl: {

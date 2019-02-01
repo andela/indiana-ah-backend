@@ -20,17 +20,15 @@ export default {
     },
     numberOfRead: {
       allowNull: false,
-      defaultValue: 0,
       type: Sequelize.INTEGER
     },
     articleSlug: {
       allowNull: false,
-      type: Sequelize.TEXT,
-      autoIncrement: true
+      type: Sequelize.TEXT
     },
     tag: {
       allowNull: true,
-      type: Sequelize.INTEGER
+      type: Sequelize.STRING
     },
     userId: {
       type: Sequelize.INTEGER,
