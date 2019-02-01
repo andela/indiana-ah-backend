@@ -32,10 +32,15 @@ export default (sequelize, DataTypes) => {
       },
       tag: {
         allowNull: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.STRING
       },
       userId: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        references: {
+          model: 'Users',
+          key: 'id',
+          as: 'userId'
+        }
       }
     },
     {}
@@ -48,7 +53,7 @@ export default (sequelize, DataTypes) => {
       onDelete: 'CASCADE'
     });
     Articles.hasMany(Comments, {
-      foreignKey: 'articleId'
+      foreignKey: 'articleId',
     });
     Articles.hasMany(Reactions, {
       foreignKey: 'articleId'
