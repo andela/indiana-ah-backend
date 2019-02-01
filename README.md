@@ -1,13 +1,18 @@
+[![Build Status](https://travis-ci.org/andela/indiana-ah-backend.svg?branch=staging)](https://travis-ci.org/andela/indiana-ah-backend)
+[![Coverage Status](https://coveralls.io/repos/github/andela/indiana-ah-backend/badge.svg?branch=staging)](https://coveralls.io/github/andela/indiana-ah-backend?branch=staging)
+[![Reviewed by Hound](https://img.shields.io/badge/Reviewed_by-Hound-8E64B0.svg)](https://houndci.com)
+
 Authors Haven - A Social platform for the creative at heart.
-=======
 
 ## Vision
+
 Create a community of like minded authors to foster inspiration and innovation
 by leveraging the modern web.
 
 ---
 
 ## API Spec
+
 The preferred JSON object to be returned by the API should be structured as follows:
 
 ### Users (for authentication)
@@ -23,7 +28,9 @@ The preferred JSON object to be returned by the API should be structured as foll
   }
 }
 ```
+
 ### Profile
+
 ```source-json
 {
   "profile": {
@@ -34,7 +41,9 @@ The preferred JSON object to be returned by the API should be structured as foll
   }
 }
 ```
+
 ### Single Article
+
 ```source-json
 {
   "article": {
@@ -56,7 +65,9 @@ The preferred JSON object to be returned by the API should be structured as foll
   }
 }
 ```
+
 ### Multiple Articles
+
 ```source-json
 {
   "articles":[{
@@ -96,7 +107,9 @@ The preferred JSON object to be returned by the API should be structured as foll
   "articlesCount": 2
 }
 ```
+
 ### Single Comment
+
 ```source-json
 {
   "comment": {
@@ -113,7 +126,9 @@ The preferred JSON object to be returned by the API should be structured as foll
   }
 }
 ```
+
 ### Multiple Comments
+
 ```source-json
 {
   "comments": [{
@@ -131,7 +146,9 @@ The preferred JSON object to be returned by the API should be structured as foll
   "commentsCount": 1
 }
 ```
+
 ### List of Tags
+
 ```source-json
 {
   "tags": [
@@ -140,7 +157,9 @@ The preferred JSON object to be returned by the API should be structured as foll
   ]
 }
 ```
+
 ### Errors and Status Codes
+
 If a request fails any validations, expect errors in the following format:
 
 ```source-json
@@ -152,16 +171,16 @@ If a request fails any validations, expect errors in the following format:
   }
 }
 ```
+
 ### Other status codes:
+
 401 for Unauthorized requests, when a request requires authentication but it isn't provided
 
 403 for Forbidden requests, when a request may be valid but the user doesn't have permissions to perform the action
 
 404 for Not found requests, when a resource can't be found to fulfill the request
 
-
-Endpoints:
-----------
+## Endpoints:
 
 ### Authentication:
 
@@ -390,3 +409,8 @@ No additional parameters required
 ### Get Tags
 
 `GET /api/tags`
+
+
+<hr>
+
+You can access the app here https://indiana-ah-staging.herokuapp.com/

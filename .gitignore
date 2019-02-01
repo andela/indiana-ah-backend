@@ -2,9 +2,11 @@
 logs
 *.log
 .DS_Store
-
+.env 
+.nyc_output
 npm-debug.log*
-
+build
+package-lock.json
 # Runtime data
 pids
 *.pid
