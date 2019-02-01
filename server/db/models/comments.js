@@ -9,12 +9,23 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.INTEGER
       },
       userId: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        references: {
+          model: 'Users',
+          key: 'id',
+          as: 'userId'
+        }
       },
       articleId: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        references: {
+          model: 'Articles',
+          key: 'id',
+          as: 'articleId'
+        }
       },
       commentBody: {
+        allowNull: true,
         type: DataTypes.STRING
       }
     },
@@ -25,7 +36,10 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'userId',
       onDelete: 'CASCADE'
     });
-    Comments.belongsTo(models.Articles);
+    Comments.belongsTo(models.Articles, {
+      foreignKey: 'articleId',
+      onDelete: 'CASCADE'
+    });
   };
   return Comments;
 };
