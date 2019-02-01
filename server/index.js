@@ -1,8 +1,8 @@
-const express = require('express'),
-  bodyParser = require('body-parser'),
-  session = require('express-session'),
-  cors = require('cors'),
-  errorhandler = require('errorhandler');
+import express from 'express';
+import session from 'express-session';
+import cors from 'cors';
+import errorhandler from 'errorhandler';
+import morgan from 'morgan';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -12,21 +12,19 @@ const app = express();
 app.use(cors());
 
 // Normal express config defaults
-app.use(require('morgan')('dev'));
+app.use(morgan('dev'));
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
-app.use(require('method-override')());
-
-app.use(express.static(`${__dirname}/public`));
-
-app.use(session({
-  secret: 'authorshaven',
-  cookie: { maxAge: 60000 },
-  resave: false,
-  saveUninitialized: false
-}));
+app.use(
+  session({
+    secret: 'authorshaven',
+    cookie: { maxAge: 60000 },
+    resave: false,
+    saveUninitialized: false
+  })
+);
 
 app.get('/', (req, res) => {
   res.status(200).send({
@@ -37,7 +35,6 @@ app.get('/', (req, res) => {
 if (!isProduction) {
   app.use(errorhandler());
 }
-
 
 // / catch 404 and forward to error handler
 app.use((req, res, next) => {

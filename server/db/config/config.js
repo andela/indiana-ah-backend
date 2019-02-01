@@ -1,18 +1,18 @@
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 
 dotenv.config();
 
 const config = {
   development: {
     url: process.env.DATABASE_URL_DEV,
-    dialect: "postgres",
+    dialect: 'postgres'
   },
   test: {
-    dialect: "postgres",
+    dialect: 'postgres'
   },
   production: {
-    dialect: "postgres",
-  },
+    dialect: 'postgres'
+  }
 };
 
 export default config;
