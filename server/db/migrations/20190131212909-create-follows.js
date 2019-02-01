@@ -1,30 +1,33 @@
-'use strict';
-module.exports = {
-  up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Follows', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
-      },
-      content: {
-        type: Sequelize.STRING
-      },
-      complete: {
-        type: Sequelize.BOOLEAN
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      }
-    });
-  },
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Follows');
-  }
+/**
+ *
+ *
+ * @export
+ * @param {any} queryInterface
+ * @param {any} Sequelize
+ * @returns
+ */
+export default {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('Follows', {
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: Sequelize.INTEGER
+    },
+    content: {
+      type: Sequelize.STRING
+    },
+    complete: {
+      type: Sequelize.BOOLEAN
+    },
+    createdAt: {
+      allowNull: false,
+      type: Sequelize.DATE
+    },
+    updatedAt: {
+      allowNull: false,
+      type: Sequelize.DATE
+    }
+  }),
+  down: queryInterface => queryInterface.dropTable('Follows')
 };
