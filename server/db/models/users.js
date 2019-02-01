@@ -9,7 +9,7 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.INTEGER
       },
       name: {
-        allowNull: false,
+        allowNull: true,
         type: DataTypes.STRING
       },
       email: {
@@ -25,23 +25,40 @@ export default (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.STRING
       },
+      imageUrl: {
+        allowNull: true,
+        type: DataTypes.STRING
+      },
       isVerified: {
-        allowNull: false,
+        allowNull: true,
         type: DataTypes.BOOLEAN
       },
       subscribed: {
-        allowNull: false,
+        allowNull: true,
         type: DataTypes.BOOLEAN
       }
     },
     {}
   );
   Users.associate = (models) => {
-    Users.hasMany(models.Articles);
-    Users.hasMany(models.Comments);
-    Users.hasMany(models.Reactions);
-    Users.hasMany(models.Follows);
-    Users.hasMany(models.Bookmarks);
+    Users.hasMany(models.Articles, {
+      foreignKey: 'userId'
+    });
+    Users.hasMany(models.Comments, {
+      foreignKey: 'userId'
+    });
+    Users.hasMany(models.Reactions, {
+      foreignKey: 'userId'
+    });
+    Users.hasMany(models.Follows, {
+      foreignKey: 'userId'
+    });
+    Users.hasMany(models.Bookmarks, {
+      foreignKey: 'userId'
+    });
+    Users.hasMany(models.Reports, {
+      foreignKey: 'userId'
+    });
   };
   return Users;
 };

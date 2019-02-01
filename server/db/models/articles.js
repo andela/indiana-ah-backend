@@ -22,7 +22,7 @@ export default (sequelize, DataTypes) => {
       },
       articleSlug: {
         allowNull: false,
-        type: DataTypes.INTEGER,
+        type: DataTypes.TEXT,
         autoIncrement: true
       },
       tag: {
@@ -31,22 +31,27 @@ export default (sequelize, DataTypes) => {
       },
       userId: {
         type: DataTypes.INTEGER
-      },
-      categoryId: {
-        type: DataTypes.INTEGER
       }
     },
     {}
   );
   Articles.associate = (models) => {
+    Articles.belongsTo(models.Users, {
+      foreignKey: 'userId',
+      onDelete: 'CASCADE'
+    });
     Articles.hasMany(models.Comments, {
-      foreignKey: 'userId'
+      foreignKey: 'articleId'
     });
     Articles.hasMany(models.Reactions, {
-      foreignKey: 'userId'
+      foreignKey: 'articleId'
     });
-    Articles.hasMany(models.Reports);
-    Articles.hasMany(models.Bookmarks);
+    Articles.hasMany(models.Reports, {
+      foreignKey: 'articleId'
+    });
+    Articles.hasMany(models.Bookmarks, {
+      foreignKey: 'articleId'
+    });
   };
   return Articles;
 };

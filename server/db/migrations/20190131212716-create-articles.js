@@ -20,7 +20,7 @@ export default {
     },
     articleSlug: {
       allowNull: false,
-      type: Sequelize.INTEGER,
+      type: Sequelize.TEXT,
       autoIncrement: true
     },
     tag: {
@@ -33,14 +33,6 @@ export default {
         model: 'Users',
         key: 'id',
         as: 'userId'
-      }
-    },
-    categoryId: {
-      type: Sequelize.INTEGER,
-      references: {
-        model: 'Categories',
-        key: 'id',
-        as: 'categoryId'
       }
     },
     createdAt: {

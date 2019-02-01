@@ -12,7 +12,7 @@ export default {
     },
     email: {
       unique: true,
-      allowNull: true,
+      allowNull: false,
       type: Sequelize.STRING
     },
     password: {
@@ -24,11 +24,15 @@ export default {
       type: Sequelize.STRING
     },
     isVerified: {
-      allowNull: false,
+      allowNull: true,
       type: Sequelize.BOOLEAN
     },
+    imageUrl: {
+      allowNull: true,
+      type: Sequelize.STRING
+    },
     subscribed: {
-      allowNull: false,
+      allowNull: true,
       type: Sequelize.BOOLEAN
     },
     createdAt: {
