@@ -6,11 +6,11 @@ module.exports = {
       primaryKey: true,
       type: Sequelize.INTEGER
     },
-    content: {
-      type: Sequelize.STRING
+    articleId: {
+      type: Sequelize.INTEGER
     },
-    complete: {
-      type: Sequelize.BOOLEAN
+    userId: {
+      type: Sequelize.INTEGER
     },
     createdAt: {
       allowNull: false,
@@ -21,5 +21,5 @@ module.exports = {
       type: Sequelize.DATE
     }
   }),
-  down: (queryInterface, Sequelize) => queryInterface.dropTable('Bookmarks')
+  down: queryInterface => queryInterface.dropTable('Bookmarks')
 };
