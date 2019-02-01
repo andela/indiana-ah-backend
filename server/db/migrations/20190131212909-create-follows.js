@@ -1,11 +1,3 @@
-/**
- *
- *
- * @export
- * @param {any} queryInterface
- * @param {any} Sequelize
- * @returns
- */
 export default {
   up: (queryInterface, Sequelize) => queryInterface.createTable('Follows', {
     id: {
