@@ -21,5 +21,5 @@ export default {
       type: Sequelize.DATE
     }
   }),
-  down: (queryInterface, Sequelize) => queryInterface.dropTable('Reactions')
+  down: queryInterface => queryInterface.dropTable('Reactions')
 };

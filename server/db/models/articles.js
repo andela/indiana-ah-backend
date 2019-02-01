@@ -39,8 +39,12 @@ export default (sequelize, DataTypes) => {
     {}
   );
   Articles.associate = (models) => {
-    Articles.hasMany(models.Comments);
-    Articles.hasMany(models.Reactions);
+    Articles.hasMany(models.Comments, {
+      foreignKey: 'userId'
+    });
+    Articles.hasMany(models.Reactions, {
+      foreignKey: 'userId'
+    });
     Articles.hasMany(models.Reports);
     Articles.hasMany(models.Bookmarks);
   };

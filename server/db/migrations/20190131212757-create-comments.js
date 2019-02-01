@@ -9,7 +9,6 @@ export default {
     userId: {
       type: Sequelize.INTEGER,
       references: {
-        // This is a reference to another model
         model: 'Users',
         key: 'id',
         as: 'userId'
