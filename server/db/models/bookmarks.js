@@ -9,10 +9,20 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER
       },
       articleId: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        references: {
+          model: 'Articles',
+          key: 'id',
+          as: 'articleId'
+        }
       },
       userId: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        references: {
+          model: 'Users',
+          key: 'id',
+          as: 'userId'
+        }
       }
     },
     {}
