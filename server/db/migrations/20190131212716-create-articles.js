@@ -29,11 +29,12 @@ export default {
       autoIncrement: true
     },
     tag: {
-      allowNull: false,
+      allowNull: true,
       type: Sequelize.INTEGER
     },
     userId: {
       type: Sequelize.INTEGER,
+      onDelete: 'CASCADE',
       references: {
         model: 'Users',
         key: 'id',

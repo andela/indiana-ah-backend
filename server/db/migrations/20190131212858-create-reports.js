@@ -8,6 +8,7 @@ export default {
     },
     userId: {
       type: Sequelize.INTEGER,
+      onDelete: 'CASCADE',
       references: {
         model: 'Users',
         key: 'id',
@@ -16,6 +17,7 @@ export default {
     },
     articleId: {
       type: Sequelize.INTEGER,
+      onDelete: 'CASCADE',
       references: {
         model: 'Articles',
         key: 'id',

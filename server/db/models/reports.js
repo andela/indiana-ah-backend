@@ -33,7 +33,7 @@ export default (sequelize, DataTypes) => {
   );
   Reports.associate = ({ Articles, Users }) => {
     Reports.belongsTo(Articles, {
-      oreignKey: 'userId',
+      foreignKey: 'userId',
       onDelete: 'CASCADE'
     });
     Reports.belongsTo(Users, {

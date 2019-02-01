@@ -1,11 +1,3 @@
-/**
- *
- *
- * @export
- * @param {any} queryInterface
- * @param {any} Sequelize
- * @returns
- */
 export default {
   up: (queryInterface, Sequelize) => queryInterface.createTable('Follows', {
     id: {
@@ -14,11 +6,23 @@ export default {
       primaryKey: true,
       type: Sequelize.INTEGER
     },
-    content: {
-      type: Sequelize.STRING
+    authorId: {
+      type: Sequelize.INTEGER,
+      onDelete: 'CASCADE',
+      references: {
+        model: 'Users',
+        key: 'id',
+        as: 'userId'
+      }
     },
-    complete: {
-      type: Sequelize.BOOLEAN
+    followId: {
+      type: Sequelize.INTEGER,
+      onDelete: 'CASCADE',
+      references: {
+        model: 'Users',
+        key: 'id',
+        as: 'userId'
+      }
     },
     createdAt: {
       allowNull: false,

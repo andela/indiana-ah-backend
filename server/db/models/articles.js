@@ -31,7 +31,7 @@ export default (sequelize, DataTypes) => {
         autoIncrement: true
       },
       tag: {
-        allowNull: false,
+        allowNull: true,
         type: DataTypes.INTEGER
       },
       userId: {
