@@ -11,7 +11,7 @@
 		"dev": "nodemon --exec babel-node server/index.js",
 		"coverage": "nyc report --reporter=text-lcov | coveralls && nyc report --reporter=lcov",
 		"migrate": "sequelize db:migrate",
-		"clean:db": "sequelize db:migrate:undo:all ",
+		"clean:db": "sequelize db:migrate:undo:all",
 		"migrate:refresh": "npm run clean:db && npm run migrate"
 	},
 	"engines": {
