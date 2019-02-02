@@ -8,7 +8,6 @@ const env = process.env.NODE_ENV || 'development';
 const config = configuration[env];
 const db = {};
 
-
 const sequelize = new Sequelize(config.url, config);
 
 fs.readdirSync(__dirname)
