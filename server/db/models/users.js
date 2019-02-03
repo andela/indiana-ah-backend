@@ -38,7 +38,7 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING
       },
       isVerified: {
-        allowNull: true,
+        defaultValue: false,
         type: DataTypes.BOOLEAN
       },
       subscribed: {
