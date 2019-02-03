@@ -49,6 +49,7 @@
 		"regenerator-runtime": "^0.13.1",
 		"request": "^2.87.0",
 		"sequelize": "^4.42.0",
+		"sequelize-cli": "^5.4.0",
 		"underscore": "^1.9.1"
 	},
 	"devDependencies": {
