@@ -29,7 +29,7 @@ export default {
       type: Sequelize.STRING
     },
     role: {
-      allowNull: false,
+      defaultValue: 'user',
       type: Sequelize.STRING
     },
     isVerified: {

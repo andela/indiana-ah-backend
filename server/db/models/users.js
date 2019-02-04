@@ -31,7 +31,7 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING
       },
       role: {
-        allowNull: false,
+        defaultValue: 'user',
         type: DataTypes.STRING
       },
       imageUrl: {

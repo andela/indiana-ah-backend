@@ -27,7 +27,7 @@ export default (sequelize, DataTypes) => {
       },
       articleSlug: {
         allowNull: false,
-        type: DataTypes.TEXT
+        type: DataTypes.STRING
       },
       tag: {
         allowNull: true,
@@ -52,7 +52,7 @@ export default (sequelize, DataTypes) => {
       onDelete: 'CASCADE'
     });
     Articles.hasMany(Comments, {
-      foreignKey: 'articleId',
+      foreignKey: 'articleId'
     });
     Articles.hasMany(Reactions, {
       foreignKey: 'articleId'

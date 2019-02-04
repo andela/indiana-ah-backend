@@ -24,7 +24,7 @@ export default {
     },
     articleSlug: {
       allowNull: false,
-      type: Sequelize.TEXT
+      type: Sequelize.STRING
     },
     tag: {
       allowNull: true,
