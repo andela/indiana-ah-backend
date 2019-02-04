@@ -26,7 +26,7 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING
       },
       bio: {
-        allowNull: false,
+        allowNull: true,
         type: DataTypes.STRING
       },
       role: {
