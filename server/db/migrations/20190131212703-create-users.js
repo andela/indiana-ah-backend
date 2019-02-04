@@ -11,6 +11,7 @@ export default {
       type: Sequelize.STRING
     },
     username: {
+      unique: true,
       allowNull: true,
       type: Sequelize.STRING
     },
@@ -36,11 +37,11 @@ export default {
       type: Sequelize.BOOLEAN
     },
     imageUrl: {
-      allowNull: true,
+      defaultValue: 'http://s3.amazonaws.com/37assets/svn/765-default-avatar.png',
       type: Sequelize.STRING
     },
     subscribed: {
-      allowNull: true,
+      defaultValue: false,
       type: Sequelize.BOOLEAN
     },
     createdAt: {

@@ -13,6 +13,7 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING
       },
       username: {
+        unique: true,
         allowNull: true,
         type: DataTypes.STRING
       },
@@ -34,7 +35,7 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING
       },
       imageUrl: {
-        allowNull: true,
+        defaultValue: 'http://s3.amazonaws.com/37assets/svn/765-default-avatar.png',
         type: DataTypes.STRING
       },
       isVerified: {
@@ -42,7 +43,7 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN
       },
       subscribed: {
-        allowNull: true,
+        defaultValue: false,
         type: DataTypes.BOOLEAN
       }
     },

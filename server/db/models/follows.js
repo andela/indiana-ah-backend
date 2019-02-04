@@ -16,7 +16,7 @@ export default (sequelize, DataTypes) => {
           as: 'userId'
         }
       },
-      followId: {
+      followerId: {
         type: DataTypes.INTEGER,
         references: {
           model: 'Users',
@@ -33,7 +33,7 @@ export default (sequelize, DataTypes) => {
       onDelete: 'CASCADE'
     });
     Follows.belongsTo(Users, {
-      foreignKey: 'followId',
+      foreignKey: 'followerId',
       onDelete: 'CASCADE'
     });
   };

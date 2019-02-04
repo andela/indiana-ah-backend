@@ -15,7 +15,7 @@ export default {
         as: 'userId'
       }
     },
-    followId: {
+    followerId: {
       type: Sequelize.INTEGER,
       onDelete: 'CASCADE',
       references: {
