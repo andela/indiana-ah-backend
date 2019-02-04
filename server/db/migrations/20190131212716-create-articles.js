@@ -8,7 +8,7 @@ export default {
     },
     articleTitle: {
       allowNull: false,
-      type: Sequelize.TEXT
+      type: Sequelize.STRING
     },
     articleBody: {
       allowNull: false,

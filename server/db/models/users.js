@@ -14,7 +14,7 @@ export default (sequelize, DataTypes) => {
       },
       username: {
         unique: true,
-        allowNull: true,
+        allowNull: false,
         type: DataTypes.STRING
       },
       email: {

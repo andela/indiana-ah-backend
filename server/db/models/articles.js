@@ -10,7 +10,7 @@ export default (sequelize, DataTypes) => {
       },
       articleTitle: {
         allowNull: false,
-        type: DataTypes.TEXT
+        type: DataTypes.STRING
       },
       articleBody: {
         allowNull: false,

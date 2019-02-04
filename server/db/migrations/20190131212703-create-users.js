@@ -12,7 +12,7 @@ export default {
     },
     username: {
       unique: true,
-      allowNull: true,
+      allowNull: false,
       type: Sequelize.STRING
     },
     email: {
