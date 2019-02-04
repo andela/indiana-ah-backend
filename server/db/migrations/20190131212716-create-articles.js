@@ -8,11 +8,11 @@ export default {
     },
     articleTitle: {
       allowNull: false,
-      type: Sequelize.STRING
+      type: Sequelize.TEXT
     },
     articleBody: {
       allowNull: false,
-      type: Sequelize.STRING
+      type: Sequelize.TEXT
     },
     imageUrl: {
       allowNull: true,

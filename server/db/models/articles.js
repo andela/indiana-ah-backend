@@ -10,11 +10,11 @@ export default (sequelize, DataTypes) => {
       },
       articleTitle: {
         allowNull: false,
-        type: DataTypes.STRING
+        type: DataTypes.TEXT
       },
       articleBody: {
         allowNull: false,
-        type: DataTypes.STRING
+        type: DataTypes.TEXT
       },
       imageUrl: {
         allowNull: true,
@@ -27,8 +27,7 @@ export default (sequelize, DataTypes) => {
       },
       articleSlug: {
         allowNull: false,
-        type: DataTypes.TEXT,
-        autoIncrement: true
+        type: DataTypes.TEXT
       },
       tag: {
         allowNull: true,
