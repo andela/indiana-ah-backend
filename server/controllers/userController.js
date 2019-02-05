@@ -8,17 +8,17 @@ const { Users } = models;
 /**
  *
  *
- * @class User
+ * @class UserController
  */
 class UserController {
   /**
    *
    *
-   * @static
+   * @static registerUser - the method that handles user registration
    * @param {object} req - the request object
    * @param {object} res - the response object
    *
-   * @memberOf User
+   * @memberOf UserController class
    */
   static async registerUser(req, res) {
     const { username, email, password } = req.body;
@@ -51,7 +51,7 @@ class UserController {
           message: 'successfully registered to authors haven'
         });
     } catch (e) {
-      return errorMessage(res, 500, 'error in registration');
+      errorMessage(res, 500, 'error in registration');
     }
   }
 }

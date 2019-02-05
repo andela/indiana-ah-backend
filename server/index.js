@@ -19,19 +19,15 @@ app.use('/api/v1', routes);
 app.use('*', (req, res, next) => {
   const err = new Error('Not Found');
   err.status = 404;
-  next(err);
+  return next(err);
 });
 
 // error handler
-app.use((err, req, res, next) => {
-  res.status(err.status);
-  res.json({
-    error: {
-      message: err.message
-    }
-  });
-  return next();
-});
+app.use((err, req, res, next) => res.status(err.status).json({
+  error: {
+    message: err.message
+  }
+}));
 
 // finally, let's start our server...
 app.listen(PORT, () => {
