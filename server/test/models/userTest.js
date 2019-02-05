@@ -37,10 +37,6 @@ describe('..db/models/users', () => {
 
     it('should define a hasMany association with Article', () => {
       expect(User.hasMany.calledWith(Article)).to.equal(true);
-      // expect(Article.hasMany.calledWith(Bookmark)).to.equal(true);
-      // expect(Article.hasMany.calledWith(Reaction)).to.equal(true);
-      // expect(Article.hasMany.calledWith(Report)).to.equal(true);
-      // expect(Article.hasMany.calledWith(Follow)).to.equal(false);
     });
 
     it('should define a hasMany association with Comment', () => {
