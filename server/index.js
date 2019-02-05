@@ -22,6 +22,17 @@ app.use('*', (req, res, next) => {
   next(err);
 });
 
+// error handler
+app.use((err, req, res, next) => {
+  res.status(err.status);
+  res.json({
+    error: {
+      message: err.message
+    }
+  });
+  return next();
+});
+
 // finally, let's start our server...
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console

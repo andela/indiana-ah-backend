@@ -15,39 +15,23 @@ class UserController {
    *
    *
    * @static
-   * @param {object} req
-   * @param {object} res
+   * @param {object} req - the request object
+   * @param {object} res - the response object
    *
    * @memberOf User
    */
   static async registerUser(req, res) {
-    const {
-      name,
-      username,
-      email,
-      password,
-      bio,
-      role,
-      imageUrl,
-      isVerified,
-      subscribed
-    } = req.body;
+    const { username, email, password } = req.body;
     try {
       const response = await Users.findOrCreate({
         where: { email },
         defaults: {
-          name,
           username,
-          password,
-          bio,
-          role,
-          imageUrl,
-          isVerified,
-          subscribed
+          password
         }
       }).spread((user, created) => {
-        if (user.get.id || !created) {
-          return errorMessage(res, 400, 'this email or username already exists');
+        if (!created) {
+          return errorMessage(res, 409, 'this email or username already exists');
         }
         return user.get({
           plain: true
@@ -62,7 +46,7 @@ class UserController {
       const token = assignToken(payload);
       return res
         .header('x-auth-token', token)
-        .status(200)
+        .status(201)
         .json({
           message: 'successfully registered to authors haven'
         });

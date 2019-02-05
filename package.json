@@ -4,7 +4,7 @@
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=test npm run migrate:refresh && cross-env NODE_ENV=test nyc mocha bin/test --timeout 6000 --exit",
+    "test": "NODE_ENV=test npm run migrate:refresh && cross-env NODE_ENV=test nyc mocha --require @babel/register --require @babel/polyfill ./server/test/**/*.test.js --timeout 6000 --exit",
     "clean": "rm -rf build",
     "build": "npm run clean && mkdir build && cd build && mkdir server && babel ./server  -s -d server",
     "start": "npm run build && node --require @babel/register ./server/index.js",
@@ -25,7 +25,6 @@
     "@babel/polyfill": "^7.2.5",
     "@babel/preset-env": "^7.3.1",
     "@babel/register": "^7.0.0",
-    "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^24.0.0",
     "body-parser": "^1.18.3",
     "chai": "^4.2.0",
