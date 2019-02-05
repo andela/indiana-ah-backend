@@ -7,6 +7,7 @@ logs
 npm-debug.log*
 build
 package-lock.json
+.vscode
 # Runtime data
 pids
 *.pid
