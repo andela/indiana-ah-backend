@@ -7,10 +7,10 @@ dotenv.config();
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 /**
- *
- * @param {*} receiverEmail
- * @param {*} subject
- * @param {*} html
+ * @description Send email notification
+ * @param {string} receiverEmail
+ * @param {string} subject
+ * @param {string} html
  */
 
 const sendEmail = (receiverEmail, subject, html) => {
