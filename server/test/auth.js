@@ -20,7 +20,7 @@ let userToken = '';
 describe('user registration', () => {
   it('should register new user', () => {
     request(app)
-      .post('/register')
+      .post('/api/v1/register')
       .send(user1)
 
       .then((res) => {
