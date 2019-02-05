@@ -14,7 +14,7 @@ describe('..db/models/users', () => {
   checkModelName(Comment)('Comment');
   // check for attributes
   context('properties', () => {
-    ['id', 'userId', 'articleId']
+    ['id', 'userId', 'articleId', 'commentBody']
       .forEach(checkPropertyExists(comment));
   });
   // test associations
