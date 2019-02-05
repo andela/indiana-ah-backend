@@ -3,13 +3,13 @@ export default (sequelize, DataTypes) => {
     'Reactions',
     {
       id: {
-        allowNull: true,
-        autoIncrement: true,
+        allowNull: false,
+        defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.UUID
       },
       articleId: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
         references: {
           model: 'Articles',
           key: 'id',
@@ -17,7 +17,7 @@ export default (sequelize, DataTypes) => {
         }
       },
       userId: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
         references: {
           model: 'Users',
           key: 'id',
@@ -30,12 +30,12 @@ export default (sequelize, DataTypes) => {
     },
     {}
   );
-  Reactions.associate = ({ Users, Article }) => {
+  Reactions.associate = ({ Users, Articles }) => {
     Reactions.belongsTo(Users, {
       foreignKey: 'userId',
       onDelete: 'CASCADE'
     });
-    Reactions.belongsTo(Article, {
+    Reactions.belongsTo(Articles, {
       foreignKey: 'articleId',
       onDelete: 'CASCADE'
     });

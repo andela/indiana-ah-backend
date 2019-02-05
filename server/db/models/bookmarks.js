@@ -3,10 +3,10 @@ export default (sequelize, DataTypes) => {
     'Bookmarks',
     {
       id: {
-        allowNull: true,
-        autoIncrement: true,
+        allowNull: false,
+        defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.UUID
       },
       articleId: {
         type: DataTypes.INTEGER,
@@ -17,7 +17,7 @@ export default (sequelize, DataTypes) => {
         }
       },
       userId: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
         references: {
           model: 'Users',
           key: 'id',
@@ -27,12 +27,12 @@ export default (sequelize, DataTypes) => {
     },
     {}
   );
-  Bookmarks.associate = ({ Users, Article }) => {
+  Bookmarks.associate = ({ Users, Articles }) => {
     Bookmarks.belongsTo(Users, {
       foreignKey: 'userId',
       onDelete: 'CASCADE'
     });
-    Bookmarks.belongsTo(Article, {
+    Bookmarks.belongsTo(Articles, {
       foreignKey: 'articleId',
       onDelete: 'CASCADE'
     });

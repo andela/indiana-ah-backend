@@ -2,12 +2,12 @@ export default {
   up: (queryInterface, Sequelize) => queryInterface.createTable('Comments', {
     id: {
       allowNull: false,
-      autoIncrement: true,
+      defaultValue: Sequelize.UUIDV4,
       primaryKey: true,
-      type: Sequelize.INTEGER
+      type: Sequelize.UUID
     },
     userId: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.UUID,
       onDelete: 'CASCADE',
       references: {
         model: 'Users',
@@ -16,7 +16,7 @@ export default {
       }
     },
     articleId: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.UUID,
       onDelete: 'CASCADE',
       references: {
         model: 'Articles',

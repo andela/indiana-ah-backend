@@ -2,12 +2,12 @@ export default {
   up: (queryInterface, Sequelize) => queryInterface.createTable('Reactions', {
     id: {
       allowNull: false,
-      autoIncrement: true,
+      defaultValue: Sequelize.UUIDV4,
       primaryKey: true,
-      type: Sequelize.INTEGER
+      type: Sequelize.UUID
     },
     articleId: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.UUID,
       onDelete: 'CASCADE',
       references: {
         model: 'Articles',
@@ -16,7 +16,7 @@ export default {
       }
     },
     userId: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.UUID,
       onDelete: 'CASCADE',
       references: {
         model: 'Users',

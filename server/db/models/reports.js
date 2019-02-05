@@ -4,12 +4,12 @@ export default (sequelize, DataTypes) => {
     {
       id: {
         allowNull: false,
-        autoIncrement: true,
+        defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.UUID
       },
       userId: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
         references: {
           model: 'Users',
           key: 'id',
@@ -17,7 +17,7 @@ export default (sequelize, DataTypes) => {
         }
       },
       articleId: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
         references: {
           model: 'Articles',
           key: 'id',
