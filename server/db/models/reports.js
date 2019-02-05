@@ -1,6 +1,6 @@
 export default (sequelize, DataTypes) => {
-  const Reports = sequelize.define(
-    'Reports',
+  const Report = sequelize.define(
+    'Report',
     {
       id: {
         allowNull: false,
@@ -9,10 +9,27 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.UUID
       },
       userId: {
+<<<<<<< HEAD
         type: DataTypes.UUID
       },
       articleId: {
         type: DataTypes.UUID
+=======
+        type: DataTypes.UUID,
+        references: {
+          model: 'User',
+          key: 'id',
+          as: 'userId'
+        }
+      },
+      articleId: {
+        type: DataTypes.UUID,
+        references: {
+          model: 'Article',
+          key: 'id',
+          as: 'articleId'
+        }
+>>>>>>> chore: write test for article model
       },
       reportBody: {
         allowNull: false,
@@ -21,15 +38,15 @@ export default (sequelize, DataTypes) => {
     },
     { paranoid: true }
   );
-  Reports.associate = ({ Articles, Users }) => {
-    Reports.belongsTo(Articles, {
+  Report.associate = ({ Article, User }) => {
+    Report.belongsTo(Article, {
       foreignKey: 'userId',
       onDelete: 'CASCADE'
     });
-    Reports.belongsTo(Users, {
+    Report.belongsTo(User, {
       foreignKey: 'userId',
       onDelete: 'CASCADE'
     });
   };
-  return Reports;
+  return Report;
 };
