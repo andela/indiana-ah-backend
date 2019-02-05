@@ -14,7 +14,8 @@ describe('..db/models/article', () => {
   checkModelName(Article)('Article');
   // check for attributes
   context('properties', () => {
-    ['articleTitle', 'articleBody', 'articleSlug', 'tag'].forEach(checkPropertyExists(article));
+    ['id', 'articleTitle', 'articleBody', 'articleSlug', 'imageUrl', 'tag', 'userId']
+      .forEach(checkPropertyExists(article));
   });
   // test associations
   context('associations', () => {
