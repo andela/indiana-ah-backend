@@ -27,11 +27,18 @@ class Auth {
         return errorResponse(
           res,
           401,
+<<<<<<< HEAD
           'Access denied. You are not authorized to access this route'
         );
       }
       if (!decodedToken.isVerified) return errorResponse(res, 403, 'Access denied. You are not a verified user');
       req.user = decodedToken;
+=======
+          'Access denied. You are not authorized to acceess this route'
+        );
+      }
+      if (!decodedToken.isVerfied) return errorResponse(res, 403, 'Access denied. You are not a verified user');
+>>>>>>> feat: implement create an article feature
       next();
     } catch (e) {
       return next(e);

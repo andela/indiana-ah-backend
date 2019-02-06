@@ -28,6 +28,7 @@ class ArticleController {
       return next(e);
     }
   }
+<<<<<<< HEAD
 
   /**
    * @description controller method for fetching all articles
@@ -111,6 +112,8 @@ class ArticleController {
       return next(e);
     }
   }
+=======
+>>>>>>> feat: implement create an article feature
 }
 
 export default ArticleController;

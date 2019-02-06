@@ -101,7 +101,16 @@
     "pg-hstore": "^2.3.2",
     "sequelize": "^4.42.0",
     "sequelize-cli": "^5.4.0",
+<<<<<<< HEAD
     "sequelize-slugify": "^0.6.1",
+=======
+<<<<<<< HEAD
+    "sequelize-test-helpers": "^1.0.7",
+    "sinon": "^7.2.3",
+=======
+    "sequelize-slugify": "^0.6.1",
+>>>>>>> feat: implement create an article feature
+>>>>>>> feat: implement create an article feature
     "supertest": "^3.4.2"
   },
   "devDependencies": {
