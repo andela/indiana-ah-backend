@@ -8,7 +8,7 @@ import { expect } from 'chai';
 
 import ArticleModel from '../../db/models/articles';
 
-describe('..db/models/article', () => {
+describe('..db/models/articles', () => {
   const Article = ArticleModel(sequelize, dataTypes);
   const article = new Article();
   checkModelName(Article)('Articles');

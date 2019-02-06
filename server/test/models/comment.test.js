@@ -8,7 +8,7 @@ import { expect } from 'chai';
 
 import CommentModel from '../../db/models/comments';
 
-describe('..db/models/users', () => {
+describe('..db/models/comments', () => {
   const Comment = CommentModel(sequelize, dataTypes);
   const comment = new Comment();
   checkModelName(Comment)('Comments');

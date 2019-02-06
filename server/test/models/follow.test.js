@@ -8,10 +8,10 @@ import { expect } from 'chai';
 
 import FollowModel from '../../db/models/follows';
 
-describe('..db/models/users', () => {
+describe('..db/models/follows', () => {
   const Follow = FollowModel(sequelize, dataTypes);
   const follow = new Follow();
-  checkModelName(Follow)('Follow');
+  checkModelName(Follow)('Follows');
   // check for attributes
   context('properties', () => {
     ['id', 'authorId', 'followerId']
@@ -19,14 +19,14 @@ describe('..db/models/users', () => {
   });
   // test associations
   context('associations', () => {
-    const User = 'User';
+    const Users = 'Users';
 
     before(() => {
-      Follow.associate({ User });
+      Follow.associate({ Users });
     });
 
     it('should define a hasMany association with User', () => {
-      expect(Follow.belongsTo.calledWith(User)).to.equal(true);
+      expect(Follow.belongsTo.calledWith(Users)).to.equal(true);
     });
   });
 });

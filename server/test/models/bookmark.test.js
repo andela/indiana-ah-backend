@@ -8,7 +8,7 @@ import { expect } from 'chai';
 
 import BookmarkModel from '../../db/models/bookmarks';
 
-describe('..db/models/users', () => {
+describe('..db/models/follows', () => {
   const Bookmark = BookmarkModel(sequelize, dataTypes);
   const bookmark = new Bookmark();
   checkModelName(Bookmark)('Bookmarks');
