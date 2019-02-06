@@ -56,6 +56,31 @@ class ArticleController {
       return next(e);
     }
   }
+
+  /**
+   * @description controller method for updating an article
+   * @static
+   * @param {object} req Request object
+   * @param {object} res Response object
+   * @param {Function} next passes control to the next middleware
+   * @returns {Object} a response object
+   */
+  static async updateArticle(req, res, next) {
+    try {
+      const { slug } = req.params;
+      const { id: userId } = req.user;
+      const response = await Articles.update(req.body, {
+        where: { slug, userId },
+        returning: true
+      });
+
+      if (response[0] === 0) return errorResponse(res, 404, 'Article requested for update not found');
+      const article = response[1][0];
+      return res.status(200).json({ message: 'Article successfully updated', article });
+    } catch (e) {
+      return next(e);
+    }
+  }
 }
 
 export default ArticleController;
