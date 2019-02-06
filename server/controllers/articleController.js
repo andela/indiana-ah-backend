@@ -29,6 +29,9 @@ class ArticleController {
     }
   }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> feat: implement get all articles feature
 
   /**
    * @description controller method for fetching all articles
@@ -57,6 +60,7 @@ class ArticleController {
       return next(e);
     }
   }
+<<<<<<< HEAD
 
   /**
    * @description controller method for updating an article
@@ -114,6 +118,8 @@ class ArticleController {
   }
 =======
 >>>>>>> feat: implement create an article feature
+=======
+>>>>>>> feat: implement get all articles feature
 }
 
 export default ArticleController;
