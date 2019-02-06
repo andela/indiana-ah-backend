@@ -28,6 +28,34 @@ class ArticleController {
       return next(e);
     }
   }
+
+  /**
+   * @description controller method for fetching all articles
+   * @static
+   * @param {object} req Request object
+   * @param {object} res Response object
+   * @param {Function} next passes control to the next middleware
+   * @returns {Object} a response object
+   */
+  static async getAllArticles(req, res, next) {
+    try {
+      const articles = await Articles.findAll({
+        include: [
+          {
+            model: Users,
+            as: 'author',
+            attributes: ['username', 'bio', 'imageUrl']
+          },
+          { model: Comments },
+          { model: Reactions }
+        ]
+      });
+      if (articles.length === 0) return errorResponse(res, 404, 'No articles found');
+      return res.status(200).json({ articles });
+    } catch (e) {
+      return next(e);
+    }
+  }
 }
 
 export default ArticleController;
