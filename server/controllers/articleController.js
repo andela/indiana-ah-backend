@@ -81,6 +81,36 @@ class ArticleController {
       return next(e);
     }
   }
+
+  /**
+   * @description controller method for fetching a single article
+   * @static
+   * @param {object} req Request object
+   * @param {object} res Response object
+   * @param {Function} next passes control to the next middleware
+   * @returns {Object} a response object
+   */
+  static async getOneArticle(req, res, next) {
+    try {
+      const { slug } = req.params;
+      const article = await Articles.findOne({
+        where: { slug },
+        include: [
+          {
+            model: Users,
+            as: 'author',
+            attributes: ['username', 'bio', 'imageUrl']
+          },
+          { model: Comments },
+          { model: Reactions }
+        ]
+      });
+      if (!article) return errorResponse(res, 404, 'Article not found');
+      return res.status(200).json({ article });
+    } catch (e) {
+      return next(e);
+    }
+  }
 }
 
 export default ArticleController;
