@@ -16,7 +16,7 @@ export default (sequelize, DataTypes) => {
           as: 'userId'
         }
       },
-      followId: {
+      followerId: {
         type: DataTypes.UUID,
         references: {
           model: 'Users',
