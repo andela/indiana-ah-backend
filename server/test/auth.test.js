@@ -13,7 +13,7 @@ const user2 = {
   password: 'baleesecret'
 };
 
-describe('', () => {
+describe('all unregistered routes', () => {
   it('should give an error when the route entered is an unregistered one', () => {
     request(app)
       .get('/*')
@@ -25,7 +25,7 @@ describe('', () => {
 });
 
 describe('user registration', () => {
-  it('should fail on registration', () => request(app)
+  it('should fail on registration, since the email field was not provided', () => request(app)
     .post('/api/v1/register')
     .set('content-type', 'application/json')
     .send(user2)
