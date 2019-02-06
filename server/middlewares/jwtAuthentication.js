@@ -31,6 +31,7 @@ class Auth {
         );
       }
       if (!decodedToken.isVerfied) return errorResponse(res, 403, 'Access denied. You are not a verified user');
+      req.user = decodedToken;
       next();
     } catch (e) {
       return next(e);
