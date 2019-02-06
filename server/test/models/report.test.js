@@ -8,10 +8,10 @@ import { expect } from 'chai';
 
 import ReportModel from '../../db/models/reports';
 
-describe('..db/models/users', () => {
+describe('..db/models/reports', () => {
   const Report = ReportModel(sequelize, dataTypes);
   const report = new Report();
-  checkModelName(Report)('Report');
+  checkModelName(Report)('Reports');
   // check for attributes
   context('properties', () => {
     ['id', 'userId', 'articleId', 'reportBody']
@@ -19,20 +19,20 @@ describe('..db/models/users', () => {
   });
   // test associations
   context('associations', () => {
-    const Article = 'Article';
-    const User = 'User';
+    const Articles = 'Articles';
+    const Users = 'Users';
 
     before(() => {
-      Report.associate({ Article });
-      Report.associate({ User });
+      Report.associate({ Articles });
+      Report.associate({ Users });
     });
 
     it('should define a belongsTo association with Article', () => {
-      expect(Report.belongsTo.calledWith(Article)).to.equal(true);
+      expect(Report.belongsTo.calledWith(Articles)).to.equal(true);
     });
 
     it('should define a belongsTo association with User', () => {
-      expect(Report.belongsTo.calledWith(User)).to.equal(true);
+      expect(Report.belongsTo.calledWith(Users)).to.equal(true);
     });
   });
 });
