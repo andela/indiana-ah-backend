@@ -6,7 +6,7 @@ import {
 } from 'sequelize-test-helpers';
 import { expect } from 'chai';
 
-import FollowModel from '../../db/models/follows';
+import FollowModel from '../db/models/follows';
 
 describe('..db/models/follows', () => {
   const Follow = FollowModel(sequelize, dataTypes);
