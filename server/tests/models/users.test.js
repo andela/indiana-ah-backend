@@ -6,7 +6,7 @@ import {
 } from 'sequelize-test-helpers';
 import { expect } from 'chai';
 
-import UserModel from '../db/models/users';
+import UserModel from '../../db/models/users';
 
 describe('..db/models/users', () => {
   const User = UserModel(sequelize, dataTypes);

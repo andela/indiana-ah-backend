@@ -6,7 +6,7 @@ import {
 } from 'sequelize-test-helpers';
 import { expect } from 'chai';
 
-import ReactionModel from '../db/models/reactions';
+import ReactionModel from '../../db/models/reactions';
 
 describe('..db/models/reactions', () => {
   const Reaction = ReactionModel(sequelize, dataTypes);

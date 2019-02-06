@@ -1,6 +1,6 @@
 import request from 'supertest';
 import { expect } from 'chai';
-import app from '../index';
+import app from '../../index';
 
 const user1 = {
   username: 'balee',

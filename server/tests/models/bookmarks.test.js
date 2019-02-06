@@ -6,7 +6,7 @@ import {
 } from 'sequelize-test-helpers';
 import { expect } from 'chai';
 
-import BookmarkModel from '../db/models/bookmarks';
+import BookmarkModel from '../../db/models/bookmarks';
 
 describe('..db/models/follows', () => {
   const Bookmark = BookmarkModel(sequelize, dataTypes);
