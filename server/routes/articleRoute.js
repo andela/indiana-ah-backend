@@ -5,6 +5,7 @@ import ArticleController from '../controllers/articleController';
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 const {
   createArticle, getAllArticles, updateArticle, getOneArticle
 } = ArticleController;
@@ -14,6 +15,9 @@ const { createArticle } = ArticleController;
 =======
 const { createArticle, getAllArticles } = ArticleController;
 >>>>>>> feat: implement get all articles feature
+=======
+const { createArticle, getAllArticles, updateArticle } = ArticleController;
+>>>>>>> feat implement update an article feature
 
 const { authUser } = Auth;
 
@@ -23,6 +27,7 @@ router.post('/', authUser, validateArticle, createArticle);
 <<<<<<< HEAD
 <<<<<<< HEAD
 router.get('/', getAllArticles);
+<<<<<<< HEAD
 router.put('/:slug', authUser, updateArticle);
 router.get('/:slug', getOneArticle);
 =======
@@ -30,5 +35,8 @@ router.get('/:slug', getOneArticle);
 =======
 router.get('/', getAllArticles);
 >>>>>>> feat: implement get all articles feature
+=======
+router.put('/:slug', authUser, validateArticle, updateArticle);
+>>>>>>> feat implement update an article feature
 
 export default router;
