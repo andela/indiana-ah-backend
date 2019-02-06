@@ -38,7 +38,11 @@ class Auth {
         );
       }
       if (!decodedToken.isVerfied) return errorResponse(res, 403, 'Access denied. You are not a verified user');
+<<<<<<< HEAD
 >>>>>>> feat: implement create an article feature
+=======
+      req.user = decodedToken;
+>>>>>>> feat: implement get a single article feature
       next();
     } catch (e) {
       return next(e);
