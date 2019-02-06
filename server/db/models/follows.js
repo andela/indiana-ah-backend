@@ -4,20 +4,20 @@ export default (sequelize, DataTypes) => {
     {
       id: {
         allowNull: false,
-        autoIncrement: true,
+        defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.UUID
       },
       authorId: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
         references: {
           model: 'Users',
           key: 'id',
           as: 'userId'
         }
       },
-      followerId: {
-        type: DataTypes.INTEGER,
+      followId: {
+        type: DataTypes.UUID,
         references: {
           model: 'Users',
           key: 'id',

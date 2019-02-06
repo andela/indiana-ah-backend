@@ -2,12 +2,12 @@ export default {
   up: (queryInterface, Sequelize) => queryInterface.createTable('Follows', {
     id: {
       allowNull: false,
-      autoIncrement: true,
+      defaultValue: Sequelize.UUIDV4,
       primaryKey: true,
-      type: Sequelize.INTEGER
+      type: Sequelize.UUID
     },
     authorId: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.UUID,
       onDelete: 'CASCADE',
       references: {
         model: 'Users',
@@ -15,8 +15,8 @@ export default {
         as: 'userId'
       }
     },
-    followerId: {
-      type: Sequelize.INTEGER,
+    followId: {
+      type: Sequelize.UUID,
       onDelete: 'CASCADE',
       references: {
         model: 'Users',

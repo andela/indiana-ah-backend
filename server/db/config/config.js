@@ -1,4 +1,6 @@
-require('dotenv').config();
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 module.exports = {
   development: {
@@ -6,6 +8,7 @@ module.exports = {
     dialect: 'postgres'
   },
   test: {
+    url: process.env.DATABASE_URL_TEST,
     dialect: 'postgres'
   },
   production: {

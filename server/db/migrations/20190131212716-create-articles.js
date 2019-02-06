@@ -2,9 +2,9 @@ export default {
   up: (queryInterface, Sequelize) => queryInterface.createTable('Articles', {
     id: {
       allowNull: false,
-      autoIncrement: true,
+      defaultValue: Sequelize.UUIDV4,
       primaryKey: true,
-      type: Sequelize.INTEGER
+      type: Sequelize.UUID
     },
     articleTitle: {
       allowNull: false,
@@ -31,7 +31,7 @@ export default {
       type: Sequelize.STRING
     },
     userId: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.UUID,
       onDelete: 'CASCADE',
       references: {
         model: 'Users',
