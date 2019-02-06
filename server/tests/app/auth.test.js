@@ -66,11 +66,17 @@ const user10 = {
   password: '9999999999a'
 };
 
+const user11 = {
+  email: 'balee@gmail.com',
+  password: 'baleesecret'
+};
+
 describe('all unregistered routes', () => {
   it('should give an error when the route entered is an unregistered one', () => {
     request(app)
       .get('/*')
       .then((res) => {
+        expect(res.body).to.have.property('error');
         expect(res.body.error).to.equal('route does not exist');
         expect(res.status).to.equal(404);
       });
@@ -84,7 +90,7 @@ describe('user registration', () => {
     .send(user2)
     .then((res) => {
       expect(res.status).to.equal(500);
-      expect(res.body.message).to.equal('error in registration');
+      expect(res.body.message).to.equal('internal server error');
     }));
 
   it('should register new user', () => request(app)
@@ -104,6 +110,16 @@ describe('user registration', () => {
     .then((res) => {
       expect(res.status).to.equal(409);
       expect(res.body.message).to.equal('this email or username already exists');
+    }));
+
+  it('should login a user', () => request(app)
+    .post('/api/v1/login')
+    .set('content-type', 'application/json')
+    .send(user11)
+
+    .then((res) => {
+      expect(res.status).to.equal(200);
+      expect(res.body.message).to.equal('successfully logged in');
     }));
 });
 
