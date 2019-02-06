@@ -271,6 +271,35 @@ class UserController {
     }
     return errorMessage(res, 404, 'User not found');
   }
+
+  /**
+   *
+   * @static getUserByEmail - the method that handles user password reset
+   * @param {object} req - the request object
+   * @param {object} res - the response object
+   * @returns {object} user - the user object
+   * @memberOf UserController class
+   */
+  static async getUserByEmail(req, res) {
+    try {
+      const dbUser = await Users.findOne({
+        where: { email: req.body.email },
+        attributes: ['username', 'email', 'createdAt']
+      });
+      if (!dbUser) {
+        return res.status(404).json({
+          message: 'User Not Found'
+        });
+      }
+      return res.status(200).json({
+        userObj: dbUser
+      });
+    } catch (e) {
+      return res.status(500).json({
+        error: `This is the error ${e}`
+      });
+    }
+  }
 }
 
 export default UserController;
