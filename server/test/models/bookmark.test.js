@@ -11,7 +11,7 @@ import BookmarkModel from '../../db/models/bookmarks';
 describe('..db/models/users', () => {
   const Bookmark = BookmarkModel(sequelize, dataTypes);
   const bookmark = new Bookmark();
-  checkModelName(Bookmark)('Bookmark');
+  checkModelName(Bookmark)('Bookmarks');
   // check for attributes
   context('properties', () => {
     ['id', 'userId', 'articleId']
@@ -19,20 +19,20 @@ describe('..db/models/users', () => {
   });
   // test associations
   context('associations', () => {
-    const Article = 'Article';
-    const User = 'User';
+    const Articles = 'Articles';
+    const Users = 'Users';
 
     before(() => {
-      Bookmark.associate({ Article });
-      Bookmark.associate({ User });
+      Bookmark.associate({ Articles });
+      Bookmark.associate({ Users });
     });
 
     it('should define a belongsTo association with Article', () => {
-      expect(Bookmark.belongsTo.calledWith(Article)).to.equal(true);
+      expect(Bookmark.belongsTo.calledWith(Articles)).to.equal(true);
     });
 
     it('should define a belongsTo association with User', () => {
-      expect(Bookmark.belongsTo.calledWith(User)).to.equal(true);
+      expect(Bookmark.belongsTo.calledWith(Users)).to.equal(true);
     });
   });
 });
