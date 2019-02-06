@@ -6,7 +6,7 @@ import {
 } from 'sequelize-test-helpers';
 import { expect } from 'chai';
 
-import ArticleModel from '../../db/models/articles';
+import ArticleModel from '../db/models/articles';
 
 describe('..db/models/articles', () => {
   const Article = ArticleModel(sequelize, dataTypes);
