@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
-import routes from './routes/userRoute';
+import routes from './routes';
 
 // Create global app object
 const app = express();

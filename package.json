@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
 	"name": "express-authorshaven",
 	"version": "1.0.0",
 	"description": "A Social platform for the creative at heart",
@@ -56,4 +57,59 @@
 		"eslint-plugin-import": "^2.15.0",
 		"nodemon": "^1.18.9"
 	}
+=======
+  "name": "express-authorshaven",
+  "version": "1.0.0",
+  "description": "A Social platform for the creative at heart",
+  "main": "index.js",
+  "scripts": {
+    "test": "NODE_ENV=test npm run migrate:refresh && cross-env NODE_ENV=test nyc mocha --require @babel/register --require @babel/polyfill ./server/test/**/*.test.js --timeout 6000 --exit",
+    "clean": "rm -rf build",
+    "build": "npm run clean && mkdir build && cd build && mkdir server && babel ./server  -s -d server",
+    "start": "npm run build && node --require @babel/register ./server/index.js",
+    "dev": "nodemon bin/dev",
+    "coverage": "nyc report --reporter=text-lcov | coveralls && nyc report --reporter=lcov",
+    "migrate": "sequelize db:migrate",
+    "clean:db": "sequelize db:migrate:undo:all",
+    "migrate:refresh": "npm run clean:db && npm run migrate"
+  },
+  "engines": {
+    "node": "10.x"
+  },
+  "author": "Andela Simulations Programme",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/polyfill": "^7.2.5",
+    "@babel/preset-env": "^7.3.1",
+    "@babel/register": "^7.0.0",
+    "babel-jest": "^24.0.0",
+    "body-parser": "^1.18.3",
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.1",
+    "cors": "^2.8.4",
+    "cross-env": "^5.2.0",
+    "dotenv": "^6.2.0",
+    "express": "^4.16.4",
+    "joi": "^14.3.1",
+    "jsonwebtoken": "^8.4.0",
+    "mocha": "^5.2.0",
+    "morgan": "^1.9.1",
+    "nyc": "^13.1.0",
+    "pg": "^7.8.0",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.42.0",
+    "sequelize-cli": "^5.4.0",
+    "sequelize-slugify": "^0.6.1",
+    "supertest": "^3.4.2"
+  },
+  "devDependencies": {
+    "coveralls": "^3.0.2",
+    "eslint": "^5.12.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.15.0",
+    "nodemon": "^1.18.9"
+  }
+>>>>>>> feat: implement create an article feature
 }
