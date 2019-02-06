@@ -11,7 +11,7 @@ export default (sequelize, DataTypes) => {
       articleId: {
         type: DataTypes.INTEGER,
         references: {
-          model: 'Article',
+          model: 'Articles',
           key: 'id',
           as: 'articleId'
         }
@@ -19,7 +19,7 @@ export default (sequelize, DataTypes) => {
       userId: {
         type: DataTypes.UUID,
         references: {
-          model: 'User',
+          model: 'Users',
           key: 'id',
           as: 'userId'
         }
