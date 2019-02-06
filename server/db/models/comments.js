@@ -1,6 +1,6 @@
 export default (sequelize, DataTypes) => {
-  const Comment = sequelize.define(
-    'Comment',
+  const Comments = sequelize.define(
+    'Comments',
     {
       id: {
         allowNull: false,
@@ -11,7 +11,7 @@ export default (sequelize, DataTypes) => {
       userId: {
         type: DataTypes.UUID,
         references: {
-          model: 'User',
+          model: 'Users',
           key: 'id',
           as: 'userId'
         }
@@ -19,7 +19,7 @@ export default (sequelize, DataTypes) => {
       articleId: {
         type: DataTypes.UUID,
         references: {
-          model: 'Article',
+          model: 'Articles',
           key: 'id',
           as: 'articleId'
         }
@@ -31,15 +31,15 @@ export default (sequelize, DataTypes) => {
     },
     {}
   );
-  Comment.associate = (models) => {
-    Comment.belongsTo(models.User, {
+  Comments.associate = (models) => {
+    Comments.belongsTo(models.Users, {
       foreignKey: 'userId',
       onDelete: 'CASCADE'
     });
-    Comment.belongsTo(models.Article, {
+    Comments.belongsTo(models.Articles, {
       foreignKey: 'articleId',
       onDelete: 'CASCADE'
     });
   };
-  return Comment;
+  return Comments;
 };
