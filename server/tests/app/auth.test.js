@@ -222,3 +222,23 @@ describe('Sign Up Validation', () => {
       expect(res.statusCode).to.equal(400);
     }));
 });
+
+describe('Social authentication', () => {
+  it('should register a new user with a google account', () => request(app)
+    .get('/auth/google')
+    .then((res) => {
+      expect(res.status).to.equal(302);
+    }));
+
+  it('should register a new user with a facebook account', () => request(app)
+    .get('/auth/facebook')
+    .then((res) => {
+      expect(res.status).to.equal(302);
+    }));
+
+  it('should register a new user with a google account', () => request(app)
+    .get('/auth/twitter')
+    .then((res) => {
+      expect(res.status).to.equal(302);
+    }));
+});
