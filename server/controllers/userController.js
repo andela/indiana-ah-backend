@@ -41,14 +41,16 @@ class UserController {
         id: response.id,
         username: response.username,
         email: response.email,
-        role: response.role
+        role: response.role,
+        isVerified: true
       };
       const token = assignToken(payload);
       return res
         .header('x-auth-token', token)
         .status(201)
         .json({
-          message: 'successfully registered to authors haven'
+          message: 'successfully registered to authors haven',
+          token
         });
     } catch (e) {
       errorMessage(res, 500, 'error in registration');
