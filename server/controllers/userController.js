@@ -23,7 +23,7 @@ class UserController {
   static async registerUser(req, res) {
     const { username, email, password } = req.body;
     try {
-      const response = await Users.findOrCreate({
+      await Users.findOrCreate({
         where: { email },
         defaults: {
           username,
@@ -33,23 +33,20 @@ class UserController {
         if (!created) {
           return errorMessage(res, 409, 'this email or username already exists');
         }
-        return user.get({
-          plain: true
-        });
+        const payload = {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          role: user.role
+        };
+        const token = assignToken(payload);
+        return res
+          .header('x-auth-token', token)
+          .status(201)
+          .json({
+            message: 'successfully registered to authors haven'
+          });
       });
-      const payload = {
-        id: response.id,
-        username: response.username,
-        email: response.email,
-        role: response.role
-      };
-      const token = assignToken(payload);
-      return res
-        .header('x-auth-token', token)
-        .status(201)
-        .json({
-          message: 'successfully registered to authors haven'
-        });
     } catch (e) {
       errorMessage(res, 500, 'error in registration');
     }

@@ -6,7 +6,7 @@ import errorMessage from '../../helpers/errorHelpers';
 export default (req, res, next) => {
   const { username, email, password } = req.body;
 
-  if (!isAlphaNumeric(password)) {
+  if (password && !isAlphaNumeric(password)) {
     return errorMessage(res, 400, 'Password Should be Alphanumeric');
   }
 
@@ -20,7 +20,9 @@ export default (req, res, next) => {
 
   if (!error) return next();
 
-  switch (error.details[0].message) {
+  const errorMessageFromJoi = error.details[0].message;
+
+  switch (errorMessageFromJoi) {
     case '"username" is not allowed to be empty':
       errorMessage(res, 400, 'No Username was specified');
       break;
@@ -36,9 +38,6 @@ export default (req, res, next) => {
     case '"password" length must be at least 8 characters long':
       errorMessage(res, 400, 'Password length must be at least 8 characters long');
       break;
-    case '"password" must be a string':
-      errorMessage(res, 400, 'Password must be alphanumeric');
-      break;
     case '"email" is not allowed to be empty':
       errorMessage(res, 400, 'No Email was specified');
       break;
@@ -46,6 +45,6 @@ export default (req, res, next) => {
       errorMessage(res, 400, 'Email is not valid');
       break;
     default:
-      errorMessage(res, 400, error.details[0].message);
+      errorMessage(res, 400, errorMessageFromJoi);
   }
 };
