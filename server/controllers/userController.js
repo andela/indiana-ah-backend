@@ -294,7 +294,7 @@ class UserController extends BaseHelper {
       UserController.checkIfDataExist(req, res, dbUser, { message: 'This email is not registered in our system' });
       const dbUserEmail = dbUser.email;
       // define token payload and duration
-      const jwtKey = dbUser.password + process.env.JWT_SECRET;
+      const jwtKey = process.env.JWT_SECRET;
       const jwtDuration = { expiresIn: '1hrs' };
       const payload = {
         id: dbUser.id,
@@ -304,16 +304,6 @@ class UserController extends BaseHelper {
       const token = assignToken(payload, jwtKey, jwtDuration);
       const url = req.get('host');
       const link = UserController.generateEmailLink(url, token);
-      // //  define email function parameters
-      // const subject = 'Password reset';
-      // const body = `<h1 style='color: Goldenrod' > Welcome to Author's Haven</h1><hr/>
-      //   <p>Please click this <a href=${link} ><b>link</b></a> to reset password</p>
-      // `;
-      // sendEmail(dbUserEmail, subject, body);
-      // return res.status(200).json({
-      // message: `A password reset link has been sent to ${dbUserEmail}.
-      // It will expire in one hour`
-      // });
       sendGrid.setApiKey(process.env.SENDGRID_API_KEY);
       const message = `<h1 style='color: Goldenrod' > Welcome to Author's Haven</h1><hr/>
       <p>Please reset your Author's Haven password with this 
@@ -351,25 +341,21 @@ class UserController extends BaseHelper {
    * @memberOf UserController class
    */
   static async resetPassword(req, res) {
+    const token = req.header('x-auth-token');
+    const decodedToken = JWTHelper.verifyToken(token);
     try {
-      const dbUser = await Users.findOne({
-        where: { email: req.body.email },
-        attributes: ['username', 'email', 'createdAt']
+      const { password } = req.body;
+      const response = await Users.update({ password }, {
+        where: { email: decodedToken.email },
+        returning: true
       });
-      if (!dbUser) {
-        return res.status(404).json({
-          message: 'User Not Found'
-        });
-      }
-      return res.status(200).json({
-        userObj: dbUser
-      });
-    } catch (e) {
-      return res.status(500).json({
-        error: `This is the error ${e}`
-      });
+      const updatedUser = response[1][0];
+      return res.status(200).json({ message: 'Password reset successfully', updatedUser });
+    } catch (resetError) {
+      return errorMessage(res, 500, resetError);
     }
   }
 }
+
 
 export default UserController;

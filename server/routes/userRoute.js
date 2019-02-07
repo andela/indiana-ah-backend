@@ -12,7 +12,8 @@ const {
   editUserProfile,
   uploadUserPicture,
   verifyUser,
-  sendPasswordResetLink
+  sendPasswordResetLink,
+  resetPassword
 } = UserController;
 
 router.post('/register', signUpValidator, registerUser);
@@ -26,5 +27,6 @@ router.get('/', (req, res) => res.status(200).json({
   message: 'welcome to authors haven platform'
 }));
 router.post('/user/:username', sendPasswordResetLink);
+router.patch('/user/passwordreset', resetPassword);
 
 export default router;

@@ -18,7 +18,7 @@ describe('all unregistered routes', () => {
     request(app)
       .get('/*')
       .then((res) => {
-        expect(res.body.error.message).to.equal('Not Found');
+        expect(res.res.statusMessage).to.equal('Not Found');
         expect(res.status).to.equal(404);
       });
   });
