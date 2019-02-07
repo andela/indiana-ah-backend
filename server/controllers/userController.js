@@ -1,11 +1,15 @@
 /* eslint-disable valid-jsdoc */
 import { Op } from 'sequelize';
+import dotenv from 'dotenv';
+import sendGrid from '@sendgrid/mail';
 import models from '../db/models';
 import assignToken from '../helpers/assignJwtToken';
 import errorMessage from '../helpers/errorHelpers';
 import sendEmail from '../services/email';
 import JWTHelper from '../helpers/jwtHelper';
+import BaseHelper from '../helpers/baseHelper';
 
+dotenv.config();
 const { Users } = models;
 const { verifyToken } = JWTHelper;
 /**
@@ -13,7 +17,7 @@ const { verifyToken } = JWTHelper;
  *
  * @class UserController
  */
-class UserController {
+class UserController extends BaseHelper {
   /**
    *
    *
@@ -275,12 +279,78 @@ class UserController {
   /**
    *
    * @static getUserByEmail - the method that handles user password reset
+   * @static sendPasswordResetLink - the method that handles user password link email
    * @param {object} req - the request object
    * @param {object} res - the response object
    * @returns {object} user - the user object
    * @memberOf UserController class
    */
-  static async getUserByEmail(req, res) {
+  static async sendPasswordResetLink(req, res) {
+    try {
+      const dbUser = await Users.findOne({
+        where: { email: req.body.email },
+        returning: true
+      });
+      UserController.checkIfDataExist(req, res, dbUser, { message: 'This email is not registered in our system' });
+      const dbUserEmail = dbUser.email;
+      // define token payload and duration
+      const jwtKey = dbUser.password + process.env.JWT_SECRET;
+      const jwtDuration = { expiresIn: '1hrs' };
+      const payload = {
+        id: dbUser.id,
+        username: dbUser.username,
+        email: dbUserEmail
+      };
+      const token = assignToken(payload, jwtKey, jwtDuration);
+      const url = req.get('host');
+      const link = UserController.generateEmailLink(url, token);
+      // //  define email function parameters
+      // const subject = 'Password reset';
+      // const body = `<h1 style='color: Goldenrod' > Welcome to Author's Haven</h1><hr/>
+      //   <p>Please click this <a href=${link} ><b>link</b></a> to reset password</p>
+      // `;
+      // sendEmail(dbUserEmail, subject, body);
+      // return res.status(200).json({
+      // message: `A password reset link has been sent to ${dbUserEmail}.
+      // It will expire in one hour`
+      // });
+      sendGrid.setApiKey(process.env.SENDGRID_API_KEY);
+      const message = `<h1 style='color: Goldenrod' > Welcome to Author's Haven</h1><hr/>
+      <p>Please reset your Author's Haven password with this 
+      <a href=http://${link}>link</a></p>`;
+
+      const mailOptions = {
+        from: 'no-reply@AuthorsHavenAndela.com',
+        to: dbUserEmail,
+        subject: 'Authors\' Haven password reset',
+        html: message
+      };
+      sendGrid.send(mailOptions, (error, body) => {
+        if (error) {
+          return errorMessage(res, 400, 'Error sending mail, please try again');
+        }
+        if (body) {
+          return res.status(200).send({
+            message: `password reset link sent to ${dbUserEmail}, please check your email`
+          });
+        }
+      });
+    } catch (e) {
+      // error: `This is the error ${e}`
+      return errorMessage(res, 500, 'Server currently down');
+    }
+  }
+
+  /**
+   *
+   *
+   * @static getUserByEmail - the method that handles user password reset
+   * @param {object} req - the request object
+   * @param {object} res - the response object
+   * @returns {object} user - the user object
+   * @memberOf UserController class
+   */
+  static async resetPassword(req, res) {
     try {
       const dbUser = await Users.findOne({
         where: { email: req.body.email },
