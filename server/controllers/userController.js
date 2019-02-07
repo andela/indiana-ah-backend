@@ -117,7 +117,7 @@ class UserController {
     });
   }
 
-  /**
+/**
    *
    *
    * @static
@@ -270,6 +270,36 @@ class UserController {
       }
     }
     return errorMessage(res, 404, 'User not found');
+  }  
+
+  /**
+   *
+   *
+   * @static handleSocialAuth - the method that handles social authentication
+   * @param {string} accessToken
+   * @param {string} refreshToken
+   * @param {string} profile
+   * @param {function} done
+   *
+   * @memberOf UserController class
+   */
+  static async handleSocialAuth(accessToken, refreshToken, profile, done) {
+
+    try {
+      const [user] = await Users.findOrCreate({
+        where: { email: profile.emails[0].value },
+        defaults: {
+          name: profile.displayName,
+          username: profile.displayName.split(' ')[0].concat(profile.id),
+          password: '',
+          imageUrl: profile.photos[0].value,
+          isVerified: true
+        }
+      });
+      return done(null, user);
+    } catch (error) {
+      return done(error, null);
+    }
   }
 }
 
