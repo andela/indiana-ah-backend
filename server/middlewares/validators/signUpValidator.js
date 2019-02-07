@@ -2,22 +2,30 @@ import Joi from 'joi';
 import isAlphaNumeric from './isAplhaNumeric';
 import errorMessage from '../../helpers/errorHelpers';
 
-
 export default (req, res, next) => {
   const { username, email, password } = req.body;
 
+  // if (!password) {
+  //   return errorMessage(res, 400, 'Password should be provided');
+  // }
   if (password && !isAlphaNumeric(password)) {
     return errorMessage(res, 400, 'Password should be Alphanumeric');
   }
 
   const schema = {
-    username: Joi.string().min(3).required(),
-    password: Joi.string().alphanum().min(8),
-    email: Joi.string().email({ minDomainAtoms: 2 })
+    username: Joi.string()
+      .min(3)
+      .required(),
+    password: Joi.string()
+      .alphanum()
+      .min(8)
+      .required(),
+    email: Joi.string()
+      .email({ minDomainAtoms: 2 })
+      .required()
   };
 
-  const { error } = Joi.validate({ username, password, email, }, schema);
-
+  const { error } = Joi.validate({ username, password, email }, schema);
   if (!error) return next();
 
   const errorMessageFromJoi = error.details[0].message;

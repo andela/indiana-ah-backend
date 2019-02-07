@@ -1,3 +1,5 @@
+import bcrypt from 'bcrypt';
+
 export default (sequelize, DataTypes) => {
   const Users = sequelize.define(
     'Users',
@@ -47,8 +49,26 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN
       }
     },
-    {}
+    {
+      hooks: {
+        beforeCreate: async (user) => {
+          const saltRounds = 10;
+          user.dataValues.password = await bcrypt.hash(user.dataValues.password, saltRounds);
+          return user;
+        },
+        beforeUpdate: async (user) => {
+          const saltRounds = 10;
+          user.dataValues.password = await bcrypt.hash(user.dataValues.password, saltRounds);
+          return user;
+        }
+      }
+    }
   );
+
+  Users.prototype.validatePassword = function validatePassword(passwordInput) {
+    return bcrypt.compare(passwordInput, this.dataValues.password);
+  };
+
   Users.associate = ({
     Articles, Comments, Reactions, Follows, Bookmarks, Reports
   }) => {

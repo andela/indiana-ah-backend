@@ -28,6 +28,7 @@
 		"@sendgrid/mail": "^6.3.1",
 		"babel-core": "^7.0.0-bridge.0",
 		"babel-jest": "^24.0.0",
+		"bcrypt": "^3.0.3",
 		"body-parser": "^1.18.3",
 		"chai": "^4.2.0",
 		"chai-http": "^4.2.1",
