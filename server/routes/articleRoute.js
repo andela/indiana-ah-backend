@@ -7,6 +7,7 @@ import ArticleController from '../controllers/articleController';
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 const {
   createArticle, getAllArticles, updateArticle, getOneArticle
 } = ArticleController;
@@ -24,12 +25,18 @@ const {
   createArticle, getAllArticles, updateArticle, getOneArticle
 } = ArticleController;
 >>>>>>> feat: implement get a single article feature
+=======
+const {
+  createArticle, getAllArticles, updateArticle, getOneArticle
+} = ArticleController;
+>>>>>>> bb32f44b19a335674ae8598eca5a6feeac2f1b50
 
 const { authUser } = Auth;
 
 const router = Router();
 
 router.post('/', authUser, validateArticle, createArticle);
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 router.get('/', getAllArticles);
@@ -52,5 +59,10 @@ router.put('/:slug', authUser, updateArticle);
 >>>>>>> feat: writes test for article crud operations
 router.get('/:slug', getOneArticle);
 >>>>>>> feat: implement get a single article feature
+=======
+router.get('/', getAllArticles);
+router.put('/:slug', authUser, updateArticle);
+router.get('/:slug', getOneArticle);
+>>>>>>> bb32f44b19a335674ae8598eca5a6feeac2f1b50
 
 export default router;

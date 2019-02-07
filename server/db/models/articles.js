@@ -36,12 +36,7 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING
       },
       userId: {
-        type: DataTypes.UUID,
-        references: {
-          model: 'Users',
-          key: 'id',
-          as: 'userId'
-        }
+        type: DataTypes.UUID
       }
     },
     {}

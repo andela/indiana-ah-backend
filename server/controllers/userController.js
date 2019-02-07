@@ -32,7 +32,6 @@ class UserController {
           username,
           password
         }
-<<<<<<< HEAD
       }).spread(
         (
           {
@@ -64,31 +63,6 @@ class UserController {
               token
             });
         })
-=======
-      }).spread((user, created) => {
-        if (!created) {
-          return errorMessage(res, 409, 'this email or username already exists');
-        }
-        return user.get({
-          plain: true
-        });
-      });
-      const payload = {
-        id: response.id,
-        username: response.username,
-        email: response.email,
-        role: response.role,
-        isVerified: true
-      };
-      const token = assignToken(payload);
-      return res
-        .header('x-auth-token', token)
-        .status(201)
-        .json({
-          message: 'successfully registered to authors haven',
-          token
-        });
->>>>>>> feat: writes test for article crud operations
     } catch (e) {
       return errorMessage(res, 500, 'internal server error');
     }

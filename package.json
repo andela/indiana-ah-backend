@@ -107,10 +107,14 @@
 <<<<<<< HEAD
     "sequelize-test-helpers": "^1.0.7",
     "sinon": "^7.2.3",
+<<<<<<< HEAD
 =======
     "sequelize-slugify": "^0.6.1",
 >>>>>>> feat: implement create an article feature
 >>>>>>> feat: implement create an article feature
+=======
+    "sequelize-slugify": "^0.6.1",
+>>>>>>> bb32f44b19a335674ae8598eca5a6feeac2f1b50
     "supertest": "^3.4.2"
   },
   "devDependencies": {

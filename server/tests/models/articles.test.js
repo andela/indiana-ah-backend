@@ -1,8 +1,5 @@
 import {
-  sequelize,
-  dataTypes,
-  checkModelName,
-  checkPropertyExists
+  sequelize, dataTypes, checkModelName, checkPropertyExists
 } from 'sequelize-test-helpers';
 import { expect } from 'chai';
 
@@ -14,8 +11,9 @@ describe('..db/models/articles', () => {
   checkModelName(Article)('Articles');
   // check for attributes
   context('properties', () => {
-    ['id', 'articleTitle', 'articleBody', 'articleSlug', 'imageUrl', 'tag', 'userId']
-      .forEach(checkPropertyExists(article));
+    ['id', 'articleTitle', 'articleBody', 'slug', 'imageUrl', 'tags', 'userId'].forEach(
+      checkPropertyExists(article)
+    );
   });
   // test associations
   context('associations', () => {

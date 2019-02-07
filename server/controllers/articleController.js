@@ -111,6 +111,22 @@ class ArticleController {
       return next(e);
     }
   }
+
+  static async deleteArticle(req, res, next) {
+    try {
+      const { slug } = req.params;
+      const response = await Article.findOne({
+        where: { slug }
+      });
+      if (!response) return errorResponse(res, 404, 'Article not found');
+      await Article.destroy({
+        where: { slug }
+      });
+      return res.status(200).json({ message: 'Article successfully deleted' });
+    } catch (e) {
+      return next(e);
+    }
+  }
 }
 
 export default ArticleController;

@@ -9,20 +9,10 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.UUID
       },
       authorId: {
-        type: DataTypes.UUID,
-        references: {
-          model: 'Users',
-          key: 'id',
-          as: 'userId'
-        }
+        type: DataTypes.UUID
       },
       followerId: {
-        type: DataTypes.UUID,
-        references: {
-          model: 'Users',
-          key: 'id',
-          as: 'userId'
-        }
+        type: DataTypes.UUID
       }
     },
     {}

@@ -12,12 +12,12 @@ class JWTHelper {
    * @returns {Object} a user payload or an error
    */
   static verifyToken(token) {
-    if (!token) return null;
+    if (!token) return false;
     try {
       const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
       return decodedToken;
     } catch (e) {
-      return e;
+      if (e.name === 'JsonWebTokenError' || e.name === 'TokenExpiredError') return false;
     }
   }
 }
