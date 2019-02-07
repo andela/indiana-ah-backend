@@ -4,7 +4,7 @@
 	"description": "A Social platform for the creative at heart",
 	"main": "index.js",
 	"scripts": {
-		"test": "NODE_ENV=test npm run migrate:refresh && cross-env NODE_ENV=test nyc mocha --require @babel/register --require @babel/polyfill ./server/test/**/*.test.js --timeout 6000 --exit",
+		"test": "NODE_ENV=test npm run migrate:refresh && cross-env NODE_ENV=test nyc mocha --require @babel/register --require @babel/polyfill ./server/tests/**/*.test.js --timeout 6000 --exit",
 		"clean": "rm -rf build",
 		"build": "npm run clean && mkdir build && cd build && mkdir server && babel ./server  -s -d server",
 		"start": "npm run build && node --require @babel/register bin/dev",
@@ -44,6 +44,8 @@
 		"pg-hstore": "^2.3.2",
 		"sequelize": "^4.42.0",
 		"sequelize-cli": "^5.4.0",
+		"sequelize-test-helpers": "^1.0.7",
+		"sinon": "^7.2.3",
 		"supertest": "^3.4.2"
 	},
 	"devDependencies": {
