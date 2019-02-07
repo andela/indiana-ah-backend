@@ -7,7 +7,7 @@ export default (req, res, next) => {
   const { username, email, password } = req.body;
 
   if (password && !isAlphaNumeric(password)) {
-    return errorMessage(res, 400, 'Password Should be Alphanumeric');
+    return errorMessage(res, 400, 'Password should be Alphanumeric');
   }
 
   const schema = {
@@ -24,7 +24,7 @@ export default (req, res, next) => {
 
   switch (errorMessageFromJoi) {
     case '"username" is not allowed to be empty':
-      errorMessage(res, 400, 'No Username was specified');
+      errorMessage(res, 400, 'No username was specified');
       break;
     case '"username" must be a string':
       errorMessage(res, 400, 'Username must be a string');
@@ -39,7 +39,7 @@ export default (req, res, next) => {
       errorMessage(res, 400, 'Password length must be at least 8 characters long');
       break;
     case '"email" is not allowed to be empty':
-      errorMessage(res, 400, 'No Email was specified');
+      errorMessage(res, 400, 'No email was specified');
       break;
     case '"email" must be a valid email':
       errorMessage(res, 400, 'Email is not valid');

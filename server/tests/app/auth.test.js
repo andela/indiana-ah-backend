@@ -78,7 +78,7 @@ describe('all unregistered routes', () => {
 });
 
 describe('user registration', () => {
-  it('should fail on registration, since the email', () => request(app)
+  it('should fail on registration, since the  email field was not provided', () => request(app)
     .post('/api/v1/register')
     .set('content-type', 'application/json')
     .send(user2)
@@ -114,7 +114,7 @@ describe('Sign Up Validation', () => {
     .send(user3)
     .then((res) => {
       expect(res.status).to.equal(400);
-      expect(res.body.message).to.equal('No Username was specified');
+      expect(res.body.message).to.equal('No username was specified');
     }));
 
   it('should fail on registration, since the username is a string', () => request(app)
@@ -135,7 +135,7 @@ describe('Sign Up Validation', () => {
       expect(res.body.message).to.equal('Username must be at least 3 characters long');
     }));
 
-  it('should fail on registration, since the password field field was not provided', () => request(app)
+  it('should fail on registration, since the password field was not provided', () => request(app)
     .post('/api/v1/register')
     .set('content-type', 'application/json')
     .send(user6)
@@ -167,7 +167,7 @@ describe('Sign Up Validation', () => {
     .set('content-type', 'application/json')
     .send(user8)
     .then((res) => {
-      expect(res.body.message).to.equal('Password Should be Alphanumeric');
+      expect(res.body.message).to.equal('Password should be Alphanumeric');
       expect(res.statusCode).to.equal(400);
     }));
 
@@ -176,7 +176,7 @@ describe('Sign Up Validation', () => {
     .set('content-type', 'application/json')
     .send(user9)
     .then((res) => {
-      expect(res.body.message).to.equal('No Email was specified');
+      expect(res.body.message).to.equal('No email was specified');
       expect(res.statusCode).to.equal(400);
     }));
 
