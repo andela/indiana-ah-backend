@@ -13,7 +13,7 @@ const router = Router();
 
 router.post('/', authUser, validateArticle, createArticle);
 router.get('/', getAllArticles);
-router.put('/:slug', authUser, validateArticle, updateArticle);
+router.put('/:slug', authUser, updateArticle);
 router.get('/:slug', getOneArticle);
 
 export default router;

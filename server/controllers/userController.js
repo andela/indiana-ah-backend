@@ -62,8 +62,7 @@ class UserController {
               message: 'successfully registered to authors haven',
               token
             });
-        }
-      );
+        })
     } catch (e) {
       return errorMessage(res, 500, 'internal server error');
     }
