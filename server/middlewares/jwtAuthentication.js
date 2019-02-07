@@ -28,6 +28,7 @@ class Auth {
           res,
           401,
 <<<<<<< HEAD
+<<<<<<< HEAD
           'Access denied. You are not authorized to access this route'
         );
       }
@@ -41,6 +42,12 @@ class Auth {
 <<<<<<< HEAD
 >>>>>>> feat: implement create an article feature
 =======
+=======
+          'Access denied. You are not authorized to access this route'
+        );
+      }
+      if (!decodedToken.isVerified) return errorResponse(res, 403, 'Access denied. You are not a verified user');
+>>>>>>> feat: writes test for article crud operations
       req.user = decodedToken;
 >>>>>>> feat: implement get a single article feature
       next();

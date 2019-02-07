@@ -40,12 +40,16 @@ router.get('/:slug', getOneArticle);
 >>>>>>> feat: implement create an article feature
 =======
 router.get('/', getAllArticles);
+<<<<<<< HEAD
 >>>>>>> feat: implement get all articles feature
 =======
 router.put('/:slug', authUser, validateArticle, updateArticle);
 <<<<<<< HEAD
 >>>>>>> feat implement update an article feature
 =======
+=======
+router.put('/:slug', authUser, updateArticle);
+>>>>>>> feat: writes test for article crud operations
 router.get('/:slug', getOneArticle);
 >>>>>>> feat: implement get a single article feature
 
