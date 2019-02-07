@@ -13,21 +13,14 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+app.get('/', (req, res) => res.status(200).json({
+  message: 'welcome to authors haven platform'
+}));
+
 app.use('/api/v1', routes);
 
 // / catch 404 and forward to error handler
-app.use('*', (req, res, next) => {
-  const err = new Error('Not Found');
-  err.status = 404;
-  return next(err);
-});
-
-// error handler
-app.use((err, req, res) => res.status(err.status).json({
-  error: {
-    message: err.message
-  }
-}));
+app.use('*', (req, res) => res.status(404).json({ error: 'route does not exist' }));
 
 // finally, let's start our server...
 app.listen(PORT, () => {
