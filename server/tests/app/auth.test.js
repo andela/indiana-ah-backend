@@ -103,13 +103,41 @@ describe('user registration', () => {
       expect(res.body.message).to.equal('successfully registered to authors haven');
     }));
 
-  it('should fail if user exists', () => request(app)
+  it('should fail if user email and password exists', () => request(app)
     .post('/api/v1/register')
     .set('content-type', 'application/json')
     .send(user1)
     .then((res) => {
       expect(res.status).to.equal(409);
-      expect(res.body.message).to.equal('this email or username already exists');
+      expect(res.body.message).to.equal('this email and username already exists');
+    }));
+
+  it('should fail if user email exists', () => request(app)
+    .post('/api/v1/register')
+    .set('content-type', 'application/json')
+    .send({
+      username: 'baleee',
+      email: 'balee@gmail.com',
+      password: 'baleesecret'
+    })
+
+    .then((res) => {
+      expect(res.status).to.equal(409);
+      expect(res.body.message).to.equal('this email already exists');
+    }));
+
+  it('should fail if username exists', () => request(app)
+    .post('/api/v1/register')
+    .set('content-type', 'application/json')
+    .send({
+      username: 'balee',
+      email: 'baleee@gmail.com',
+      password: 'baleesecret'
+    })
+
+    .then((res) => {
+      expect(res.status).to.equal(409);
+      expect(res.body.message).to.equal('this username already exists');
     }));
 
   it('should login a user', () => request(app)

@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
  *
  * @class baseHelpers
  */
-class baseHelpers {
+class BaseHelpers {
   /**
    *
    *
@@ -43,4 +43,4 @@ class baseHelpers {
     }
   }
 }
-export default baseHelpers;
+export default BaseHelpers;
