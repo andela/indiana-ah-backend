@@ -42,9 +42,6 @@ class UserController {
           },
           created
         ) => {
-          if (!created && !isNewRecord && dbEmail === email && dbUsername === username) {
-            return errorMessage(res, 409, 'this email and username already exists');
-          }
           if (!created && !isNewRecord && dbEmail === email) {
             return errorMessage(res, 409, 'this email already exists');
           }
@@ -68,7 +65,7 @@ class UserController {
         }
       );
     } catch (e) {
-      errorMessage(res, 500, 'internal server error');
+      return errorMessage(res, 500, 'internal server error');
     }
   }
 

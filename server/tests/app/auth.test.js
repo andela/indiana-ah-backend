@@ -2,12 +2,6 @@ import request from 'supertest';
 import { expect } from 'chai';
 import app from '../../index';
 
-const user1 = {
-  username: 'balee',
-  email: 'balee@gmail.com',
-  password: 'baleesecret23'
-};
-
 const user2 = {
   username: 'balee',
   password: 'baleesecret23'
@@ -68,7 +62,7 @@ const user10 = {
 
 const user11 = {
   email: 'balee@gmail.com',
-  password: 'baleesecret'
+  password: 'baleesecret23'
 };
 
 describe('all unregistered routes', () => {
@@ -89,36 +83,31 @@ describe('user registration', () => {
     .set('content-type', 'application/json')
     .send(user2)
     .then((res) => {
-      expect(res.status).to.equal(500);
-      expect(res.body.message).to.equal('internal server error');
+      expect(res.status).to.equal(400);
+      expect(res.body.message).to.equal('"email" is required');
     }));
 
   it('should register new user', () => request(app)
     .post('/api/v1/register')
     .set('content-type', 'application/json')
-    .send(user1)
+    .send({
+      username: 'baleeqwqw',
+      email: 'balee@gmail.com',
+      password: 'baleesecret23'
+    })
 
     .then((res) => {
       expect(res.status).to.equal(201);
       expect(res.body.message).to.equal('successfully registered to authors haven');
     }));
 
-  it('should fail if user email and password exists', () => request(app)
-    .post('/api/v1/register')
-    .set('content-type', 'application/json')
-    .send(user1)
-    .then((res) => {
-      expect(res.status).to.equal(409);
-      expect(res.body.message).to.equal('this email and username already exists');
-    }));
-
   it('should fail if user email exists', () => request(app)
     .post('/api/v1/register')
     .set('content-type', 'application/json')
     .send({
-      username: 'baleee',
+      username: 'baleeqwqwt',
       email: 'balee@gmail.com',
-      password: 'baleesecret'
+      password: 'baleesecret23'
     })
 
     .then((res) => {
@@ -130,9 +119,9 @@ describe('user registration', () => {
     .post('/api/v1/register')
     .set('content-type', 'application/json')
     .send({
-      username: 'balee',
-      email: 'baleee@gmail.com',
-      password: 'baleesecret'
+      username: 'baleeqwqw',
+      email: 'baleeq@gmail.com',
+      password: 'baleesecret23'
     })
 
     .then((res) => {
@@ -184,8 +173,8 @@ describe('Sign Up Validation', () => {
     .set('content-type', 'application/json')
     .send(user6)
     .then((res) => {
-      expect(res.body.message).to.equal('error in registration');
-      expect(res.statusCode).to.equal(500);
+      expect(res.body.message).to.equal('"password" is required');
+      expect(res.statusCode).to.equal(400);
     }));
 
   it('should fail on registration, since the password field is empty', () => request(app)
