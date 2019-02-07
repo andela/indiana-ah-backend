@@ -321,7 +321,7 @@ class UserController extends BaseHelper {
         }
         if (body) {
           return res.status(200).send({
-            message: `password reset link sent to ${dbUserEmail}, please check your email`
+            message: `password reset link sent to ${dbUserEmail}, please check your email`, token
           });
         }
       });
@@ -343,6 +343,9 @@ class UserController extends BaseHelper {
   static async resetPassword(req, res) {
     const token = req.header('x-auth-token');
     const decodedToken = JWTHelper.verifyToken(token);
+    if (decodedToken === false) {
+      return errorMessage(res, 401, 'unauthorised!!');
+    }
     try {
       const { password } = req.body;
       const response = await Users.update({ password }, {
