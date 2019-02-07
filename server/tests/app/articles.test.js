@@ -1,23 +1,9 @@
 import request from 'supertest';
 import { expect } from 'chai';
-import app from '../index';
-
-const invalidArticle = {
-  articleTitle: '',
-  articleBody: 'uwuuwuwwuywuuiwiwiwwiiwiwiiiwiwiwiiw',
-  tags: ''
-};
-
-const validArticle = {
-  articleTitle: 'dddkdddkdjdjjd',
-  articleBody: 'djdjjdjdjjdjdjjdjdjdjjdjdjjjd'
-};
-
-const user = {
-  username: 'ozone4real',
-  email: 'ezenwa9000@gmail.com',
-  password: 'baleesecret'
-};
+import app from '../../index';
+import {
+  invalidArticle, validArticle, articleForUpdate, user
+} from './mockData/articlesMockData';
 
 let userToken;
 let articleSlug;
@@ -28,7 +14,6 @@ describe('Create an Article', () => {
     .send(user)
     .then((res) => {
       userToken = res.body.token;
-      console.log(userToken);
     }));
 
   it('should return a unauthorized response message if the user provides an invalid or expired token', () => request(app)
@@ -97,4 +82,22 @@ describe('Get one article', () => {
     }));
 });
 
-// describe('Update an article');
+describe('Update an article', () => {
+  it('should return a not found error if an article requested for update was not found', () => request(app)
+    .put('/api/v1/articles/yeah-yeah-yeah')
+    .set('x-auth-token', userToken)
+    .send(articleForUpdate)
+    .then((res) => {
+      expect(res.status).to.equal(404);
+      expect(res.body.message).to.equal('Article requested for update not found');
+    }));
+
+  it('should update the article if found', () => request(app)
+    .put(`/api/v1/articles/${articleSlug}`)
+    .set('x-auth-token', userToken)
+    .send(articleForUpdate)
+    .then((res) => {
+      expect(res.status).to.equal(200);
+      expect(res.body.article).to.be.an('object');
+    }));
+});
