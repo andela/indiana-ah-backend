@@ -35,45 +35,43 @@ class UserController {
           username,
           password
         }
-      }).spread(
-        (
-          {
-            _options: { isNewRecord },
-            dataValues: {
-              username: dbUsername, email: dbEmail, id, role
-            }
-          },
-          created
-        ) => {
-          if (!created && !isNewRecord && dbEmail === email) {
-            return errorMessage(res, 409, 'this email already exists');
+      }).spread((
+        {
+          _options: { isNewRecord },
+          dataValues: {
+            username: dbUsername, email: dbEmail, id, role
           }
-          if (!created && !isNewRecord && dbUsername === username) {
-            return errorMessage(res, 409, 'this username already exists');
-          }
-          const payload = {
-            id,
-            username: dbUsername,
-            email: dbEmail,
-            role
-          };
-          const token = assignToken(payload);
-          const location = req.get('host');
-          const link = `${location}/api/v1/user/verified?token=${token}`;
-          const message = `<h1 style='color: Goldenrod' > Welcome to Author's Haven</h1><hr/>
+        },
+        created
+      ) => {
+        if (!created && !isNewRecord && dbEmail === email) {
+          return errorMessage(res, 409, 'this email already exists');
+        }
+        if (!created && !isNewRecord && dbUsername === username) {
+          return errorMessage(res, 409, 'this username already exists');
+        }
+        const payload = {
+          id,
+          username: dbUsername,
+          email: dbEmail,
+          role
+        };
+        const token = assignToken(payload);
+        const location = req.get('host');
+        const link = `${location}/api/v1/user/verified?token=${token}`;
+        const message = `<h1 style='color: Goldenrod' > Welcome to Author's Haven</h1><hr/>
           <p>Please click this link to verify your Author's Haven account
           <a href=${link}>link</a></p>`;
 
-          sendEmail(email, 'Verify your Email', message);
-          return res
-            .header('x-auth-token', token)
-            .status(201)
-            .json({
-              message: 'successfully registered to authors haven',
-              token
-            });
-        }
-      );
+        sendEmail(email, 'Verify your Email', message);
+        return res
+          .header('x-auth-token', token)
+          .status(201)
+          .json({
+            message: 'successfully registered to authors haven',
+            token
+          });
+      });
     } catch (e) {
       return errorMessage(res, 500, 'internal server error');
     }

@@ -84,9 +84,7 @@ describe('Edit user profile', () => {
     .send(data)
     .then((res) => {
       expect(res.status).to.equal(401);
-      expect(res.body.message).to.equal(
-        'Access denied. You are not authorized to access this route'
-      );
+      expect(res.body.message).to.equal('Access denied. You are not authorized to access this route');
     }));
   it('should return updated user profile if user is authenticated and verwhenied', () => request(app)
     .patch('/api/v1/profiles/balee/update')
@@ -128,9 +126,7 @@ describe('Edit user picture', () => {
     .send(data)
     .then((res) => {
       expect(res.status).to.equal(401);
-      expect(res.body.message).to.equal(
-        'Access denied. You are not authorized to access this route'
-      );
+      expect(res.body.message).to.equal('Access denied. You are not authorized to access this route');
     }));
   it('should return updated user picture if user is authenticated and verified', () => request(app)
     .patch('/api/v1/profiles/image')
