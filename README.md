@@ -35,11 +35,11 @@ The preferred JSON object to be returned by the API should be structured as foll
 {
   "profile": {
     "name": "Jake Ryan",
-    "username": "jake",	    "username": "jake",
+    "username": "jake",
     "email": "jakeryan@gmail.com",
-    "bio": "I work at statefarm",	    "bio": "I work at statefarm",
-    "image": "image-link",	    "imageUrl": "image-link",
-    "following": false	    "createdAt": "2019-02-06"
+    "bio": "I work at statefarm",
+    "imageUrl": "image-link",
+    "createdAt": "2019-02-06"
   }	  
 }	
 ```
