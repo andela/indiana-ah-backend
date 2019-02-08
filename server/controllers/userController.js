@@ -58,21 +58,20 @@ class UserController {
         };
         const token = assignToken(payload);
         const location = req.get('host');
-        const link = `${location}/api/v1/user/verified?token=${token}`;
+        const link = `${location}/api/v1/user/verify?token=${token}`;
         const message = `<h1 style='color: Goldenrod' > Welcome to Author's Haven</h1><hr/>
           <p>Please click this link to verify your Author's Haven account
           <a href=${link}>link</a></p>`;
-
         sendEmail(email, 'Verify your Author\'s haven account', message);
         return res
           .header('x-auth-token', token)
           .status(201)
           .json({
-            message: 'Successfully registered to Authors haven. Kindly check your Email to verify your account',
+            message: 'Successfully registered to Authors haven. Kindly check your email to verify your account',
             token
           });
       });
-    } catch (e) {
+    } catch (error) {
       return errorMessage(res, 500, 'internal server error');
     }
   }
@@ -185,7 +184,7 @@ class UserController {
           profile: user.dataValues
         });
       });
-    } catch (e) {
+    } catch (error) {
       errorMessage(res, 500, 'Internal server error');
     }
   }
@@ -221,7 +220,7 @@ class UserController {
           avatar: updatedUser.imageUrl
         });
       });
-    } catch (e) {
+    } catch (error) {
       errorMessage(res, 500, 'Internal server error');
     }
   }
@@ -238,38 +237,41 @@ class UserController {
   static async editUserProfile(req, res) {
     const {
       name,
-      username,
       bio,
       password
     } = req.body;
-    const { id } = req.user;
+    const user = req.params.username;
+    const { id, username } = req.user;
 
     const profile = await Users.findOne({
-      where: { id }
+      where: { id, username: user }
     });
-    try {
-      await Users.update(
-        {
-          name: name || profile.dataValues.name,
-          username: username || profile.dataValues.username,
-          bio: bio || profile.dataValues.bio,
-          password: password || profile.dataValues.password
-        },
-        {
-          where: { id },
-          returning: true
-        }
-      ).then(([updatedRows, [updatedUser]]) => {
-        if (!updatedRows) {
-          return errorMessage(res, 404, 'User not found');
-        }
-        return res.status(200).json({
-          profile: updatedUser
+    if (profile) {
+      try {
+        await Users.update(
+          {
+            name: name || profile.dataValues.name,
+            username: username || profile.dataValues.username,
+            bio: bio || profile.dataValues.bio,
+            password: password || profile.dataValues.password
+          },
+          {
+            where: { id },
+            returning: true
+          }
+        ).then(([updatedRows, [updatedUser]]) => {
+          if (!updatedRows) {
+            return errorMessage(res, 404, 'User not found');
+          }
+          return res.status(200).json({
+            profile: updatedUser
+          });
         });
-      });
-    } catch (e) {
-      errorMessage(res, 500, 'Internal server error');
+      } catch (error) {
+        errorMessage(res, 500, 'Internal server error');
+      }
     }
+    return errorMessage(res, 404, 'User not found');
   }
 }
 

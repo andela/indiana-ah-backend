@@ -86,8 +86,8 @@ describe('Edit user profile', () => {
       expect(res.status).to.equal(401);
       expect(res.body.message).to.equal('Access denied. You are not authorized to access this route');
     }));
-  it('should return updated user profile if user is authenticated and verwhenied', () => request(app)
-    .patch('/api/v1/profiles/balee/update')
+  it('should return updated user profile if user is authenticated and verified', () => request(app)
+    .patch('/api/v1/profiles/cim/update')
     .set('x-auth-token', secondToken)
     .send(data)
     .then((res) => {
@@ -95,28 +95,20 @@ describe('Edit user profile', () => {
       expect(res.body.profile).to.be.an('object');
     }));
   it('should return an error when invalid ID passed', () => request(app)
-    .patch('/api/v1/profiles/balee/update')
+    .patch('/api/v1/profiles/tiku/update')
     .set('x-auth-token', falseToken)
     .send(data)
     .then((res) => {
       expect(res.status).to.equal(404);
       expect(res.body.message).to.equal('User not found');
     }));
-  it('should return an error when bad data is passed', () => request(app)
-    .patch('/api/v1/profiles/balee/update')
-    .set('x-auth-token', falseToken)
+  it('should return an error when invalid username is passed', () => request(app)
+    .patch('/api/v1/profiles/king/update')
+    .set('x-auth-token', secondToken)
     .send(mockData)
     .then((res) => {
-      expect(res.status).to.equal(500);
-      expect(res.body.message).to.equal('Internal server error');
-    }));
-  it('should return an error if JWT malfunctioned', () => request(app)
-    .patch('/api/v1/profiles/balee/update')
-    .set('x-auth-token', falseToken)
-    .send(mockData)
-    .then((res) => {
-      expect(res.status).to.equal(500);
-      expect(res.body.message).to.equal('Internal server error');
+      expect(res.status).to.equal(404);
+      expect(res.body.message).to.equal('User not found');
     }));
 });
 

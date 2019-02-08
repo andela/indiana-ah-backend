@@ -58,7 +58,7 @@ export default (sequelize, DataTypes) => {
         },
         beforeBulkUpdate: async (user) => {
           const saltRounds = 10;
-          if (user.password) {
+          if (user.attributes.password) {
             user.attributes.password = await bcrypt.hash(user.attributes.password, saltRounds);
           }
           return user;
