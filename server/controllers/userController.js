@@ -5,6 +5,7 @@ import assignToken from '../helpers/assignJwtToken';
 import errorMessage from '../helpers/errorHelpers';
 import sendEmail from '../services/email';
 import JWTHelper from '../helpers/jwtHelper';
+import BaseHelpers from '../helpers/baseHelpers';
 
 const { Users } = models;
 const { verifyToken } = JWTHelper;
@@ -284,14 +285,14 @@ class UserController {
    * @memberOf UserController class
    */
   static async handleSocialAuth(accessToken, refreshToken, profile, done) {
-
+    const userPassword = await BaseHelpers.hashPassword(profile.id);
     try {
       const [user] = await Users.findOrCreate({
         where: { email: profile.emails[0].value },
         defaults: {
           name: profile.displayName,
           username: profile.displayName.split(' ')[0].concat(profile.id),
-          password: '',
+          password: userPassword,
           imageUrl: profile.photos[0].value,
           isVerified: true
         }
