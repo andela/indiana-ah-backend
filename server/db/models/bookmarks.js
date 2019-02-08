@@ -15,7 +15,7 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.UUID
       }
     },
-    {}
+    { paranoid: true }
   );
   Bookmarks.associate = ({ Users, Articles }) => {
     Bookmarks.belongsTo(Users, {

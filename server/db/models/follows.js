@@ -15,7 +15,7 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.UUID
       }
     },
-    {}
+    { paranoid: true }
   );
   Follows.associate = ({ Users }) => {
     Follows.belongsTo(Users, {

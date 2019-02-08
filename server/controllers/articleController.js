@@ -112,14 +112,22 @@ class ArticleController {
     }
   }
 
+  /**
+   * @description controller method for deleting an article
+   * @static
+   * @param {object} req Request object
+   * @param {object} res Response object
+   * @param {Function} next passes control to the next middleware
+   * @returns {Object} a response object
+   */
   static async deleteArticle(req, res, next) {
     try {
       const { slug } = req.params;
-      const response = await Article.findOne({
+      const response = await Articles.findOne({
         where: { slug }
       });
       if (!response) return errorResponse(res, 404, 'Article not found');
-      await Article.destroy({
+      await Articles.destroy({
         where: { slug }
       });
       return res.status(200).json({ message: 'Article successfully deleted' });

@@ -19,43 +19,15 @@ class Auth {
     try {
       const token = req.header('x-auth-token');
       const decodedToken = verifyToken(token);
-      if (
-        !decodedToken
-        || decodedToken.name === 'JsonWebTokenError'
-        || decodedToken.name === 'TokenExpiredError'
-      ) {
+      if (!decodedToken) {
         return errorResponse(
           res,
           401,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> bb32f44b19a335674ae8598eca5a6feeac2f1b50
           'Access denied. You are not authorized to access this route'
         );
       }
       if (!decodedToken.isVerified) return errorResponse(res, 403, 'Access denied. You are not a verified user');
       req.user = decodedToken;
-<<<<<<< HEAD
-=======
-          'Access denied. You are not authorized to acceess this route'
-        );
-      }
-      if (!decodedToken.isVerfied) return errorResponse(res, 403, 'Access denied. You are not a verified user');
-<<<<<<< HEAD
->>>>>>> feat: implement create an article feature
-=======
-=======
-          'Access denied. You are not authorized to access this route'
-        );
-      }
-      if (!decodedToken.isVerified) return errorResponse(res, 403, 'Access denied. You are not a verified user');
->>>>>>> feat: writes test for article crud operations
-      req.user = decodedToken;
->>>>>>> feat: implement get a single article feature
-=======
->>>>>>> bb32f44b19a335674ae8598eca5a6feeac2f1b50
       next();
     } catch (e) {
       return next(e);

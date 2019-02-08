@@ -18,7 +18,7 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING
       }
     },
-    {}
+    { paranoid: true }
   );
   Reactions.associate = ({ Users, Articles }) => {
     Reactions.belongsTo(Users, {

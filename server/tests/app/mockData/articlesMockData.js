@@ -15,8 +15,15 @@ export const articleForUpdate = {
   tags: 'yes, no, true'
 };
 
-export const user = {
+export const user1 = {
   username: 'ozone4real',
   email: 'ezenwa9000@gmail.com',
-  password: 'baleesecret'
+  password: 'baleesecret48',
+  isVerified: true
+};
+
+export const user2 = {
+  username: 'Dainty',
+  email: 'dainty1@gmail.com',
+  password: 'chika4life4real'
 };
