@@ -63,7 +63,7 @@ class UserController {
           <p>Please click this link to verify your Author's Haven account
           <a href=${link}>link</a></p>`;
 
-        sendEmail(email, 'Verify your Email', message);
+        sendEmail(email, 'Verify your Author\'s haven account', message);
         return res
           .header('x-auth-token', token)
           .status(201)
