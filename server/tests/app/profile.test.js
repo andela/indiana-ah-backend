@@ -51,7 +51,7 @@ before(() => {
     });
 });
 describe('user verification', () => {
-  it("should verify a user's account", () => request(app)
+  it('should verify a user\'s account', () => request(app)
     .patch(`/api/v1/user/verify?token=${firstToken}`)
     .then((res) => {
       secondToken = res.body.token;
@@ -69,7 +69,7 @@ describe('user profile', () => {
       expect(res.body.message).to.equal('User not found');
     }));
 
-  it("should return the user's profile when a valid username is provided", () => request(app)
+  it('should return the user\'s profile when a valid username is provided', () => request(app)
     .get('/api/v1/profiles/cim')
     .set('x-auth-token', secondToken)
     .then((res) => {
