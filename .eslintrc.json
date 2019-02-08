@@ -15,6 +15,7 @@
     "comma-dangle": 0,
     "function-paren-newline": ["error", "multiline"],
     "curly": ["error", "multi-line"],
+    "quotes": ["error", "single"],
     "import/no-unresolved": [2, { "commonjs": true }],
     "no-shadow": ["error", { "allow": ["req", "res", "err"] }],
     "valid-jsdoc": [
