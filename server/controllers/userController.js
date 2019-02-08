@@ -285,14 +285,14 @@ class UserController extends BaseHelper {
    * @memberOf UserController class
    */
   static async handleSocialAuth(accessToken, refreshToken, profile, done) {
-
+    const userPassword = await BaseHelper.hashPassword(profile.id);
     try {
       const [user] = await Users.findOrCreate({
         where: { email: profile.emails[0].value },
         defaults: {
           name: profile.displayName,
           username: profile.displayName.split(' ')[0].concat(profile.id),
-          password: '',
+          password: userPassword,
           imageUrl: profile.photos[0].value,
           isVerified: true
         }
