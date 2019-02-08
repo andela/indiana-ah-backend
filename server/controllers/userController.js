@@ -68,7 +68,7 @@ class UserController {
           .header('x-auth-token', token)
           .status(201)
           .json({
-            message: 'successfully registered to authors haven',
+            message: 'Successfully registered to Authors haven. Kindly check your Email to verify your account',
             token
           });
       });
