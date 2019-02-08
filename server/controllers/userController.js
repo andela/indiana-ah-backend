@@ -344,7 +344,7 @@ class UserController extends BaseHelper {
     const token = req.header('x-auth-token');
     const decodedToken = JWTHelper.verifyToken(token);
     if (decodedToken === false) {
-      return errorMessage(res, 401, 'unauthorised!!');
+      return errorMessage(res, 401, 'This link is invalid or expired!!');
     }
     try {
       const { password } = req.body;

@@ -45,6 +45,6 @@ describe('Password reset funcionality for users', () => {
     .send(user1)
     .then((res) => {
       expect(res.statusCode).to.equal(401);
-      expect(res.body.message).to.equal('unauthorised!!');
+      expect(res.body.message).to.equal('This link is invalid or expired!!');
     }));
 });
