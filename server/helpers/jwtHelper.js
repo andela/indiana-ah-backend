@@ -16,8 +16,8 @@ class JWTHelper {
     try {
       const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
       return decodedToken;
-    } catch (e) {
-      if (e.name === 'JsonWebTokenError' || e.name === 'TokenExpiredError') return false;
+    } catch (error) {
+      if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') return false;
     }
   }
 }

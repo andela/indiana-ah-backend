@@ -24,8 +24,8 @@ class ArticleController {
       req.body.userId = userId;
       const article = await Articles.create(req.body);
       return res.status(201).json({ article });
-    } catch (e) {
-      return next(e);
+    } catch (error) {
+      return next(error);
     }
   }
 
@@ -52,8 +52,8 @@ class ArticleController {
       });
       if (!articles[0]) return errorResponse(res, 404, 'No articles found');
       return res.status(200).json({ articles });
-    } catch (e) {
-      return next(e);
+    } catch (error) {
+      return next(error);
     }
   }
 
@@ -74,8 +74,8 @@ class ArticleController {
       });
       if (!articles[0]) return errorResponse(res, 404, 'No articles found for user');
       return res.status(200).json({ articles });
-    } catch (e) {
-      return next(e);
+    } catch (error) {
+      return next(error);
     }
   }
 
@@ -99,8 +99,8 @@ class ArticleController {
       if (response[0] === 0) return errorResponse(res, 404, 'Article requested for update not found');
       const article = response[1][0];
       return res.status(200).json({ message: 'Article successfully updated', article });
-    } catch (e) {
-      return next(e);
+    } catch (error) {
+      return next(error);
     }
   }
 
@@ -129,8 +129,8 @@ class ArticleController {
       });
       if (!article) return errorResponse(res, 404, 'Article not found');
       return res.status(200).json({ article });
-    } catch (e) {
-      return next(e);
+    } catch (error) {
+      return next(error);
     }
   }
 
@@ -153,8 +153,8 @@ class ArticleController {
         where: { slug }
       });
       return res.status(200).json({ message: 'Article successfully deleted' });
-    } catch (e) {
-      return next(e);
+    } catch (error) {
+      return next(error);
     }
   }
 }

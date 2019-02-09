@@ -64,7 +64,9 @@ class UserController {
             });
         }
       );
-    } catch (e) {
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(`error upon registering  ${error}`);
       return errorMessage(res, 500, 'internal server error');
     }
   }
