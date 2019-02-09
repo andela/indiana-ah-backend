@@ -129,6 +129,16 @@ describe('Update an article', () => {
     }));
 });
 
+describe('Get all articles for a particular user', () => {
+  it('should get all the articles written by a particular user', () => request(app)
+    .get('/api/v1/articles/user')
+    .set('x-auth-token', verifiedToken)
+    .then((res) => {
+      expect(res.status).to.equal(200);
+      expect(res.body.articles).to.be.an('array');
+    }));
+});
+
 describe('Delete an article', () => {
   it('should return a not found error if an article requested for delete was not found', () => request(app)
     .delete('/api/v1/articles/yeah-yeah-yeah')

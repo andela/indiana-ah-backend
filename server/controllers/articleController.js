@@ -50,7 +50,29 @@ class ArticleController {
           { model: Reactions }
         ]
       });
-      if (articles.length === 0) return errorResponse(res, 404, 'No articles found');
+      if (!articles[0]) return errorResponse(res, 404, 'No articles found');
+      return res.status(200).json({ articles });
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  /**
+   * @description controller method for fetching all articles for a particular user
+   * @static
+   * @param {object} req Request object
+   * @param {object} res Response object
+   * @param {Function} next passes control to the next middleware
+   * @returns {Object} a response object
+   */
+  static async getAllUserArticles(req, res, next) {
+    try {
+      const { id: userId } = req.user;
+      const articles = await Articles.findAll({
+        where: { userId },
+        include: [{ model: Comments }, { model: Reactions }]
+      });
+      if (!articles[0]) return errorResponse(res, 404, 'No articles found for user');
       return res.status(200).json({ articles });
     } catch (e) {
       return next(e);

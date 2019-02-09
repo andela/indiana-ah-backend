@@ -8,6 +8,7 @@ const {
   getAllArticles,
   updateArticle,
   getOneArticle,
+  getAllUserArticles,
   deleteArticle
 } = ArticleController;
 
@@ -17,8 +18,9 @@ const router = Router();
 
 router.post('/', authUser, validateArticle, createArticle);
 router.get('/', getAllArticles);
+router.get('/user', authUser, getAllUserArticles);
 router.put('/:slug', authUser, updateArticle);
 router.get('/:slug', getOneArticle);
-router.delete('/:slug', deleteArticle);
+router.delete('/:slug', authUser, deleteArticle);
 
 export default router;
