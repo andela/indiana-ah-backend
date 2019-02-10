@@ -26,7 +26,8 @@ router.patch('/profiles/image', jwtAuth.authUser, parser.single('image'), upload
 router.get('/', (req, res) => res.status(200).json({
   message: 'welcome to authors haven platform'
 }));
-router.post('/user/forgot', sendPasswordResetLink);
+router.post('/user/forgotpassword', sendPasswordResetLink);
 router.patch('/user/passwordreset', resetPassword);
+router.put('/user/verify', verifyUser);
 
 export default router;

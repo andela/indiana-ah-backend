@@ -18,13 +18,12 @@ const { verifyToken } = JWTHelper;
  */
 class UserController extends BaseHelper {
   /**
-   *
-   *
-   * @static registerUser - the method that handles user registration
-   * @param {object} req - the request object
-   * @param {object} res - the response object
-   *
-   * @memberOf UserController class
+   * @description controller method for creating an article
+   * @static
+   * @param {object} req Request object
+   * @param {object} res Response object
+   * @param {Function} next passes control to the next middleware
+   * @returns {Object} a response object
    */
   static async registerUser(req, res) {
     const { username, email, password } = req.body;
@@ -125,20 +124,20 @@ class UserController extends BaseHelper {
    *
    *
    * @static
-   * @param {any} req - the request object from the body
-   * @param {any} res - the response object sent back to the client
-   *
-   * @memberOf UserController
+   * @param {object} req Request object
+   * @param {object} res Response object
+   * @param {Function} next passes control to the next middleware
+   * @returns {Object} a response object
    */
   static async loginUser(req, res) {
     const { email, password } = req.body;
     try {
       const newUser = await Users.findOne({
         where: { email },
-        attributes: ['name', 'username', 'email', 'password', 'role', 'isVerified', 'id']
+        attributes: ['name', 'username', 'email', 'password', 'role', 'isVerified']
       });
       const {
-        email: dbEmail, username, name, role, isVerified, id
+        email: dbEmail, username, name, role, isVerified
       } = newUser;
       const decodedPassword = await newUser.validatePassword(password);
       if (dbEmail && decodedPassword) {
@@ -147,8 +146,7 @@ class UserController extends BaseHelper {
           username,
           name,
           role,
-          isVerified,
-          id
+          isVerified
         };
         const token = assignToken(payload);
         return res

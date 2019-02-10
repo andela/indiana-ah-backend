@@ -15,7 +15,7 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.UUID
       },
       commentBody: {
-        allowNull: true,
+        allowNull: false,
         type: DataTypes.STRING
       }
     },

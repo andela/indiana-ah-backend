@@ -2,6 +2,7 @@ import { Router } from 'express';
 import Auth from '../middlewares/jwtAuthentication';
 import validateArticle from '../middlewares/validators/articleValidator';
 import ArticleController from '../controllers/articleController';
+import CommentController from '../controllers/commentController';
 
 const {
   createArticle,
@@ -11,6 +12,8 @@ const {
   getAllUserArticles,
   deleteArticle
 } = ArticleController;
+
+const { commentAnArticle } = CommentController;
 
 const { authUser } = Auth;
 
@@ -22,5 +25,8 @@ router.get('/user/:username', getAllUserArticles);
 router.put('/:slug/update', authUser, updateArticle);
 router.get('/:slug', getOneArticle);
 router.delete('/:slug/delete', authUser, deleteArticle);
+
+router.post('/:slug/comments', authUser, commentAnArticle);
+
 
 export default router;
