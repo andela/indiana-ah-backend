@@ -40,9 +40,7 @@ describe('Create an Article', () => {
     .send(validArticle)
     .then((res) => {
       expect(res.status).to.equal(401);
-      expect(res.body.message).to.equal(
-        'Access denied. You are not authorized to access this route'
-      );
+      expect(res.body.message).to.equal('Access denied. You are not authorized to access this route');
     }));
 
   it('should return a unauthorized response message if no token was provided', () => request(app)
@@ -50,9 +48,7 @@ describe('Create an Article', () => {
     .send(validArticle)
     .then((res) => {
       expect(res.status).to.equal(401);
-      expect(res.body.message).to.equal(
-        'Access denied. You are not authorized to access this route'
-      );
+      expect(res.body.message).to.equal('Access denied. You are not authorized to access this route');
     }));
 
   it('should return a forbidden response message if the user is not verified', () => request(app)
@@ -111,7 +107,7 @@ describe('Get one article', () => {
 
 describe('Update an article', () => {
   it('should return a not found error if an article requested for update was not found', () => request(app)
-    .put('/api/v1/articles/yeah-yeah-yeah')
+    .put('/api/v1/articles/yeah-yeah-yea/update')
     .set('x-auth-token', verifiedToken)
     .send(articleForUpdate)
     .then((res) => {
@@ -120,7 +116,7 @@ describe('Update an article', () => {
     }));
 
   it('should update an article requested for update if found', () => request(app)
-    .put(`/api/v1/articles/${articleSlug}`)
+    .put(`/api/v1/articles/${articleSlug}/update`)
     .set('x-auth-token', verifiedToken)
     .send(articleForUpdate)
     .then((res) => {
@@ -141,7 +137,7 @@ describe('Get all articles for a particular user', () => {
 
 describe('Delete an article', () => {
   it('should return a not found error if an article requested for delete was not found', () => request(app)
-    .delete('/api/v1/articles/yeah-yeah-yeah')
+    .delete('/api/v1/articles/yeah-yeah-yeah/delete')
     .set('x-auth-token', verifiedToken)
     .then((res) => {
       expect(res.status).to.equal(404);
@@ -149,7 +145,7 @@ describe('Delete an article', () => {
     }));
 
   it('should delete an article requested to be deleted if found', () => request(app)
-    .delete(`/api/v1/articles/${articleSlug}`)
+    .delete(`/api/v1/articles/${articleSlug}/delete`)
     .set('x-auth-token', verifiedToken)
     .then((res) => {
       expect(res.status).to.equal(200);
