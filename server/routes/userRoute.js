@@ -23,11 +23,7 @@ router.patch('/profiles/:username/update', jwtAuth.authUser, editUserProfile);
 router.patch('/user/verify', verifyUser);
 router.patch('/profiles/image', jwtAuth.authUser, parser.single('image'), uploadUserPicture);
 
-router.get('/', (req, res) => res.status(200).json({
-  message: 'welcome to authors haven platform'
-}));
 router.post('/user/forgotpassword', sendPasswordResetLink);
 router.patch('/user/passwordreset', resetPassword);
-router.put('/user/verify', verifyUser);
 
 export default router;
