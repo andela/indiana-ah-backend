@@ -56,9 +56,11 @@ export default (sequelize, DataTypes) => {
           user.dataValues.password = await bcrypt.hash(user.dataValues.password, saltRounds);
           return user;
         },
-        beforeUpdate: async (user) => {
+        beforeBulkUpdate: async (user) => {
           const saltRounds = 10;
-          user.dataValues.password = await bcrypt.hash(user.dataValues.password, saltRounds);
+          if (user.attributes.password) {
+            user.attributes.password = await bcrypt.hash(user.attributes.password, saltRounds);
+          }
           return user;
         }
       }

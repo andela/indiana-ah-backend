@@ -98,7 +98,7 @@ describe('user registration', () => {
 
     .then((res) => {
       expect(res.status).to.equal(201);
-      expect(res.body.message).to.equal('successfully registered to authors haven');
+      expect(res.body.message).to.equal('Successfully registered to Authors haven. Kindly check your email to verify your account');
     }));
 
   it('should fail if user email exists', () => request(app)

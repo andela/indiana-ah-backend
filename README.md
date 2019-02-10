@@ -34,12 +34,14 @@ The preferred JSON object to be returned by the API should be structured as foll
 ```source-json
 {
   "profile": {
+    "name": "Jake Ryan",
     "username": "jake",
+    "email": "jakeryan@gmail.com",
     "bio": "I work at statefarm",
-    "image": "image-link",
-    "following": false
-  }
-}
+    "imageUrl": "image-link",
+    "createdAt": "2019-02-06"
+  }	  
+}	
 ```
 
 ### Single Article
@@ -227,37 +229,37 @@ Required fields: `email`, `username`, `password`
 
 Authentication required, returns a User that's the current user
 
-### Update User
+### Update User Profile
 
-`PUT /api/user`
+`PATCH api/v1/profiles/:username/update`
 
 Example request body:
 
 ```source-json
-{
+{	
   "user":{
-    "email": "jake@jake.jake",
-    "bio": "I like to skateboard",
-    "image": "https://i.stack.imgur.com/xHWG8.jpg"
-  }
-}
+  "name": "Cim News",
+  "bio": "I like to skateboard",
+  "username": "cim"
+  }	
+}	
 ```
 
-Authentication required, returns the User
+Authentication required, returns the Updated User
 
-Accepted fields: `email`, `username`, `password`, `image`, `bio`
+Accepted fields: `name`, `username`, `bio`
 
 ### Get Profile
 
-`GET /api/profiles/:username`
+`GET /api/v1/profiles/:username`
 
-Authentication optional, returns a Profile
+ Authentication required, returns a Profile
 
-### Follow user
+ ### Update Picture
 
-`POST /api/profiles/:username/follow`
+ `PATCH api/v1/profiles/image`
 
-Authentication required, returns a Profile
+Authentication required, returns an updated Picture
 
 No additional parameters required
 

@@ -4,9 +4,9 @@ import errorResponse from '../helpers/errorHelpers';
 const { verifyToken } = JWTHelper;
 
 /**
- * @description a collection of middlewares for user/admin authentication and authorisation
- * @class Auth
- */
+* @description a collection of middlewares for user/admin authentication and authorisation
+* @class Auth
+*/
 class Auth {
   /**
    * @description middleware for authenticating and authorising a user
