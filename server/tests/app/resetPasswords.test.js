@@ -12,7 +12,7 @@ const user1 = {
 };
 describe('Send reset password link to user', () => {
   it('should return http status code 404 if a user does not exist', () => request(app)
-    .post('/api/v1/user/omenkish')
+    .post('/api/v1/user/forgot')
     .set('content-type', 'application/json')
     .send(user)
     .then((res) => {
@@ -20,7 +20,7 @@ describe('Send reset password link to user', () => {
       expect(res.body.message).to.equal('This email is not registered in our system');
     }));
   it('should return status code 200 if mail is sent', () => request(app)
-    .post('/api/v1/user/omenkish')
+    .post('/api/v1/user/forgot')
     .set('content-type', 'application/json')
     .send(user1)
     .then((res) => {
