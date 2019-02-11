@@ -1,5 +1,6 @@
 import express from 'express';
 import passport from 'passport';
+import UserController from '../controllers/userController';
 
 const router = express.Router();
 
@@ -8,11 +9,7 @@ router.get('/google', passport.authenticate('google', { scope: ['profile', 'emai
 router.get(
   '/google/callback',
   passport.authenticate('google', { session: false, failureRedirect: '/login' }),
-  (req, res) => {
-    // git console.log('*****reqUser***', req.user);
-    // Successful authentication, redirect to home.
-    res.redirect('/');
-  }
+  UserController.socialAuthRedirect
 );
 
 router.get('/facebook', passport.authenticate('facebook', { scope: ['email'] }));
@@ -23,10 +20,7 @@ router.get(
     session: false,
     failureRedirect: '/login'
   }),
-  (req, res) => {
-    // Successful authentication, redirect to home.
-    res.redirect('/');
-  }
+  UserController.socialAuthRedirect
 );
 
 router.get('/twitter', passport.authenticate('twitter'));
@@ -34,9 +28,6 @@ router.get('/twitter', passport.authenticate('twitter'));
 router.get(
   '/twitter/callback',
   passport.authenticate('twitter', { session: false, failureRedirect: '/login' }),
-  (req, res) => {
-    // Successful authentication, redirect to home.
-    res.redirect('/api/v1');
-  }
+  UserController.socialAuthRedirect
 );
 export default router;

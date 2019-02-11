@@ -118,7 +118,7 @@ class UserController {
     });
   }
 
-/**
+  /**
    *
    *
    * @static
@@ -271,12 +271,12 @@ class UserController {
       }
     }
     return errorMessage(res, 404, 'User not found');
-  }  
+  }
 
   /**
    *
    *
-   * @static handleSocialAuth - the method that handles social authentication
+   * @static handleSocialAuth - the method that saves socially authenticated user's data into the database
    * @param {string} accessToken
    * @param {string} refreshToken
    * @param {string} profile
@@ -285,15 +285,19 @@ class UserController {
    * @memberOf UserController class
    */
   static async handleSocialAuth(accessToken, refreshToken, profile, done) {
+    // console.log('***profile***', profile);
+    const {
+      id, emails, displayName, photos
+    } = profile;
     const userPassword = await BaseHelpers.hashPassword(profile.id);
     try {
       const [user] = await Users.findOrCreate({
-        where: { email: profile.emails[0].value },
+        where: { email: emails[0].value },
         defaults: {
-          name: profile.displayName,
-          username: profile.displayName.split(' ')[0].concat(profile.id),
+          name: displayName,
+          username: displayName.split(' ')[0].concat(id),
           password: userPassword,
-          imageUrl: profile.photos[0].value,
+          imageUrl: photos[0].value,
           isVerified: true
         }
       });
@@ -301,6 +305,30 @@ class UserController {
     } catch (error) {
       return done(error, null);
     }
+  }
+
+  /**
+   *
+   * @description Redirects socially authenticated users and returns a token
+   * @static
+   * @param {*} req
+   * @param {*} res
+   * @returns {object} Json Resonse
+   * @memberof UserController
+   */
+  static async socialAuthRedirect(req, res) {
+    const {
+      username, email, name, role, isVerified
+    } = req.user.dataValues;
+    const payload = {
+      email,
+      username,
+      name,
+      role,
+      isVerified
+    };
+    const token = assignToken(payload);
+    return res.redirect(`/?token=${token}`);
   }
 }
 

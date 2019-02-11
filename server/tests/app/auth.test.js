@@ -1,6 +1,23 @@
 import request from 'supertest';
-import { expect } from 'chai';
+import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
+import chai, { expect } from 'chai';
 import app from '../../index';
+import UserController from '../../controllers/userController';
+
+chai.use(sinonChai);
+
+const socialUser = {
+  id: '108288014452561062871',
+  displayName: 'Divinelove Chukwuemeka',
+  emails: [{ value: 'divinelove.chukwuemeka@andela.com', type: 'account' }],
+  photos: [
+    {
+      value:
+        'https://lh6.googleusercontent.com/-oI45jeLioco/AAAAAAAAAAI/AAAAAAAAAAA/ACevoQNPvTdoQs-JQ7dFLjzGy7erCjHlLw/mo/photo.jpg?sz=50'
+    }
+  ]
+};
 
 const user2 = {
   username: 'balee',
@@ -224,21 +241,9 @@ describe('Sign Up Validation', () => {
 });
 
 describe('Social authentication', () => {
-  it('should register a new user with a google account', () => request(app)
-    .get('/auth/google')
-    .then((res) => {
-      expect(res.status).to.equal(302);
-    }));
-
-  it('should register a new user with a facebook account', () => request(app)
-    .get('/auth/facebook')
-    .then((res) => {
-      expect(res.status).to.equal(302);
-    }));
-
-  it('should register a new user with a google account', () => request(app)
-    .get('/auth/twitter')
-    .then((res) => {
-      expect(res.status).to.equal(302);
-    }));
+  const callBack = sinon.spy();
+  it('should save a socially authenticated users data into the database', async () => {
+    await UserController.handleSocialAuth(null, null, socialUser, callBack);
+    expect(callBack.called).to.equal(true);
+  });
 });

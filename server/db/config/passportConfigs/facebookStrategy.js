@@ -1,10 +1,9 @@
 import dotenv from 'dotenv';
+import { Strategy as FacebookStrategy } from 'passport-facebook';
 
 import UserController from '../../../controllers/userController';
 
 dotenv.config();
-
-const FacebookStrategy = require('passport-facebook').Strategy;
 
 const facebook = (passport) => {
   passport.use(

@@ -37,6 +37,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// passport.use(google);
 app.use('/auth', auth);
 app.use('/api/v1', routes);
 

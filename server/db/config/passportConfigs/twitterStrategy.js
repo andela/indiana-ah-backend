@@ -1,14 +1,13 @@
 import dotenv from 'dotenv';
+import { Strategy as TwitterStrategy } from 'passport-twitter';
 
 import UserController from '../../../controllers/userController';
 
 dotenv.config();
 
-const twitterStrategy = require('passport-twitter').Strategy;
-
 const twitter = (passport) => {
   passport.use(
-    new twitterStrategy(
+    new TwitterStrategy(
       {
         consumerKey: process.env.twitterClientID,
         consumerSecret: process.env.twitterClientSecret,

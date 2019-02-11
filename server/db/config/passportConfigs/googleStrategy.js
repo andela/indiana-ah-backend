@@ -1,10 +1,9 @@
 import dotenv from 'dotenv';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 
 import UserController from '../../../controllers/userController';
 
 dotenv.config();
-
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 const google = (passport) => {
   passport.use(
@@ -20,4 +19,9 @@ const google = (passport) => {
   );
 };
 
+// const mockStrategy = new MockStrategy('google', UserController.handleSocialAuth);
+
+// const availableStrategy = process.env.NODE_ENV === 'test' ? mockStrategy : google;
+
+// export default availableStrategy;
 export default google;
