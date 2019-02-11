@@ -97,7 +97,7 @@ describe('Get one article', () => {
       expect(res.body.message).to.equal('Article not found');
     }));
 
-  it('should get an if the article exists', () => request(app)
+  it('should get an article if it exists', () => request(app)
     .get(`/api/v1/articles/${articleSlug}`)
     .then((res) => {
       expect(res.status).to.equal(200);
@@ -126,9 +126,15 @@ describe('Update an article', () => {
 });
 
 describe('Get all articles for a particular user', () => {
+  it('should return a not found response if the user was not found', () => request(app)
+    .get('/api/v1/articles/user/piriri')
+    .then((res) => {
+      expect(res.status).to.equal(404);
+      expect(res.body.message).to.equal('User not found');
+    }));
+
   it('should get all the articles written by a particular user', () => request(app)
-    .get('/api/v1/articles/user')
-    .set('x-auth-token', verifiedToken)
+    .get('/api/v1/articles/user/ozone4real')
     .then((res) => {
       expect(res.status).to.equal(200);
       expect(res.body.articles).to.be.an('array');

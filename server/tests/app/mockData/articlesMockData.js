@@ -23,7 +23,7 @@ export const user1 = {
 };
 
 export const user2 = {
-  username: 'Dainty',
+  username: 'dainty',
   email: 'dainty1@gmail.com',
   password: 'chika4life4real'
 };

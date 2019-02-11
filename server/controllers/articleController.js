@@ -67,7 +67,10 @@ class ArticleController {
    */
   static async getAllUserArticles(req, res, next) {
     try {
-      const { id: userId } = req.user;
+      const { username } = req.params;
+      const user = await Users.findOne({ where: { username } });
+      if (!user) return errorResponse(res, 404, 'User not found');
+      const { id: userId } = user;
       const articles = await Articles.findAll({
         where: { userId },
         include: [{ model: Comments }, { model: Reactions }]

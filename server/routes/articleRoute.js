@@ -18,7 +18,7 @@ const router = Router();
 
 router.post('/', authUser, validateArticle, createArticle);
 router.get('/', getAllArticles);
-router.get('/user', authUser, getAllUserArticles);
+router.get('/user/:username', getAllUserArticles);
 router.put('/:slug/update', authUser, updateArticle);
 router.get('/:slug', getOneArticle);
 router.delete('/:slug/delete', authUser, deleteArticle);
