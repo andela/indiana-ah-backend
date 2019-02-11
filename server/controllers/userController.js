@@ -308,7 +308,7 @@ class UserController extends BaseHelper {
       sendGrid.setApiKey(process.env.SENDGRID_API_KEY);
       const message = `<h1 style='color: Goldenrod' > Welcome to Author's Haven</h1><hr/>
       <p>Please reset your Author's Haven password with this 
-      <a href=http://${link}>link</a></p>`;
+      <a href=${link}>link</a></p>`;
 
       const mailOptions = {
         from: 'no-reply@AuthorsHavenAndela.com',
