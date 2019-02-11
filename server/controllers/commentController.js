@@ -15,7 +15,7 @@ class CommentController {
    * @param {object} res Response object
    * @returns {Object} a response object
    */
-  static async commentAnArticle(req, res) {
+  static async articleComment(req, res) {
     try {
       const { slug } = req.params;
       const { id: userId } = req.user;

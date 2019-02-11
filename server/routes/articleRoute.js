@@ -13,7 +13,7 @@ const {
   deleteArticle
 } = ArticleController;
 
-const { commentAnArticle } = CommentController;
+const { articleComment } = CommentController;
 
 const { authUser } = Auth;
 
@@ -26,7 +26,7 @@ router.put('/:slug/update', authUser, updateArticle);
 router.get('/:slug', getOneArticle);
 router.delete('/:slug/delete', authUser, deleteArticle);
 
-router.post('/:slug/comments', authUser, commentAnArticle);
+router.post('/:slug/comments', authUser, articleComment);
 
 
 export default router;
