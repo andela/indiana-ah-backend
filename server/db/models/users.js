@@ -50,6 +50,7 @@ export default (sequelize, DataTypes) => {
       }
     },
     {
+      paranoid: true,
       hooks: {
         beforeCreate: async (user) => {
           const saltRounds = 10;
