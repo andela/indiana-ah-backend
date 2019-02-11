@@ -67,11 +67,13 @@ class UserController {
           .header('x-auth-token', token)
           .status(201)
           .json({
-            message: 'Successfully registered to Authors haven. Kindly check your email to verify your account',
+            message:
+                'Successfully registered to Authors haven. Kindly check your email to verify your account',
             token
           });
       });
     } catch (error) {
+      console.log(`error upon registering  ${error}`);
       return errorMessage(res, 500, 'internal server error');
     }
   }
@@ -161,14 +163,14 @@ class UserController {
   }
 
   /**
-  *
-  *
-  * @static getUserProfile - the method that handles getting user profile
-  * @param {object} req - the request object
-  * @param {object} res - the response object
-  *
-  * @memberOf UserController class
-  */
+   *
+   *
+   * @static getUserProfile - the method that handles getting user profile
+   * @param {object} req - the request object
+   * @param {object} res - the response object
+   *
+   * @memberOf UserController class
+   */
   static async getUserProfile(req, res) {
     const { username } = req.params;
     try {
@@ -227,20 +229,16 @@ class UserController {
   }
 
   /**
-  *
-  *
-  * @static editUserProfile - the method that handles editing a user profile
-  * @param {object} req - the request object
-  * @param {object} res - the response object
-  *
-  * @memberOf UserController class
-  */
+   *
+   *
+   * @static editUserProfile - the method that handles editing a user profile
+   * @param {object} req - the request object
+   * @param {object} res - the response object
+   *
+   * @memberOf UserController class
+   */
   static async editUserProfile(req, res) {
-    const {
-      name,
-      bio,
-      password
-    } = req.body;
+    const { name, bio, password } = req.body;
     const user = req.params.username;
     const { id, username } = req.user;
 
