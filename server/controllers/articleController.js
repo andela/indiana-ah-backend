@@ -50,7 +50,7 @@ class ArticleController {
           { model: Reactions }
         ]
       });
-      if (!articles[0]) return errorResponse(res, 404, 'No articles found');
+      if (!articles.length) return errorResponse(res, 404, 'No articles found');
       return res.status(200).json({ articles });
     } catch (error) {
       return next(error);
@@ -75,7 +75,7 @@ class ArticleController {
         where: { userId },
         include: [{ model: Comments }, { model: Reactions }]
       });
-      if (!articles[0]) return errorResponse(res, 404, 'No articles found for user');
+      if (!articles.length) return errorResponse(res, 404, 'No articles found for user');
       return res.status(200).json({ articles });
     } catch (error) {
       return next(error);
