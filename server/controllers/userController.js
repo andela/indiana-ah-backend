@@ -197,7 +197,6 @@ class UserController extends BaseHelper {
 
   /**
    *
-   *
    * @static uploadUserPicture - the method that handles editing user picture
    * @param {object} req - the request object
    * @param {object} res - the response object
@@ -227,6 +226,7 @@ class UserController extends BaseHelper {
         });
       });
     } catch (error) {
+      // console.log(error);
       errorMessage(res, 500, 'Internal server error');
     }
   }
@@ -262,9 +262,10 @@ class UserController extends BaseHelper {
             returning: true
           }
         ).then(([updatedRows, [updatedUser]]) => {
-          if (!updatedRows) {
-            return errorMessage(res, 404, 'User not found');
-          }
+          // if (!updatedRows) {
+          //   return errorMessage(res, 404, 'User not found');
+          // }
+          UserController.checkIfDataExist(req, res, updatedRows, { message: 'User not found' });
           return res.status(200).json({
             profile: updatedUser
           });
@@ -325,7 +326,7 @@ class UserController extends BaseHelper {
           });
         }
       });
-    } catch (e) {
+    } catch (error) {
       // error: `This is the error ${e}`
       return errorMessage(res, 500, 'Server currently down');
     }
