@@ -73,7 +73,6 @@ class UserController {
           });
       });
     } catch (error) {
-      console.log(`error upon registering  ${error}`);
       return errorMessage(res, 500, 'internal server error');
     }
   }
