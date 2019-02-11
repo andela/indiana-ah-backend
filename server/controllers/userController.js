@@ -1,7 +1,6 @@
 /* eslint-disable valid-jsdoc */
 import { Op } from 'sequelize';
 import dotenv from 'dotenv';
-import sendGrid from '@sendgrid/mail';
 import models from '../db/models';
 import assignToken from '../helpers/assignJwtToken';
 import errorMessage from '../helpers/errorHelpers';
@@ -289,38 +288,26 @@ class UserController extends BaseHelper {
         returning: true
       });
       UserController.checkIfDataExist(req, res, dbUser, { message: 'This email is not registered in our system' });
-      const dbUserEmail = dbUser.email;
+      const { id, username } = dbUser;
       // define token payload and duration
       const jwtKey = process.env.JWT_SECRET;
       const jwtDuration = { expiresIn: '1hrs' };
       const payload = {
-        id: dbUser.id,
-        username: dbUser.username,
-        email: dbUserEmail
+        id,
+        username,
+        email
       };
       const token = assignToken(payload, jwtKey, jwtDuration);
       const url = req.get('host');
+      // define sendEmail parameter list
       const link = UserController.generateEmailLink(url, token);
-      sendGrid.setApiKey(process.env.SENDGRID_API_KEY);
-      const message = `<h1 style='color: Goldenrod' > Welcome to Author's Haven</h1><hr/>
+      const subject = 'Authors\' Haven password reset';
+      const message = `<h1 style='color: Goldenrod' > Password Reset </h1><hr/>
       <p>Please reset your Author's Haven password with this 
-      <a href=${link}>link</a></p>`;
-
-      const mailOptions = {
-        from: 'no-reply@AuthorsHavenAndela.com',
-        to: dbUserEmail,
-        subject: 'Authors\' Haven password reset',
-        html: message
-      };
-      sendGrid.send(mailOptions, (error, body) => {
-        if (error) {
-          return errorMessage(res, 400, 'Error sending mail, please try again');
-        }
-        if (body) {
-          return res.status(200).send({
-            message: `password reset link sent to ${dbUserEmail}, please check your email`, token
-          });
-        }
+      <a href=${link}>link</a>. This link will expire after <b>one hour</b></p>`;
+      sendEmail(email, subject, message);
+      return res.status(200).send({
+        message: `password reset link sent to ${email}, please check your email`, token
       });
     } catch (error) {
       return errorMessage(res, 500, 'Server currently down');
@@ -339,7 +326,7 @@ class UserController extends BaseHelper {
   static async resetPassword(req, res) {
     const token = req.header('x-auth-token');
     const decodedToken = JWTHelper.verifyToken(token);
-    if (decodedToken === false) {
+    if (!decodedToken) {
       return errorMessage(res, 401, 'This link is invalid or expired!!');
     }
     try {
