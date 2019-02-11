@@ -276,7 +276,8 @@ class UserController {
   /**
    *
    *
-   * @static handleSocialAuth - the method that saves socially authenticated user's data into the database
+   * @static handleSocialAuth - the method that saves socially /
+   * authenticated user's data into the database
    * @param {string} accessToken
    * @param {string} refreshToken
    * @param {string} profile

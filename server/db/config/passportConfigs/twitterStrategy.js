@@ -6,18 +6,16 @@ import UserController from '../../../controllers/userController';
 dotenv.config();
 
 const twitter = (passport) => {
-  passport.use(
-    new TwitterStrategy(
-      {
-        consumerKey: process.env.twitterClientID,
-        consumerSecret: process.env.twitterClientSecret,
-        callbackURL: 'http://localhost:5000/auth/twitter/callback',
-        includeEmail: true,
-        proxy: true
-      },
-      UserController.handleSocialAuth
-    )
-  );
+  passport.use(new TwitterStrategy(
+    {
+      consumerKey: process.env.TWITTER_CLIENT_ID,
+      consumerSecret: process.env.TWITTER_CLIENT_SECRET,
+      callbackURL: 'http://localhost:5000/auth/twitter/callback',
+      includeEmail: true,
+      proxy: true
+    },
+    UserController.handleSocialAuth
+  ));
 };
 
 export default twitter;
