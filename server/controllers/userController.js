@@ -226,7 +226,6 @@ class UserController extends BaseHelper {
         });
       });
     } catch (error) {
-      // console.log(error);
       errorMessage(res, 500, 'Internal server error');
     }
   }
@@ -262,9 +261,6 @@ class UserController extends BaseHelper {
             returning: true
           }
         ).then(([updatedRows, [updatedUser]]) => {
-          // if (!updatedRows) {
-          //   return errorMessage(res, 404, 'User not found');
-          // }
           UserController.checkIfDataExist(req, res, updatedRows, { message: 'User not found' });
           return res.status(200).json({
             profile: updatedUser
@@ -279,8 +275,7 @@ class UserController extends BaseHelper {
 
   /**
    *
-   * @static getUserByEmail - the method that handles user password reset
-   * @static sendPasswordResetLink - the method that handles user password link email
+   * @static sendPasswordResetLink - method to send password reset link to user
    * @param {object} req - the request object
    * @param {object} res - the response object
    * @returns {object} user - the user object
@@ -288,8 +283,9 @@ class UserController extends BaseHelper {
    */
   static async sendPasswordResetLink(req, res) {
     try {
+      const { email } = req.body;
       const dbUser = await Users.findOne({
-        where: { email: req.body.email },
+        where: { email },
         returning: true
       });
       UserController.checkIfDataExist(req, res, dbUser, { message: 'This email is not registered in our system' });
@@ -327,7 +323,6 @@ class UserController extends BaseHelper {
         }
       });
     } catch (error) {
-      // error: `This is the error ${e}`
       return errorMessage(res, 500, 'Server currently down');
     }
   }

@@ -10,19 +10,9 @@ export default (sequelize, DataTypes) => {
       },
       articleId: {
         type: DataTypes.INTEGER,
-        references: {
-          model: 'Articles',
-          key: 'id',
-          as: 'articleId'
-        }
       },
       userId: {
         type: DataTypes.UUID,
-        references: {
-          model: 'Users',
-          key: 'id',
-          as: 'userId'
-        }
       }
     },
     { paranoid: true }
