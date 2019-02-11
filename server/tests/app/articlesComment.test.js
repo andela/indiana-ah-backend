@@ -16,7 +16,7 @@ before(async () => request(app)
   }));
 
 describe('Create an Article for comment', () => {
-  it('create an article if the user passes authentication', () => request(app)
+  it('Should create an article if the user passes authentication', () => request(app)
     .post('/api/v1/articles')
     .set('x-auth-token', verifiedToken)
     .send(validArticle)
@@ -28,7 +28,7 @@ describe('Create an Article for comment', () => {
 });
 
 describe('Get one article', () => {
-  it('should get an if the article exists', () => request(app)
+  it('Should get an article if the article exists', () => request(app)
     .get(`/api/v1/articles/${articleSlug}`)
     .then((res) => {
       articleId = res.body.article.id;
@@ -37,20 +37,20 @@ describe('Get one article', () => {
     }));
 });
 
-describe('User Comment an article', () => {
-  it('It should show article does not exist if slug is invalid', () => request(app)
+describe('User comments on an article', () => {
+  it('Should show article does not exist if slug is invalid', () => request(app)
     .post(`/api/v1/articles/${wrongArticleSlug}/comments`)
     .set('x-auth-token', verifiedToken)
-    .send({ commentBody: 'THIs is making sense part 2', articleId })
+    .send({ commentBody: 'This is making sense part 2', articleId })
     .then((res) => {
       expect(res.status).to.equal(404);
       expect(res.body.message).to.equal('Article not found');
     }));
 
-  it('A verified user should be able to comment on an article', () => request(app)
+  it('Should allow a verified user comment on an article', () => request(app)
     .post(`/api/v1/articles/${articleSlug}/comments`)
     .set('x-auth-token', verifiedToken)
-    .send({ commentBody: 'THIs is making sense part 2', articleId })
+    .send({ commentBody: 'This is making sense part 2', articleId })
     .then((res) => {
       expect(res.status).to.equal(201);
       expect(res.body.message).to.equal('Comment has been posted successfully');
