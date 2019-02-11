@@ -1,7 +1,7 @@
 export const invalidArticle = {
   articleTitle: '',
   articleBody: 'uwuuwuwwuywuuiwiwiwwiiwiwiiiwiwiwiiw',
-  tags: ''
+  tags: ['yes', 'yes', 'good']
 };
 
 export const validArticle = {
@@ -12,7 +12,7 @@ export const validArticle = {
 export const articleForUpdate = {
   articleTitle: 'How I got into Andela',
   articleBody: 'djdjjdjdjjdjdjjdjdjdjjdjdjjjd',
-  tags: 'yes, no, true'
+  tags: ['yes', 'no', 'true']
 };
 
 export const user1 = {

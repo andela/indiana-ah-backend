@@ -134,10 +134,10 @@ class UserController extends BaseHelper {
     try {
       const newUser = await Users.findOne({
         where: { email },
-        attributes: ['name', 'username', 'email', 'password', 'role', 'isVerified']
+        attributes: ['name', 'username', 'email', 'password', 'role', 'isVerified', 'id']
       });
       const {
-        email: dbEmail, username, name, role, isVerified
+        email: dbEmail, username, name, role, isVerified, id
       } = newUser;
       const decodedPassword = await newUser.validatePassword(password);
       if (dbEmail && decodedPassword) {
@@ -146,7 +146,8 @@ class UserController extends BaseHelper {
           username,
           name,
           role,
-          isVerified
+          isVerified,
+          id
         };
         const token = assignToken(payload);
         return res

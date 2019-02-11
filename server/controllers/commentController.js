@@ -1,4 +1,5 @@
 import models from '../db/models';
+import errorMessage from '../helpers/errorHelpers';
 
 const { Comments, Articles } = models;
 
@@ -20,18 +21,17 @@ class CommentController {
       const { slug } = req.params;
 
       const { id: userId } = req.user;
-
       req.body.userId = userId;
-      if (!userId) {
-        return res.status(404).json({
-          success: false,
-          message: 'User does not exist'
-        });
-      }
       const article = await Articles.findOne({
         where: { slug },
         returning: true
       });
+      if (!article) {
+        return res.status(404).json({
+          success: false,
+          message: 'Article not found'
+        });
+      }
       req.body.articleId = article.dataValues.id;
 
       const Articlecomments = await Comments.create(req.body);
@@ -41,8 +41,8 @@ class CommentController {
         data: Articlecomments
       });
     } catch (e) {
-      return res.status(404).json({ message: 'Articles does not exist' });
-    } 
+      return errorMessage(res, 500, 'internal server error');
+    }
   }
 }
 
