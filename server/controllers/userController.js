@@ -61,7 +61,8 @@ class UserController extends BaseHelper {
         };
         const token = assignToken(payload);
         const location = req.get('host');
-        const link = `${location}/api/v1/user/verify?token=${token}`;
+        const url = '/api/v1/user/verify';
+        const link = UserController.generateEmailLink(location, url, token);
         const message = `<h1 style='color: Goldenrod' > Welcome to Author's Haven</h1><hr/>
           <p>Please click this link to verify your Author's Haven account
           <a href=${link}>link</a></p>`;
@@ -298,9 +299,10 @@ class UserController extends BaseHelper {
         email
       };
       const token = assignToken(payload, jwtKey, jwtDuration);
-      const url = req.get('host');
+      const location = req.get('host');
+      const url = '/api/v1/user/passwordreset';
       // define sendEmail parameter list
-      const link = UserController.generateEmailLink(url, token);
+      const link = UserController.generateEmailLink(location, url, token);
       const subject = 'Authors\' Haven password reset';
       const message = `<h1 style='color: Goldenrod' > Password Reset </h1><hr/>
       <p>Please reset your Author's Haven password with this 

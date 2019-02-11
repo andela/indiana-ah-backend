@@ -4,12 +4,13 @@
 class BaseHelper {
 /**
  *
- * @param { string } url
+ * @param { string } location
+ * @param {string} url
  * @param {string} token
  * @returns {string} link
  */
-  static generateEmailLink(url, token) {
-    const link = `${url}/api/v1/user/passwordreset?query=${token}`;
+  static generateEmailLink(location, url, token) {
+    const link = `${location}${url}?query=${token}`;
     return link;
   }
 
