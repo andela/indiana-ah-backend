@@ -24,7 +24,6 @@ describe('Send reset password link to user', () => {
     .set('content-type', 'application/json')
     .send(user1)
     .then((res) => {
-      // console.log('============>', res.body);
       token = res.body;
       expect(res.statusCode).to.equal(200);
       expect(res.body.message).to.equal(`password reset link sent to ${user1.email}, please check your email`);
