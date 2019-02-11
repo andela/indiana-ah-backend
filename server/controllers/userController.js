@@ -330,9 +330,10 @@ class UserController extends BaseHelper {
       return errorMessage(res, 401, 'This link is invalid or expired!!');
     }
     try {
+      const { email } = decodedToken;
       const { password } = req.body;
       const response = await Users.update({ password }, {
-        where: { email: decodedToken.email },
+        where: { email },
         returning: true
       });
       const updatedUser = response[1][0];
