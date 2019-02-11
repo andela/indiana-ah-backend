@@ -18,15 +18,15 @@ export default {
       allowNull: true,
       type: Sequelize.STRING
     },
-    numberOfRead: {
+    numberOfReads: {
       allowNull: false,
       type: Sequelize.INTEGER
     },
-    articleSlug: {
+    slug: {
       allowNull: false,
       type: Sequelize.STRING
     },
-    tag: {
+    tags: {
       allowNull: true,
       type: Sequelize.STRING
     },
@@ -45,6 +45,9 @@ export default {
     },
     updatedAt: {
       allowNull: false,
+      type: Sequelize.DATE
+    },
+    deletedAt: {
       type: Sequelize.DATE
     }
   }),

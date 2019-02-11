@@ -1,3 +1,5 @@
+import SequelizeSlugify from 'sequelize-slugify';
+
 export default (sequelize, DataTypes) => {
   const Articles = sequelize.define(
     'Articles',
@@ -20,36 +22,35 @@ export default (sequelize, DataTypes) => {
         allowNull: true,
         type: DataTypes.STRING
       },
-      numberOfRead: {
+      numberOfReads: {
         allowNull: false,
         defaultValue: 0,
         type: DataTypes.INTEGER
       },
-      articleSlug: {
-        allowNull: false,
+      slug: {
+        unique: true,
         type: DataTypes.STRING
       },
-      tag: {
+      tags: {
         allowNull: true,
         type: DataTypes.STRING
       },
       userId: {
-        type: DataTypes.UUID,
-        references: {
-          model: 'Users',
-          key: 'id',
-          as: 'userId'
-        }
+        type: DataTypes.UUID
       }
     },
-    {}
+    { paranoid: true }
   );
+  SequelizeSlugify.slugifyModel(Articles, {
+    source: ['articleTitle']
+  });
   Articles.associate = ({
     Users, Comments, Reactions, Reports, Bookmarks
   }) => {
     Articles.belongsTo(Users, {
       foreignKey: 'userId',
-      onDelete: 'CASCADE'
+      onDelete: 'CASCADE',
+      as: 'author'
     });
     Articles.hasMany(Comments, {
       foreignKey: 'articleId'

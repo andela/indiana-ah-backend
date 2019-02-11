@@ -30,7 +30,7 @@ class Auth {
       req.user = decodedToken;
       next();
     } catch (error) {
-      return next(error);
+      return errorResponse(res, 500, 'internal server error');
     }
   }
 }

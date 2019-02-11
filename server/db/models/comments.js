@@ -9,27 +9,17 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.UUID
       },
       userId: {
-        type: DataTypes.UUID,
-        references: {
-          model: 'Users',
-          key: 'id',
-          as: 'userId'
-        }
+        type: DataTypes.UUID
       },
       articleId: {
-        type: DataTypes.UUID,
-        references: {
-          model: 'Articles',
-          key: 'id',
-          as: 'articleId'
-        }
+        type: DataTypes.UUID
       },
       commentBody: {
         allowNull: true,
         type: DataTypes.STRING
       }
     },
-    {}
+    { paranoid: true }
   );
   Comments.associate = (models) => {
     Comments.belongsTo(models.Users, {

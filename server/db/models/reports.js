@@ -9,27 +9,17 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.UUID
       },
       userId: {
-        type: DataTypes.UUID,
-        references: {
-          model: 'Users',
-          key: 'id',
-          as: 'userId'
-        }
+        type: DataTypes.UUID
       },
       articleId: {
-        type: DataTypes.UUID,
-        references: {
-          model: 'Articles',
-          key: 'id',
-          as: 'articleId'
-        }
+        type: DataTypes.UUID
       },
       reportBody: {
         allowNull: false,
         type: DataTypes.STRING
       }
     },
-    {}
+    { paranoid: true }
   );
   Reports.associate = ({ Articles, Users }) => {
     Reports.belongsTo(Articles, {

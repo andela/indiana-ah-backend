@@ -9,26 +9,16 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.UUID
       },
       articleId: {
-        type: DataTypes.UUID,
-        references: {
-          model: 'Articles',
-          key: 'id',
-          as: 'articleId'
-        }
+        type: DataTypes.UUID
       },
       userId: {
-        type: DataTypes.UUID,
-        references: {
-          model: 'Users',
-          key: 'id',
-          as: 'userId'
-        }
+        type: DataTypes.UUID
       },
       reactionType: {
         type: DataTypes.STRING
       }
     },
-    {}
+    { paranoid: true }
   );
   Reactions.associate = ({ Users, Articles }) => {
     Reactions.belongsTo(Users, {
