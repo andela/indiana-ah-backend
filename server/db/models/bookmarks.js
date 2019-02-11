@@ -9,10 +9,10 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.UUID
       },
       articleId: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       userId: {
-        type: DataTypes.UUID
+        type: DataTypes.UUID,
       }
     },
     { paranoid: true }
