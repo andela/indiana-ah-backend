@@ -18,11 +18,10 @@ const { verifyToken } = JWTHelper;
  */
 class UserController extends BaseHelper {
   /**
-   * @description controller method for creating an article
+   * @description controller method for creating a user
    * @static
    * @param {object} req Request object
    * @param {object} res Response object
-   * @param {Function} next passes control to the next middleware
    * @returns {Object} a response object
    */
   static async registerUser(req, res) {
@@ -113,7 +112,6 @@ class UserController extends BaseHelper {
     };
     const newToken = assignToken(payload);
     return res.status(200).json({
-      success: true,
       message: 'User Successfully Verified',
       data: user[1][0],
       token: newToken

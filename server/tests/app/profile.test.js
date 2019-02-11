@@ -3,34 +3,10 @@ import { expect } from 'chai';
 import app from '../../index';
 import assignToken from '../../helpers/assignJwtToken';
 
-const data = {
-  bio: 'I am a boy',
-  name: 'Emeka',
-  email: 'dozie.emeka@yahoo.com',
-  username: 'tiku',
-  password: 'sammy12345'
-};
+import {
+  data, mockData, payload, badPayload
+} from './mockData/userMockData';
 
-const mockData = {
-  bio: 'I am a boy',
-  name: 'Emeka',
-  email: 'dozie.emeka@yahoo.com'
-};
-
-const payload = {
-  id: 'c09acc42-ebb1-4319-a43a-d4fc6061e829',
-  username: 'tiku',
-  email: 'tiku@gmail.com',
-  role: 'user',
-  isVerified: true
-};
-const badPayload = {
-  id: 23,
-  username: 'cim',
-  email: 'tiku@gmail.com',
-  role: 'user',
-  isVerified: true
-};
 const falseToken = assignToken(payload);
 const badToken = assignToken(badPayload);
 
