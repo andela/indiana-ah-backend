@@ -8,7 +8,7 @@ import { expect } from 'chai';
 
 import CommentReactionModel from '../../db/models/commentreactions';
 
-describe.only('..db/models/commentreactions', () => {
+describe('..db/models/commentreactions', () => {
   const CommentReaction = CommentReactionModel(sequelize, dataTypes);
   const commentReaction = new CommentReaction();
   checkModelName(CommentReaction)('CommentReactions');
