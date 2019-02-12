@@ -2,53 +2,25 @@ import request from 'supertest';
 import { expect } from 'chai';
 import app from '../../index';
 import assignToken from '../../helpers/assignJwtToken';
+import {
+  data,
+  mockData,
+  payload,
+  badPayload,
+  user1
+} from './mockData/profileMockData';
 
-const data = {
-  bio: 'I am a boy',
-  name: 'Emeka',
-  email: 'dozie.emeka@yahoo.com',
-  username: 'tiku',
-  password: 'sammy12345'
-};
-
-const mockData = {
-  bio: 'I am a boy',
-  name: 'Emeka',
-  email: 'dozie.emeka@yahoo.com'
-};
-
-const payload = {
-  id: 'c09acc42-ebb1-4319-a43a-d4fc6061e829',
-  username: 'tiku',
-  email: 'tiku@gmail.com',
-  role: 'user',
-  isVerified: true
-};
-const badPayload = {
-  id: 23,
-  username: 'cim',
-  email: 'tiku@gmail.com',
-  role: 'user',
-  isVerified: true
-};
 const falseToken = assignToken(payload);
 const badToken = assignToken(badPayload);
 
 let firstToken = '';
 let secondToken = '';
 
-before(() => {
-  const user1 = {
-    username: 'cim',
-    email: 'cim@gmail.com',
-    password: 'baleesecret23'
-  };
-  return request(app)
+before(async () => {
+  const res = await request(app)
     .post('/api/v1/register')
-    .send(user1)
-    .then((res) => {
-      firstToken = res.body.token;
-    });
+    .send(user1);
+  firstToken = res.body.token;
 });
 describe('user verification', () => {
   it('should verify a user\'s account', () => request(app)
