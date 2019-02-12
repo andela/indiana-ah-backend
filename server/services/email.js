@@ -16,7 +16,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const sendEmail = (receiverEmail, subject, html) => {
   sgMail.send({
     to: receiverEmail,
-    from: 'AuthorsHaven@andela.com',
+    from: 'no-reply@authors-haven.com',
     subject,
     html
   });

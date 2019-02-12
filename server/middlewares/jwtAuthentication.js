@@ -16,22 +16,18 @@ class Auth {
    * @returns {Object} a response object
    */
   static authUser(req, res, next) {
-    try {
-      const token = req.header('x-auth-token');
-      const decodedToken = verifyToken(token);
-      if (!decodedToken) {
-        return errorResponse(
-          res,
-          401,
-          'Access denied. You are not authorized to access this route'
-        );
-      }
-      if (!decodedToken.isVerified) return errorResponse(res, 403, 'Access denied. You are not a verified user');
-      req.user = decodedToken;
-      next();
-    } catch (error) {
-      return errorResponse(res, 500, 'internal server error');
+    const token = req.header('x-auth-token');
+    const decodedToken = verifyToken(token);
+    if (!decodedToken) {
+      return errorResponse(
+        res,
+        401,
+        'Access denied. You are not authorized to access this route'
+      );
     }
+    if (!decodedToken.isVerified) return errorResponse(res, 403, 'Access denied. You are not a verified user');
+    req.user = decodedToken;
+    next();
   }
 }
 
