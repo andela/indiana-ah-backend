@@ -3,7 +3,7 @@ import models from '../db/models';
 import BaseHelper from '../helpers/baseHelper';
 
 const {
-  Articles, Users, Comments, Reactions
+  Articles, Users, Comments, Reactions, Reports
 } = models;
 
 /**
@@ -130,7 +130,8 @@ class ArticleController extends BaseHelper {
             attributes: ['username', 'bio', 'imageUrl']
           },
           { model: Comments },
-          { model: Reactions }
+          { model: Reactions },
+          { model: Reports }
         ]
       });
       if (!article) return errorResponse(res, 404, 'Article not found');

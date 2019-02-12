@@ -1,6 +1,8 @@
 import models from '../db/models';
+import commentReportLogic from '../helpers/commentReactionHelper';
+import errorResponse from '../helpers/errorHelpers';
 
-const { Reports, Articles } = models;
+const { Reports, Articles, Users } = models;
 
 /**
  * @description  Handles Users reports on articles
@@ -16,21 +18,31 @@ class ReportController {
    * @returns {Object} a response object
    */
   static async reportArticle(req, res, next) {
+    const message = 'Article report is successful';
+    commentReportLogic(req, res, next, Articles, Reports, message);
+  }
+
+  /**
+   *@description controller method for getting all reports
+   * @param {object} req Request object
+   * @param {object} res Response object
+   * @param {object} next Response Object
+   * @returns {Object} a response object
+   */
+  static async getAllReports(req, res, next) {
     try {
-      req.body.userId = req.user.id;
-      const { slug } = req.params;
-      const article = await Articles.findOne({ where: { slug }, returning: true });
-      if (!article) {
-        return res.status(404).json({
-          message: 'Article not found'
-        });
-      }
-      req.body.articleId = article.dataValues.id;
-      const reportArticle = await Reports.create(req.body);
-      return res.status(201).json({
-        message: 'Comment has been posted successfully',
-        data: reportArticle
+      const report = await Reports.findAll({
+        include: [
+          {
+            model: Users,
+            attributes: ['username', 'bio'],
+
+            include: [{ model: Articles, attributes: ['articleTitle', 'articleBody'] }]
+          }
+        ]
       });
+      if (!report.length) return errorResponse(res, 404, 'No reports found');
+      return res.status(200).json({ message: 'Report retrieve successful', report });
     } catch (error) {
       return next(error);
     }

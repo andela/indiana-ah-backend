@@ -1,5 +1,5 @@
 import models from '../db/models';
-import errorMessage from '../helpers/errorHelpers';
+import commentReportLogic from '../helpers/commentReactionHelper';
 
 const { Comments, Articles } = models;
 
@@ -13,11 +13,24 @@ class CommentController {
    * @static
    * @param {object} req Request object
    * @param {object} res Response object
+   * @param {object} next Response object
    * @returns {Object} a response object
    */
-  static async articleComment(req, res) {
+  static async articleComment(req, res, next) {
+    const message = 'Comment has been posted successfully';
+    commentReportLogic(req, res, next, Articles, Comments, message);
+  }
+
+  /**
+   * @description controller method for commenting on an article
+   * @static
+   * @param {object} req Request object
+   * @param {object} res Response object
+   * @param {object} next Response object
+   * @returns {Object} a response object
+   */
+  static async getArticleComment(req, res, next) {
     try {
-      req.body.userId = req.user.id;
       const { slug } = req.params;
       const article = await Articles.findOne({
         where: { slug },
@@ -29,13 +42,16 @@ class CommentController {
         });
       }
       req.body.articleId = article.dataValues.id;
-      const articleComments = await Comments.create(req.body);
+      const articleComments = await Comments.findAll({
+        where: { slug },
+        returning: true
+      });
       return res.status(201).json({
         message: 'Comment has been posted successfully',
         data: articleComments
       });
     } catch (error) {
-      return errorMessage(res, 500, 'internal server error');
+      return next(error);
     }
   }
 }
