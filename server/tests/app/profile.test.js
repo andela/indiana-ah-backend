@@ -2,10 +2,13 @@ import request from 'supertest';
 import { expect } from 'chai';
 import app from '../../index';
 import assignToken from '../../helpers/assignJwtToken';
-
 import {
-  data, mockData, payload, badPayload
-} from './mockData/userMockData';
+  data,
+  mockData,
+  payload,
+  badPayload,
+  user1
+} from './mockData/profileMockData';
 
 const falseToken = assignToken(payload);
 const badToken = assignToken(badPayload);
@@ -13,18 +16,11 @@ const badToken = assignToken(badPayload);
 let firstToken = '';
 let secondToken = '';
 
-before(() => {
-  const user1 = {
-    username: 'cim',
-    email: 'cim@gmail.com',
-    password: 'baleesecret23'
-  };
-  return request(app)
+before(async () => {
+  const res = await request(app)
     .post('/api/v1/register')
-    .send(user1)
-    .then((res) => {
-      firstToken = res.body.token;
-    });
+    .send(user1);
+  firstToken = res.body.token;
 });
 describe('user verification', () => {
   it('should verify a user\'s account', () => request(app)
