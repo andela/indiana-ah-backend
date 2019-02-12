@@ -65,6 +65,60 @@ class BaseHelper {
       return undefined;
     }
   }
+
+  /**
+   * @description articleReaction- controller method for liking and disliking an article
+   * @static
+   * @param {object} req Request object
+   * @param {object} res Response object
+   * @param {object} modelName Request object
+   * @param {object} modelId Request object
+   * @returns {object} a response object
+   */
+  static async reaction(req, res, modelName, modelId) {
+    const { reactionType } = req.body;
+    const { id: userId } = req.user;
+    req.body.userId = userId;
+
+    const reaction = await modelName.findOrCreate({
+      where: { modelId, userId },
+      defaults: {
+        reactionType,
+        modelId,
+        userId
+      }
+    }).spread((
+      {
+        dataValues: {
+          modelId: dbModelId, userId: dbUserId, reactionType: dbReactionType
+        }
+      },
+      created
+    ) => ({
+      dbModelId, dbUserId, dbReactionType, created
+    }));
+    const { created, dbReactionType } = reaction;
+    if (created) {
+      return res.status(200).json({ message: `You have successfully ${reactionType}d this article` });
+    }
+    if (!created && reactionType !== dbReactionType) {
+      await modelName.update(
+        { reactionType },
+        {
+          where: { modelId, userId },
+          returning: true
+        }
+      ).then(() => res.status(200).json({
+        message: `You have sucessfully ${reactionType}d this article`
+      }));
+    }
+    if (!created && reactionType === dbReactionType) {
+      await modelName.destroy({
+        where: { modelId, userId }
+      });
+      return res.status(200).json({ message: 'Reaction successfully deleted' });
+    }
+  }
 }
 
 export default BaseHelper;

@@ -351,7 +351,7 @@ class UserController extends BaseHelper {
       });
       const { id, username } = dbUser;
       // define token payload and duration
-      const jwtKey = process.env.JWT_SECRET;
+      const jwtKey = process.env.JWT_SECRET_KEY;
       const jwtDuration = { expiresIn: '1hrs' };
       const payload = {
         id,
