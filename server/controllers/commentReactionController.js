@@ -1,5 +1,6 @@
 import models from '../db/models';
 import BaseHelper from '../helpers/baseHelper';
+import errorMessage from '../helpers/errorHelpers';
 
 const { CommentReactions } = models;
 /**
@@ -16,7 +17,7 @@ class CommentReactionController extends BaseHelper {
    * @param {object} next Response object
    * @returns {object} a response object
    */
-  static async commentReaction(req, res, next) {
+  static async commentReaction(req, res) {
     const { commentId, reactionType } = req.body;
     const { id: userId } = req.user;
 
@@ -50,7 +51,7 @@ class CommentReactionController extends BaseHelper {
             returning: true
           }
         ).then(() => res.status(200).json({
-          message: `You have sucessfully ${reactionType}d this comment`
+          message: `You have successfully ${reactionType}d this comment`
         }));
       }
       if (!created && reactionType === dbReactionType) {
@@ -60,7 +61,7 @@ class CommentReactionController extends BaseHelper {
         return res.status(200).json({ message: 'Reaction successfully deleted' });
       }
     } catch (error) {
-      next(error);
+      return errorMessage(res, 500, 'internal server error');
     }
   }
 }
