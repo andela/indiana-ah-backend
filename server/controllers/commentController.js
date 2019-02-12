@@ -41,7 +41,6 @@ class CommentController {
           message: 'Article not found'
         });
       }
-      req.body.articleId = article.dataValues.id;
       const articleComments = await Comments.findAll({
         where: { slug },
         returning: true
