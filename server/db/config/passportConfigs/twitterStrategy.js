@@ -10,7 +10,7 @@ const twitter = (passport) => {
     {
       consumerKey: process.env.TWITTER_CLIENT_ID,
       consumerSecret: process.env.TWITTER_CLIENT_SECRET,
-      callbackURL: 'http://localhost:5000/auth/twitter/callback',
+      callbackURL: 'http://localhost:3000/auth/twitter/callback',
       includeEmail: true,
       proxy: true
     },

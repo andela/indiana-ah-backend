@@ -16,7 +16,7 @@ twitter(passport);
 
 // Create global app object
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 // Normal express config defaults
 app.use(morgan('dev'));
@@ -37,7 +37,6 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// passport.use(google);
 app.use('/auth', auth);
 app.use('/api/v1', routes);
 
