@@ -50,11 +50,9 @@ class ReactionController extends BaseHelper {
             where: { articleId, userId },
             returning: true
           }
-        ).then(() => {
-          return res.status(200).json({
-            message: `You have successfully ${reactionType}d this article`
-          });
-        });
+        ).then(() => res.status(200).json({
+          message: `You have successfully ${reactionType}d this article`
+        }));
       }
       if (!created && reactionType === dbReactionType) {
         await Reactions.destroy({
