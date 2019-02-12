@@ -1,14 +1,12 @@
 /* eslint-disable valid-jsdoc */
 import { Op } from 'sequelize';
-import dotenv from 'dotenv';
 import models from '../db/models';
 import assignToken from '../helpers/assignJwtToken';
 import errorMessage from '../helpers/errorHelpers';
 import sendEmail from '../services/email';
 import JWTHelper from '../helpers/jwtHelper';
-import BaseHelper from '../helpers/baseHelper';
+import BaseHelpers from '../helpers/baseHelpers';
 
-dotenv.config();
 const { Users } = models;
 const { verifyToken } = JWTHelper;
 /**
@@ -16,7 +14,7 @@ const { verifyToken } = JWTHelper;
  *
  * @class UserController
  */
-class UserController extends BaseHelper {
+class UserController {
   /**
    *
    *
@@ -61,8 +59,7 @@ class UserController extends BaseHelper {
         };
         const token = assignToken(payload);
         const location = req.get('host');
-        const url = '/api/v1/user/verify';
-        const link = UserController.generateEmailLink(location, url, token);
+        const link = `${location}/api/v1/user/verify?token=${token}`;
         const message = `<h1 style='color: Goldenrod' > Welcome to Author's Haven</h1><hr/>
           <p>Please click this link to verify your Author's Haven account
           <a href=${link}>link</a></p>`;
@@ -121,7 +118,7 @@ class UserController extends BaseHelper {
     });
   }
 
-/**
+  /**
    *
    *
    * @static
@@ -197,6 +194,7 @@ class UserController extends BaseHelper {
 
   /**
    *
+   *
    * @static uploadUserPicture - the method that handles editing user picture
    * @param {object} req - the request object
    * @param {object} res - the response object
@@ -261,7 +259,9 @@ class UserController extends BaseHelper {
             returning: true
           }
         ).then(([updatedRows, [updatedUser]]) => {
-          UserController.checkIfDataExist(req, res, updatedRows, { message: 'User not found' });
+          if (!updatedRows) {
+            return errorMessage(res, 404, 'User not found');
+          }
           return res.status(200).json({
             profile: updatedUser
           });
@@ -271,12 +271,13 @@ class UserController extends BaseHelper {
       }
     }
     return errorMessage(res, 404, 'User not found');
-  }  
+  }
 
   /**
    *
    *
-   * @static handleSocialAuth - the method that handles social authentication
+   * @static handleSocialAuth - the method that saves socially /
+   * authenticated user's data into the database
    * @param {string} accessToken
    * @param {string} refreshToken
    * @param {string} profile
@@ -285,15 +286,19 @@ class UserController extends BaseHelper {
    * @memberOf UserController class
    */
   static async handleSocialAuth(accessToken, refreshToken, profile, done) {
-    const userPassword = await BaseHelper.hashPassword(profile.id);
+    // console.log('***profile***', profile);
+    const {
+      id, emails, displayName, photos
+    } = profile;
+    const userPassword = await BaseHelpers.hashPassword(profile.id);
     try {
       const [user] = await Users.findOrCreate({
-        where: { email: profile.emails[0].value },
+        where: { email: emails[0].value },
         defaults: {
-          name: profile.displayName,
-          username: profile.displayName.split(' ')[0].concat(profile.id),
+          name: displayName,
+          username: displayName.split(' ')[0].concat(id),
           password: userPassword,
-          imageUrl: profile.photos[0].value,
+          imageUrl: photos[0].value,
           isVerified: true
         }
       });
@@ -305,76 +310,27 @@ class UserController extends BaseHelper {
 
   /**
    *
-   * @static sendPasswordResetLink - method to send password reset link to user
-   * @param {object} req - the request object
-   * @param {object} res - the response object
-   * @returns {object} user - the user object
-   * @memberOf UserController class
+   * @description Redirects socially authenticated users and returns a token
+   * @static
+   * @param {*} req
+   * @param {*} res
+   * @returns {object} Json Resonse
+   * @memberof UserController
    */
-  static async sendPasswordResetLink(req, res) {
-    try {
-      const { email } = req.body;
-      const dbUser = await Users.findOne({
-        where: { email },
-        returning: true
-      });
-      UserController.checkIfDataExist(req, res, dbUser, { message: 'This email is not registered in our system' });
-      const { id, username } = dbUser;
-      // define token payload and duration
-      const jwtKey = process.env.JWT_SECRET;
-      const jwtDuration = { expiresIn: '1hrs' };
-      const payload = {
-        id,
-        username,
-        email
-      };
-      const token = assignToken(payload, jwtKey, jwtDuration);
-      const location = req.get('host');
-      const url = '/api/v1/user/passwordreset';
-      // define sendEmail parameter list
-      const link = UserController.generateEmailLink(location, url, token);
-      const subject = 'Authors\' Haven password reset';
-      const message = `<h1 style='color: Goldenrod' > Password Reset </h1><hr/>
-      <p>Please reset your Author's Haven password with this 
-      <a href=${link}>link</a>. This link will expire after <b>one hour</b></p>`;
-      sendEmail(email, subject, message);
-      return res.status(200).send({
-        message: `password reset link sent to ${email}, please check your email`, token
-      });
-    } catch (error) {
-      return errorMessage(res, 500, 'Server currently down');
-    }
-  }
-
-  /**
-   *
-   *
-   * @static getUserByEmail - the method that handles user password reset
-   * @param {object} req - the request object
-   * @param {object} res - the response object
-   * @returns {object} user - the user object
-   * @memberOf UserController class
-   */
-  static async resetPassword(req, res) {
-    const token = req.header('x-auth-token');
-    const decodedToken = JWTHelper.verifyToken(token);
-    if (!decodedToken) {
-      return errorMessage(res, 401, 'This link is invalid or expired!!');
-    }
-    try {
-      const { email } = decodedToken;
-      const { password } = req.body;
-      const response = await Users.update({ password }, {
-        where: { email },
-        returning: true
-      });
-      const updatedUser = response[1][0];
-      return res.status(200).json({ message: 'Password reset successfully', updatedUser });
-    } catch (resetError) {
-      return errorMessage(res, 500, resetError);
-    }
+  static async socialAuthRedirect(req, res) {
+    const {
+      username, email, name, role, isVerified
+    } = req.user.dataValues;
+    const payload = {
+      email,
+      username,
+      name,
+      role,
+      isVerified
+    };
+    const token = assignToken(payload);
+    return res.redirect(`/?token=${token}`);
   }
 }
-
 
 export default UserController;
