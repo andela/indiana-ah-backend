@@ -28,6 +28,22 @@ class BaseHelper {
     }
     return true;
   }
+
+  /**
+ *
+ * @param { string } article
+ * @returns {number} returns a number
+ */
+  static calculateTimeToRead(article) {
+    if (article) {
+      const numberOfWords = article.split(' ').length;
+      const wpm = 150;
+      const time = Math.round(numberOfWords / wpm);
+      const timeToRead = (time < 1) ? 'a couple of secs' : `${time} min read`;
+      return timeToRead;
+    }
+    return false;
+  }
 }
 
 export default BaseHelper;
