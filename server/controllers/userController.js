@@ -14,7 +14,7 @@ const { verifyToken } = JWTHelper;
  *
  * @class UserController
  */
-class UserController {
+class UserController extends BaseHelper{
   /**
    * @description controller method for creating a user
    * @static
