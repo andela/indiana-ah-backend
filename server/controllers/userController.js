@@ -14,7 +14,7 @@ const { verifyToken } = JWTHelper;
  *
  * @class UserController
  */
-class UserController extends BaseHelper{
+class UserController extends BaseHelper {
   /**
    * @description controller method for creating a user
    * @static
@@ -283,7 +283,6 @@ class UserController extends BaseHelper{
    * @memberOf UserController class
    */
   static async handleSocialAuth(accessToken, refreshToken, profile, done) {
-    // console.log('***profile***', profile);
     const {
       id, emails, displayName, photos
     } = profile;
