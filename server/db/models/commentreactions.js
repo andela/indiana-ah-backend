@@ -1,28 +1,22 @@
 export default (sequelize, DataTypes) => {
-  const CommentReactions = sequelize.define(
-    'CommentReactions',
-    {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: DataTypes.INTEGER
-      },
-      userId: {
-        type: DataTypes.UUID
-      },
-      commentId: {
-        type: DataTypes.UUID
-      },
-      reactionType: {
-        allowNull: false,
-        type: DataTypes.ENUM,
-        values: ['like', 'dislike']
-      }
-
+  const CommentReactions = sequelize.define('CommentReactions', {
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER
     },
-    {}
-  );
+    userId: {
+      type: DataTypes.UUID
+    },
+    commentId: {
+      type: DataTypes.UUID
+    },
+    reactionType: {
+      allowNull: false,
+      type: DataTypes.STRING
+    },
+  }, {});
   CommentReactions.associate = (models) => {
     CommentReactions.belongsTo(models.Users, {
       foreignKey: 'userId',
