@@ -6,6 +6,7 @@ logs
 .nyc_output
 npm-debug.log*
 build
+dist
 package-lock.json
 .vscode
 # Runtime data

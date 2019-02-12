@@ -16,13 +16,11 @@ const { verifyToken } = JWTHelper;
  */
 class UserController {
   /**
-   *
-   *
-   * @static registerUser - the method that handles user registration
-   * @param {object} req - the request object
-   * @param {object} res - the response object
-   *
-   * @memberOf UserController class
+   * @description controller method for creating a user
+   * @static
+   * @param {object} req Request object
+   * @param {object} res Response object
+   * @returns {Object} a response object
    */
   static async registerUser(req, res) {
     const { username, email, password } = req.body;
@@ -111,7 +109,6 @@ class UserController {
     };
     const newToken = assignToken(payload);
     return res.status(200).json({
-      success: true,
       message: 'User Successfully Verified',
       data: user[1][0],
       token: newToken
@@ -122,10 +119,10 @@ class UserController {
    *
    *
    * @static
-   * @param {any} req - the request object from the body
-   * @param {any} res - the response object sent back to the client
-   *
-   * @memberOf UserController
+   * @param {object} req Request object
+   * @param {object} res Response object
+   * @param {Function} next passes control to the next middleware
+   * @returns {Object} a response object
    */
   static async loginUser(req, res) {
     const { email, password } = req.body;
@@ -337,7 +334,7 @@ class UserController {
       };
       const token = assignToken(payload, jwtKey, jwtDuration);
       const location = req.get('host');
-      const url = '/api/v1/user/passwordreset';
+      const url = '/api/v1/user/resetpassword';
       // define sendEmail parameter list
       const link = UserController.generateEmailLink(location, url, token);
       const subject = 'Authors\' Haven password reset';

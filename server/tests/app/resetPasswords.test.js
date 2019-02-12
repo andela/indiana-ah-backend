@@ -12,7 +12,7 @@ const user1 = {
 };
 describe('Send reset password link to user', () => {
   it('should return http status code 404 if a user does not exist', () => request(app)
-    .post('/api/v1/user/forgot')
+    .post('/api/v1/users/begin_reset_password')
     .set('content-type', 'application/json')
     .send(user)
     .then((res) => {
@@ -20,7 +20,7 @@ describe('Send reset password link to user', () => {
       expect(res.body.message).to.equal('This email is not registered in our system');
     }));
   it('should return status code 200 if mail is sent', () => request(app)
-    .post('/api/v1/user/forgot')
+    .post('/api/v1/users/begin_reset_password')
     .set('content-type', 'application/json')
     .send(user1)
     .then((res) => {
@@ -33,7 +33,7 @@ describe('Send reset password link to user', () => {
 
 describe('Password reset funcionality for users', () => {
   it('should return status code 200 on successful password reset', () => request(app)
-    .patch('/api/v1/user/passwordreset')
+    .patch('/api/v1/users/resetpassword')
     .set('x-auth-token', token.token)
     .send(user1)
     .then((res) => {
@@ -41,7 +41,7 @@ describe('Password reset funcionality for users', () => {
       expect(res.body.message).to.equal('Password reset successfully');
     }));
   it('should return status code 200 on successful password reset', () => request(app)
-    .patch('/api/v1/user/passwordreset')
+    .patch('/api/v1/users/resetpassword')
     .send(user1)
     .then((res) => {
       expect(res.statusCode).to.equal(401);
