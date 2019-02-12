@@ -28,7 +28,7 @@ before(() => {
 });
 describe('user verification', () => {
   it('should verify a user\'s account', () => request(app)
-    .patch(`/api/v1/user/verify?token=${firstToken}`)
+    .patch(`/api/v1/users/verify?token=${firstToken}`)
     .then((res) => {
       secondToken = res.body.token;
       expect(res.status).to.equal(200);

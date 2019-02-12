@@ -20,10 +20,10 @@ router.post('/register', signUpValidator, registerUser);
 router.post('/login', loginUser);
 router.get('/profiles/:username', jwtAuth.authUser, getUserProfile);
 router.patch('/profiles/:username/update', jwtAuth.authUser, editUserProfile);
-router.patch('/user/verify', verifyUser);
+router.patch('/users/verify', verifyUser);
 router.patch('/profiles/image', jwtAuth.authUser, parser.single('image'), uploadUserPicture);
 
-router.post('/user/forgotpassword', sendPasswordResetLink);
-router.patch('/user/resetpassword', resetPassword);
+router.post('/users/begin_reset_password', sendPasswordResetLink);
+router.patch('/users/resetpassword', resetPassword);
 
 export default router;

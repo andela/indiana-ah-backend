@@ -18,8 +18,6 @@ class CommentController {
   static async articleComment(req, res) {
     try {
       const { slug } = req.params;
-      const { id: userId } = req.user;
-      req.body.userId = userId;
       const article = await Articles.findOne({
         where: { slug },
         returning: true
@@ -30,10 +28,10 @@ class CommentController {
         });
       }
       req.body.articleId = article.dataValues.id;
-      const Articlecomments = await Comments.create(req.body);
+      const articleComments = await Comments.create(req.body);
       return res.status(201).json({
         message: 'Comment has been posted successfully',
-        data: Articlecomments
+        data: articleComments
       });
     } catch (error) {
       return errorMessage(res, 500, 'internal server error');
