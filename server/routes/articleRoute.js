@@ -4,6 +4,7 @@ import { validateArticle, validateRating } from '../middlewares/validators/artic
 import ArticleController from '../controllers/articleController';
 import CommentController from '../controllers/commentController';
 import RatingsController from '../controllers/ratingsController';
+import ReactionController from '../controllers/reactionController';
 
 const {
   createArticle,
@@ -18,6 +19,9 @@ const { articleComment } = CommentController;
 const {
   rateArticle, getOneArticleRating, getAllArticleRatings, cancelRating
 } = RatingsController;
+const {
+  articleReaction,
+} = ReactionController;
 
 const { authUser } = Auth;
 
@@ -34,5 +38,6 @@ router.get('/:slug', getOneArticle);
 router.delete('/:slug/delete', authUser, deleteArticle);
 router.delete('/ratings/:ratingId/cancel', authUser, cancelRating);
 router.post('/:slug/comments', authUser, articleComment);
+router.post('/:slug/reaction', authUser, articleReaction);
 
 export default router;

@@ -21,7 +21,9 @@ class Auth {
     if (!decodedToken) {
       return errorResponse(res, 401, 'Access denied. You are not authorized to access this route');
     }
-    if (!decodedToken.isVerified) return errorResponse(res, 403, 'Access denied. You are not a verified user');
+    if (!decodedToken.isVerified) {
+      return errorResponse(res, 403, 'Access denied. You are not a verified user');
+    }
     req.user = decodedToken;
     next();
   }
