@@ -25,6 +25,7 @@ export default {
       }
     },
     commentBody: {
+      allowNull: false,
       type: Sequelize.STRING
     },
     createdAt: {
