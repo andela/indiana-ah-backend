@@ -6,3 +6,7 @@ export const user = {
 export const like = {
   reactionType: 'like'
 };
+
+export const dislike = {
+  reactionType: 'dislike'
+};
