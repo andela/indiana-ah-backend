@@ -297,7 +297,7 @@ class UserController extends BaseHelper {
       };
       const token = assignToken(payload, jwtKey, jwtDuration);
       const location = req.get('host');
-      const url = '/api/v1/user/passwordreset';
+      const url = '/api/v1/user/resetpassword';
       // define sendEmail parameter list
       const link = UserController.generateEmailLink(location, url, token);
       const subject = 'Authors\' Haven password reset';

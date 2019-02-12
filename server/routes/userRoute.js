@@ -24,6 +24,6 @@ router.patch('/user/verify', verifyUser);
 router.patch('/profiles/image', jwtAuth.authUser, parser.single('image'), uploadUserPicture);
 
 router.post('/user/forgotpassword', sendPasswordResetLink);
-router.patch('/user/passwordreset', resetPassword);
+router.patch('/user/resetpassword', resetPassword);
 
 export default router;
