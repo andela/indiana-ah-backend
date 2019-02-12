@@ -17,13 +17,13 @@ before(async () => {
 
 describe('Article Likes and dislikes', () => {
   it('should return an error if user is not authenticated', () => request(app)
-    .post('/api/v1/:slug/reaction')
+    .post('/api/v1/articles/:slug/reaction')
     .then((res) => {
       expect(res.status).to.equal(401);
-      expect(res.body.message).to.equal('Access denied.You are not authorized to access this route');
+      expect(res.body.message).to.equal('Access denied. You are not authorized to access this route');
     }));
   it('should successfully like an article if user is authenticated', () => request(app)
-    .post('/api/v1/:slug/reaction')
+    .post('/api/v1/articles/:slug/reaction')
     .set('x-auth-token', userToken)
     .send(like)
     .then((res) => {

@@ -1,8 +1,8 @@
 export const user = {
-  email: 'cim@gmail.com',
-  password: 'baleesecret23'
+  email: 'ezenwa9000@gmail.com',
+  password: 'baleesecret48'
 };
 
 export const like = {
-  type: 'like'
+  reactionType: 'like'
 };

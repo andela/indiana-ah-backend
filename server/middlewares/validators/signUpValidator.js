@@ -5,9 +5,6 @@ import errorMessage from '../../helpers/errorHelpers';
 export default (req, res, next) => {
   const { username, email, password } = req.body;
 
-  // if (!password) {
-  //   return errorMessage(res, 400, 'Password should be provided');
-  // }
   if (password && !isAlphaNumeric(password)) {
     return errorMessage(res, 400, 'Password should be Alphanumeric');
   }
