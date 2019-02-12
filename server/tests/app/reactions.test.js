@@ -12,6 +12,8 @@ import {
 let userToken = '',
   articleId,
   articleSlug;
+  user,
+  like;
 
 before(async () => {
   const res = await request(app)
