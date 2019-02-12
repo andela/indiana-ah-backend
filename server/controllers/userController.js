@@ -5,7 +5,7 @@ import assignToken from '../helpers/assignJwtToken';
 import errorMessage from '../helpers/errorHelpers';
 import sendEmail from '../services/email';
 import JWTHelper from '../helpers/jwtHelper';
-import BaseHelpers from '../helpers/baseHelpers';
+import BaseHelper from '../helpers/baseHelper';
 
 const { Users } = models;
 const { verifyToken } = JWTHelper;
@@ -290,14 +290,14 @@ class UserController {
     const {
       id, emails, displayName, photos
     } = profile;
-    const userPassword = await BaseHelpers.hashPassword(profile.id);
+
     try {
       const [user] = await Users.findOrCreate({
         where: { email: emails[0].value },
         defaults: {
           name: displayName,
           username: displayName.split(' ')[0].concat(id),
-          password: userPassword,
+          password: id,
           imageUrl: photos[0].value,
           isVerified: true
         }
@@ -305,6 +305,52 @@ class UserController {
       return done(null, user);
     } catch (error) {
       return done(error, null);
+    }
+  }
+
+  /**
+   *
+   * @static sendPasswordResetLink - method to send password reset link to user
+   * @param {object} req - the request object
+   * @param {object} res - the response object
+   * @returns {object} user - the user object
+   * @memberOf UserController class
+   */
+  static async sendPasswordResetLink(req, res) {
+    try {
+      const { email } = req.body;
+      const dbUser = await Users.findOne({
+        where: { email },
+        returning: true
+      });
+      UserController.checkIfDataExist(req, res, dbUser, {
+        message: 'This email is not registered in our system'
+      });
+      const { id, username } = dbUser;
+      // define token payload and duration
+      const jwtKey = process.env.JWT_SECRET;
+      const jwtDuration = { expiresIn: '1hrs' };
+      const payload = {
+        id,
+        username,
+        email
+      };
+      const token = assignToken(payload, jwtKey, jwtDuration);
+      const location = req.get('host');
+      const url = '/api/v1/user/passwordreset';
+      // define sendEmail parameter list
+      const link = UserController.generateEmailLink(location, url, token);
+      const subject = 'Authors\' Haven password reset';
+      const message = `<h1 style='color: Goldenrod' > Password Reset </h1><hr/>
+      <p>Please reset your Author's Haven password with this 
+      <a href=${link}>link</a>. This link will expire after <b>one hour</b></p>`;
+      sendEmail(email, subject, message);
+      return res.status(200).send({
+        message: `password reset link sent to ${email}, please check your email`,
+        token
+      });
+    } catch (error) {
+      return errorMessage(res, 500, 'Server currently down');
     }
   }
 
@@ -330,6 +376,38 @@ class UserController {
     };
     const token = assignToken(payload);
     return res.redirect(`/?token=${token}`);
+  }
+
+  /**
+   *
+   *
+   * @static getUserByEmail - the method that handles user password reset
+   * @param {object} req - the request object
+   * @param {object} res - the response object
+   * @returns {object} user - the user object
+   * @memberOf UserController class
+   */
+  static async resetPassword(req, res) {
+    const token = req.header('x-auth-token');
+    const decodedToken = JWTHelper.verifyToken(token);
+    if (!decodedToken) {
+      return errorMessage(res, 401, 'This link is invalid or expired!!');
+    }
+    try {
+      const { email } = decodedToken;
+      const { password } = req.body;
+      const response = await Users.update(
+        { password },
+        {
+          where: { email },
+          returning: true
+        }
+      );
+      const updatedUser = response[1][0];
+      return res.status(200).json({ message: 'Password reset successfully', updatedUser });
+    } catch (resetError) {
+      return errorMessage(res, 500, resetError);
+    }
   }
 }
 

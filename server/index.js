@@ -37,10 +37,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-<<<<<<< HEAD
-=======
 // passport.use(google);
->>>>>>> 2bdbbe66a8cddad7160b56b4029ac813ef3c37e4
 app.use('/auth', auth);
 app.use('/api/v1', routes);
 

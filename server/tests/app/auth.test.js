@@ -241,29 +241,9 @@ describe('Sign Up Validation', () => {
 });
 
 describe('Social authentication', () => {
-<<<<<<< HEAD
-  it('should register a new user with a google account', () => request(app)
-    .get('/auth/google')
-    .then((res) => {
-      expect(res.status).to.equal(302);
-    }));
-
-  it('should register a new user with a facebook account', () => request(app)
-    .get('/auth/facebook')
-    .then((res) => {
-      expect(res.status).to.equal(302);
-    }));
-
-  it('should register a new user with a google account', () => request(app)
-    .get('/auth/twitter')
-    .then((res) => {
-      expect(res.status).to.equal(302);
-    }));
-=======
   const callBack = sinon.spy();
   it('should save a socially authenticated users data into the database', async () => {
     await UserController.handleSocialAuth(null, null, socialUser, callBack);
     expect(callBack.called).to.equal(true);
   });
->>>>>>> 2bdbbe66a8cddad7160b56b4029ac813ef3c37e4
 });
