@@ -16,22 +16,24 @@ let verifiedToken;
 let unverifiedToken;
 let articleSlug;
 
-before(async () => {
-  await Users.create(user1);
-  return request(app)
-    .post('/api/v1/login')
-    .send({ email: user1.email, password: user1.password })
-    .then((res) => {
-      verifiedToken = res.body.token;
-    });
-});
+describe('Login user and collect token', () => {
+  before(async () => {
+    await Users.create(user1);
+    return request(app)
+      .post('/api/v1/login')
+      .send({ email: user1.email, password: user1.password })
+      .then((res) => {
+        verifiedToken = res.body.token;
+      });
+  });
 
-before(() => request(app)
-  .post('/api/v1/register')
-  .send(user2)
-  .then((res) => {
-    unverifiedToken = res.body.token;
-  }));
+  before(() => request(app)
+    .post('/api/v1/register')
+    .send(user2)
+    .then((res) => {
+      unverifiedToken = res.body.token;
+    }));
+});
 
 describe('Create an Article', () => {
   it('should return a unauthorized response message if the user provides an invalid or expired token', () => request(app)
