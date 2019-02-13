@@ -71,7 +71,7 @@ describe('the admin role', () => {
           role: 'admin'
         })
         .then((res) => {
-          expect(res.status).to.equal(400);
+          expect(res.status).to.equal(404);
           expect(res.body.message).to.equal('this user was not found');
         });
     });
