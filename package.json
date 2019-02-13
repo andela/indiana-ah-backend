@@ -59,15 +59,12 @@
     "@babel/polyfill": "^7.2.5",
     "@babel/preset-env": "^7.3.1",
     "@babel/register": "^7.0.0",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
     "coveralls": "^3.0.2",
     "eslint": "^5.12.1",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.15.0",
     "nock": "^10.0.6",
     "nodemon": "^1.18.9",
-    "sinon": "^7.2.3",
     "sinon-chai": "^3.3.0"
   }
 }
