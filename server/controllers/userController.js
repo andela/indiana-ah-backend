@@ -133,6 +133,9 @@ class UserController extends BaseHelper {
         where: { email },
         attributes: ['name', 'username', 'email', 'password', 'role', 'isVerified', 'id']
       });
+      if (!newUser) {
+        return errorMessage(res, 404, 'error logging in');
+      }
       const {
         email: dbEmail, username, name, role, isVerified, id
       } = newUser;
@@ -170,7 +173,7 @@ class UserController extends BaseHelper {
    *
    * @memberOf UserController class
    */
-  static async getUserProfile(req, res) {
+  static async getUserProfile(req, res, next) {
     const { username } = req.params;
     try {
       const user = await Users.findOne({
@@ -186,7 +189,7 @@ class UserController extends BaseHelper {
         profile: user.dataValues
       });
     } catch (error) {
-      errorMessage(res, 500, 'Internal server error');
+      return next(error);
     }
   }
 
@@ -231,7 +234,6 @@ class UserController extends BaseHelper {
     }
   }
 
-
   /**
    *
    *
@@ -271,7 +273,7 @@ class UserController extends BaseHelper {
           profile: updatedUserValues
         });
       } catch (error) {
-        errorMessage(res, 500, 'Internal server error');
+        return errorMessage(res, 500, 'Internal server error');
       }
     }
     return errorMessage(res, 404, 'User not found');
