@@ -59,8 +59,7 @@ class UserController extends BaseHelper {
         };
         const token = assignToken(payload);
         const location = req.get('host');
-        const url = '/api/v1/user/verify';
-        const link = UserController.generateEmailLink(location, url, token);
+        const link = `${location}/api/v1/user/verify?token=${token}`;
         const message = `<h1 style='color: Goldenrod' > Welcome to Author's Haven</h1><hr/>
           <p>Please click this link to verify your Author's Haven account
           <a href=${link}>link</a></p>`;
@@ -194,6 +193,7 @@ class UserController extends BaseHelper {
 
   /**
    *
+   *
    * @static uploadUserPicture - the method that handles editing user picture
    * @param {object} req - the request object
    * @param {object} res - the response object
@@ -258,7 +258,9 @@ class UserController extends BaseHelper {
             returning: true
           }
         ).then(([updatedRows, [updatedUser]]) => {
-          UserController.checkIfDataExist(req, res, updatedRows, { message: 'User not found' });
+          if (!updatedRows) {
+            return errorMessage(res, 404, 'User not found');
+          }
           return res.status(200).json({
             profile: updatedUser
           });
@@ -268,6 +270,40 @@ class UserController extends BaseHelper {
       }
     }
     return errorMessage(res, 404, 'User not found');
+  }
+
+  /**
+   *
+   *
+   * @static handleSocialAuth - the method that saves socially /
+   * authenticated user's data into the database
+   * @param {string} accessToken
+   * @param {string} refreshToken
+   * @param {string} profile
+   * @param {function} done
+   *
+   * @memberOf UserController class
+   */
+  static async handleSocialAuth(accessToken, refreshToken, profile, done) {
+    const {
+      id, emails, displayName, photos
+    } = profile;
+
+    try {
+      const [user] = await Users.findOrCreate({
+        where: { email: emails[0].value },
+        defaults: {
+          name: displayName,
+          username: displayName.split(' ')[0].concat(id),
+          password: id,
+          imageUrl: photos[0].value,
+          isVerified: true
+        }
+      });
+      return done(null, user);
+    } catch (error) {
+      return done(error, null);
+    }
   }
 
   /**
@@ -285,7 +321,9 @@ class UserController extends BaseHelper {
         where: { email },
         returning: true
       });
-      UserController.checkIfDataExist(req, res, dbUser, { message: 'This email is not registered in our system' });
+      UserController.checkIfDataExist(req, res, dbUser, {
+        message: 'This email is not registered in our system'
+      });
       const { id, username } = dbUser;
       // define token payload and duration
       const jwtKey = process.env.JWT_SECRET;
@@ -306,11 +344,36 @@ class UserController extends BaseHelper {
       <a href=${link}>link</a>. This link will expire after <b>one hour</b></p>`;
       sendEmail(email, subject, message);
       return res.status(200).send({
-        message: `password reset link sent to ${email}, please check your email`, token
+        message: `password reset link sent to ${email}, please check your email`,
+        token
       });
     } catch (error) {
       return errorMessage(res, 500, 'Server currently down');
     }
+  }
+
+  /**
+   *
+   * @description Redirects socially authenticated users and returns a token
+   * @static
+   * @param {*} req
+   * @param {*} res
+   * @returns {object} Json Resonse
+   * @memberof UserController
+   */
+  static async socialAuthRedirect(req, res) {
+    const {
+      username, email, name, role, isVerified
+    } = req.user.dataValues;
+    const payload = {
+      email,
+      username,
+      name,
+      role,
+      isVerified
+    };
+    const token = assignToken(payload);
+    return res.redirect(`/?token=${token}`);
   }
 
   /**
@@ -331,10 +394,13 @@ class UserController extends BaseHelper {
     try {
       const { email } = decodedToken;
       const { password } = req.body;
-      const response = await Users.update({ password }, {
-        where: { email },
-        returning: true
-      });
+      const response = await Users.update(
+        { password },
+        {
+          where: { email },
+          returning: true
+        }
+      );
       const updatedUser = response[1][0];
       return res.status(200).json({ message: 'Password reset successfully', updatedUser });
     } catch (resetError) {
@@ -342,6 +408,5 @@ class UserController extends BaseHelper {
     }
   }
 }
-
 
 export default UserController;

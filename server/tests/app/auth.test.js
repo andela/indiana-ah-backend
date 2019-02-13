@@ -1,6 +1,23 @@
 import request from 'supertest';
-import { expect } from 'chai';
+import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
+import chai, { expect } from 'chai';
 import app from '../../index';
+import UserController from '../../controllers/userController';
+
+chai.use(sinonChai);
+
+const socialUser = {
+  id: '10828801445254545653',
+  displayName: 'Divinelove Iscool',
+  emails: [{ value: 'divineloveiscool@gmail.com', type: 'account' }],
+  photos: [
+    {
+      value:
+        'https://t4.ftcdn.net/jpg/01/17/36/43/500_F_117364322_7awtHqkvQCiRggBCG1Fq5mt5jPMNjdKh.jpg'
+    }
+  ]
+};
 
 const user2 = {
   username: 'balee',
@@ -221,4 +238,12 @@ describe('Sign Up Validation', () => {
       expect(res.body.message).to.equal('Email is not valid');
       expect(res.statusCode).to.equal(400);
     }));
+});
+
+describe('Social authentication', () => {
+  const callBack = sinon.spy();
+  it('should save a socially authenticated users data into the database', async () => {
+    await UserController.handleSocialAuth(null, null, socialUser, callBack);
+    expect(callBack.called).to.equal(true);
+  });
 });
