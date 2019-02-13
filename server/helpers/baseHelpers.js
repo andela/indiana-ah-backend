@@ -14,10 +14,10 @@ class BaseHelpers {
    *
    * @memberOf baseHelpers - hashes the users password
    */
-  static async hashPassword(password) {
+  static hashPassword(password) {
     const saltRounds = 10;
     try {
-      const response = await bcrypt.hash(password, saltRounds);
+      const response = bcrypt.hashSync(password, saltRounds);
       return response;
     } catch (error) {
       return error;

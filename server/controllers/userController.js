@@ -1,5 +1,6 @@
 /* eslint-disable valid-jsdoc */
 import { Op } from 'sequelize';
+import { runInNewContext } from 'vm';
 import models from '../db/models';
 import assignToken from '../helpers/assignJwtToken';
 import errorMessage from '../helpers/errorHelpers';
@@ -133,6 +134,9 @@ class UserController {
         where: { email },
         attributes: ['name', 'username', 'email', 'password', 'role', 'isVerified', 'id']
       });
+      if (!newUser) {
+        return errorMessage(res, 404, 'error logging in');
+      }
       const {
         email: dbEmail, username, name, role, isVerified, id
       } = newUser;
@@ -170,7 +174,7 @@ class UserController {
    *
    * @memberOf UserController class
    */
-  static async getUserProfile(req, res) {
+  static async getUserProfile(req, res, next) {
     const { username } = req.params;
     try {
       await Users.findOne({
@@ -187,7 +191,7 @@ class UserController {
         });
       });
     } catch (error) {
-      errorMessage(res, 500, 'Internal server error');
+      return next(error);
     }
   }
 
@@ -266,7 +270,7 @@ class UserController {
           });
         });
       } catch (error) {
-        errorMessage(res, 500, 'Internal server error');
+        return errorMessage(res, 500, 'Internal server error');
       }
     }
     return errorMessage(res, 404, 'User not found');

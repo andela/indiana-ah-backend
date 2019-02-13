@@ -10,7 +10,7 @@
     "start": "NODE_ENV=production && NODE_ENV=production npm run migrate:refresh && NODE_ENV=production babel-node ./server/index.js",
     "dev": "nodemon bin/dev",
     "coverage": "nyc report --reporter=text-lcov --reporter=html | coveralls && nyc report --reporter=lcov",
-    "migrate": "sequelize db:migrate",
+    "migrate": "sequelize db:migrate && sequelize db:seed:all",
     "clean:db": "sequelize db:migrate:undo:all",
     "migrate:refresh": "npm run clean:db && npm run migrate"
   },
@@ -41,10 +41,11 @@
     "pg-hstore": "^2.3.2",
     "sequelize": "^4.42.0",
     "sequelize-cli": "^5.4.0",
-    "sequelize-test-helpers": "^1.0.7",
     "sequelize-slugify": "^0.6.1",
+    "sequelize-test-helpers": "^1.0.7",
     "sinon": "^7.2.3",
-    "supertest": "^3.4.2"
+    "supertest": "^3.4.2",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
