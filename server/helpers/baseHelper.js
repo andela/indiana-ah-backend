@@ -23,7 +23,7 @@ class BaseHelper {
  * @returns {boolean} returns a boolean
  */
   static checkIfDataExist(req, res, data, message) {
-    if (!data || data === undefined) {
+    if (!data) {
       return res.status(404).json(message);
     }
     return true;

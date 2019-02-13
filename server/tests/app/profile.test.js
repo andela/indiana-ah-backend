@@ -45,14 +45,6 @@ describe('user profile', () => {
       expect(res.body.message).to.equal('User not found');
     }));
 
-  it('should return an error if an invalid username is provided', () => request(app)
-    .get('/api/v1/profiles/.')
-    .set('x-auth-token', secondToken)
-    .then((res) => {
-      expect(res.status).to.equal(404);
-      expect(res.body.message).to.equal('User not found');
-    }));
-
   it('should return the user\'s profile when a valid username is provided', () => request(app)
     .get('/api/v1/profiles/cim')
     .set('x-auth-token', secondToken)
