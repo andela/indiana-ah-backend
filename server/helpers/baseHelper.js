@@ -30,13 +30,15 @@ class BaseHelper {
   }
 
   /**
- *
- * @param { string } article
- * @returns {number} returns a number
- */
+   * @description helper method for calculating time to read an article
+   * @static
+   * @param {string} article article to be read
+   * @returns {Object} a response object
+   */
   static calculateTimeToRead(article) {
     if (article) {
       const numberOfWords = article.split(' ').length;
+      // average word per minute for reading
       const wpm = 150;
       const time = Math.round(numberOfWords / wpm);
       const timeToRead = (time < 1) ? 'a couple of secs' : `${time} min read`;
