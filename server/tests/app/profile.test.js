@@ -105,15 +105,6 @@ describe('Edit user picture', () => {
       expect(res.status).to.equal(200);
       expect(res.body.avatar).to.match(/^http/);
     }));
-  it('should return an error when invalid ID passed', () => request(app)
-    .patch('/api/v1/profiles/image')
-    .set('x-auth-token', falseToken)
-    .field('Content-Type', 'multipart/form-data')
-    .attach('image', 'server/tests/testImage/feather.jpg')
-    .then((res) => {
-      expect(res.status).to.equal(404);
-      expect(res.body.message).to.equal('User not found');
-    }));
   it('should return an error when invalid ID type passed', () => request(app)
     .patch('/api/v1/profiles/image')
     .set('x-auth-token', badToken)

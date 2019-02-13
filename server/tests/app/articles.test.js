@@ -77,6 +77,8 @@ describe('Create an Article', () => {
       articleSlug = res.body.article.slug;
       expect(res.status).to.equal(201);
       expect(res.body.article).to.be.an('object');
+      expect(res.body.timeToRead).to.equal('a couple of secs');
+      expect(res.body.timeToRead).to.be.a('string');
     }));
 });
 
@@ -102,6 +104,8 @@ describe('Get one article', () => {
     .then((res) => {
       expect(res.status).to.equal(200);
       expect(res.body.article).to.be.an('object');
+      expect(res.body.timeToRead).to.equal('a couple of secs');
+      expect(res.body.timeToRead).to.be.a('string');
     }));
 });
 
