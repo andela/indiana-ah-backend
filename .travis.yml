@@ -1,18 +1,18 @@
 language: node_js
 node_js:
- - 'stable'
+  - "stable"
 env:
- - global
+  - global
 services:
- - postgresql
+  - postgresql
 install:
- - npm install
+  - npm install
 before_script:
- - psql -c 'create database travis_ci_test;' -U postgres
+  - psql -c 'create database travis_ci_test;' -U postgres
 script:
- - npm test
+  - npm test
 after_success:
- - npm run coverage
- - npm run clean:db
+  - npm run coverage
+  - npm run clean:db
 after_failure:
- - npm run clean:db
+  - npm run clean:db
