@@ -8,13 +8,13 @@ import UserController from '../../controllers/userController';
 chai.use(sinonChai);
 
 const socialUser = {
-  id: '108288014452561062871',
-  displayName: 'Divinelove Chukwuemeka',
-  emails: [{ value: 'divinelove.chukwuemeka@andela.com', type: 'account' }],
+  id: '10828801445254545653',
+  displayName: 'Divinelove Iscool',
+  emails: [{ value: 'divineloveiscool@gmail.com', type: 'account' }],
   photos: [
     {
       value:
-        'https://lh6.googleusercontent.com/-oI45jeLioco/AAAAAAAAAAI/AAAAAAAAAAA/ACevoQNPvTdoQs-JQ7dFLjzGy7erCjHlLw/mo/photo.jpg?sz=50'
+        'https://t4.ftcdn.net/jpg/01/17/36/43/500_F_117364322_7awtHqkvQCiRggBCG1Fq5mt5jPMNjdKh.jpg'
     }
   ]
 };

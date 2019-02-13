@@ -1,5 +1,6 @@
 /* eslint-disable valid-jsdoc */
 import { Op } from 'sequelize';
+import dotenv from 'dotenv';
 import models from '../db/models';
 import assignToken from '../helpers/assignJwtToken';
 import errorMessage from '../helpers/errorHelpers';
@@ -7,6 +8,7 @@ import sendEmail from '../services/email';
 import JWTHelper from '../helpers/jwtHelper';
 import BaseHelper from '../helpers/baseHelper';
 
+dotenv.config();
 const { Users } = models;
 const { verifyToken } = JWTHelper;
 /**
