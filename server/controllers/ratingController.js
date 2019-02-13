@@ -1,6 +1,7 @@
 import { Op } from 'sequelize';
 import models from '../db/models';
 import errorResponse from '../helpers/errorHelpers';
+import Basehelper from '../helpers/baseHelper';
 
 const { Ratings, Articles } = models;
 
@@ -8,7 +9,7 @@ const { Ratings, Articles } = models;
  * @description A collection of controller methods for rating an article
  * @class RatingController
  */
-class RatingController {
+class RatingController extends Basehelper {
   /**
    * @description controller method for rating an article
    * @static
@@ -23,7 +24,7 @@ class RatingController {
       const { articleId } = req.params;
       const { rating } = req.body;
       const article = await Articles.findOne({ where: { id: { [Op.eq]: articleId } } });
-      if (!article) return errorResponse(res, 404, 'Article not found');
+      RatingController.checkIfDataExist(req, res, article, { message: 'Article not found' });
       if (article.userId === userId) errorResponse(res, 403, 'You cannot rate an article that you authored');
       const alreadyRated = await Ratings.findOne({ where: { userId, articleId } });
 
@@ -60,7 +61,9 @@ class RatingController {
       const articleRating = await Ratings.findOne({
         where: { id: { [Op.eq]: ratingId } }
       });
-      if (!articleRating) return errorResponse(res, 404, 'Article rating not found');
+      RatingController.checkIfDataExist(req, res, articleRating, {
+        message: 'Article rating not found'
+      });
       return res.status(200).json({ articleRating });
     } catch (error) {
       return next(error);
@@ -79,7 +82,9 @@ class RatingController {
     try {
       const { articleId } = req.params;
       const articleRatings = await Ratings.findAll({ where: { articleId } });
-      if (!articleRatings.length) return errorResponse(res, 404, 'No ratings found for this article');
+      RatingController.checkIfDataExist(req, res, articleRatings.length, {
+        message: 'No ratings found for this article'
+      });
       const numberOfRatings = articleRatings.length;
       const ratings = articleRatings.map(article => article.rating);
       const totalRatings = ratings.reduce((a, b) => a + b);
@@ -103,7 +108,9 @@ class RatingController {
       const { ratingId: id } = req.params;
       const { id: userId } = req.user;
       const rating = await Ratings.findOne({ where: { id, userId } });
-      if (!rating) return errorResponse(res, 404, 'Rating not found');
+      RatingController.checkIfDataExist(req, res, rating, {
+        message: 'No ratings found for this article'
+      });
       await Ratings.destroy({ where: { id, userId } });
       return res.status(200).json({ message: 'Rating successfully cancelled' });
     } catch (error) {

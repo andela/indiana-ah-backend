@@ -241,6 +241,16 @@ describe('Get all article ratings', () => {
     }));
 });
 
+// describe('cancel an article rating', () => {
+//   it('should return a "not found" error if the article requested to be deleted is not found', () => request(app)
+//     .delete('/api/v1/articles/ratings/:ratingId/cancel')
+//     .set('x-auth-token', verifiedToken)
+//     .then((res) => {
+//       expect(res.)
+//     })
+//   )
+// })
+
 describe('Delete an article', () => {
   it('should return a "not found" response if an article requested for delete was not found', () => request(app)
     .delete('/api/v1/articles/yeah-yeah-yeah/delete')
