@@ -11,7 +11,6 @@ import {
 } from './mockData/articlesMockData';
 
 const { Users } = models;
-console.log('>>>>>users', Users);
 
 let verifiedToken;
 let unverifiedToken;

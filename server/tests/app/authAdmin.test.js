@@ -21,7 +21,6 @@ describe('the admin role', () => {
         password: 'baleesecret48'
       });
     regularUserToken = token;
-    console.log(body, 'Body>>>>');
     const {
       header: { 'x-auth-token': token2 }
     } = await request(app)
