@@ -241,15 +241,21 @@ describe('Get all article ratings', () => {
     }));
 });
 
-// describe('cancel an article rating', () => {
-//   it('should return a "not found" error if the article requested to be deleted is not found', () => request(app)
-//     .delete('/api/v1/articles/ratings/:ratingId/cancel')
-//     .set('x-auth-token', verifiedToken)
-//     .then((res) => {
-//       expect(res.)
-//     })
-//   )
-// })
+describe('cancel an article rating', () => {
+  it('should return a "not found" error if the rating requested to be cancelled is not found', () => request(app)
+    .delete('/api/v1/articles/ratings/69feb295-9030-4ef4-b7d7-91198a35b276/ratings/cancel')
+    .set('x-auth-token', verifiedToken)
+    .then((res) => {
+      expect(res.status).to.equal(404);
+    }));
+
+  // it('should cancel the rating if the rating was found', () => request(app)
+  //   .delete(`/api/v1/articles/ratings/${ratingId}/ratings/cancel`)
+  //   .set('x-auth-token', verifiedToken)
+  //   .then((res) => {
+  //     expect(res.status).to.equal(200);
+  //   }));
+});
 
 describe('Delete an article', () => {
   it('should return a "not found" response if an article requested for delete was not found', () => request(app)
