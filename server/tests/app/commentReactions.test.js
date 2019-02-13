@@ -28,7 +28,6 @@ before(async () => {
       userToken = res.body.token;
     });
 });
-
 describe('Create an article', () => {
   it('create an article if the user passes authentication', () => request(app)
     .post('/api/v1/articles')
@@ -66,7 +65,7 @@ describe('Like and Dislike comments', () => {
     .send({ commentId, reactionType: 'like' })
     .then((res) => {
       expect(res.status).to.equal(200);
-      expect(res.body.message).to.equal('You have successfully liked this comment');
+      expect(res.body.message).to.equal('You have successfully liked');
     }));
   it('should successfully dislike an article if user is authenticated', () => request(app)
     .post('/api/v1/comments/reaction')
@@ -74,6 +73,6 @@ describe('Like and Dislike comments', () => {
     .send({ commentId, reactionType: 'dislike' })
     .then((res) => {
       expect(res.status).to.equal(200);
-      expect(res.body.message).to.equal('You have successfully disliked this comment');
+      expect(res.body.message).to.equal('You have successfully disliked');
     }));
 });
