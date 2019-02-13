@@ -221,9 +221,8 @@ class UserController extends BaseHelper {
       if (userValues) {
         url = userValues.dataValues.imageUrl;
       }
-      if (!updatedRows) {
-        return errorMessage(res, 404, 'User not found');
-      }
+
+      UserController.checkIfDataExist(req, res, updatedRows, 'User not found');
       return res.status(200).json({
         avatar: url
       });
@@ -267,9 +266,7 @@ class UserController extends BaseHelper {
         const updatedRows = updatedUser[0];
         const updatedUserValues = updatedUser[1][0].dataValues;
 
-        if (!updatedRows) {
-          return errorMessage(res, 404, 'User not found');
-        }
+        UserController.checkIfDataExist(req, res, updatedRows, 'User not found');
         return res.status(200).json({
           profile: updatedUserValues
         });
