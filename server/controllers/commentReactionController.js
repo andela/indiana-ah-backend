@@ -18,48 +18,9 @@ class CommentReactionController extends BaseHelper {
    * @returns {object} a response object
    */
   static async commentReaction(req, res) {
-    const { commentId, reactionType } = req.body;
-    const { id: userId } = req.user;
-
+    const { commentId } = req.body;
     try {
-      const reaction = await CommentReactions.findOrCreate({
-        where: { commentId, userId },
-        defaults: {
-          reactionType,
-          commentId,
-          userId
-        }
-      }).spread((
-        {
-          dataValues: {
-            commentId: dbCommentId, userId: dbUserId, reactionType: dbReactionType
-          }
-        },
-        created
-      ) => ({
-        dbCommentId, dbUserId, dbReactionType, created
-      }));
-      const { created, dbReactionType } = reaction;
-      if (created) {
-        return res.status(200).json({ message: `You have successfully ${reactionType}d this comment` });
-      }
-      if (!created && reactionType !== dbReactionType) {
-        await CommentReactions.update(
-          { reactionType },
-          {
-            where: { commentId, userId },
-            returning: true
-          }
-        ).then(() => res.status(200).json({
-          message: `You have successfully ${reactionType}d this comment`
-        }));
-      }
-      if (!created && reactionType === dbReactionType) {
-        await CommentReactions.destroy({
-          where: { commentId, userId }
-        });
-        return res.status(200).json({ message: 'Reaction successfully deleted' });
-      }
+      CommentReactionController.reaction(req, res, CommentReactions, commentId);
     } catch (error) {
       return errorMessage(res, 500, 'internal server error');
     }
