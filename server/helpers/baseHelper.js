@@ -72,21 +72,20 @@ class BaseHelper {
    * @param {object} req Request object
    * @param {object} res Response object
    * @param {object} model Request object
-   * @param {object} queryFields Request object
+   * @param {object} modelColumnObj Request object
    * @param {object} modelIdKeyName Request object
    * @returns {object} a response object
    */
-  static async reaction(req, res, model, queryFields, modelIdKeyName) {
+  static async reaction(req, res, model, modelColumnObj, modelIdKeyName) {
     const { reactionType } = req.body;
     const { id: userId } = req.user;
     req.body.userId = userId;
-    // const modelIdKeyName = model === 'Articles' ? 'articleId' : 'commentId';
     const reaction = await model.findOrCreate({
-      where: { ...queryFields, userId },
+      where: { ...modelColumnObj, userId },
       defaults: {
         reactionType,
         userId,
-        ...queryFields
+        ...modelColumnObj
       }
     }).spread((
       {
@@ -106,16 +105,16 @@ class BaseHelper {
       await model.update(
         { reactionType },
         {
-          where: { ...queryFields, userId },
+          where: { ...modelColumnObj, userId },
           returning: true
         }
-      ).then(() => res.status(200).json({
+      ); res.status(200).json({
         message: `You have successfully ${reactionType}d`
-      }));
+      });
     }
     if (!created && reactionType === dbReactionType) {
       await model.destroy({
-        where: { ...queryFields, userId }
+        where: { ...modelColumnObj, userId }
       });
       return res.status(200).json({ message: 'Reaction successfully deleted' });
     }
