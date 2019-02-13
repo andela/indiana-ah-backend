@@ -8,6 +8,6 @@ const router = express.Router();
 const { assignRole } = RoleController;
 const { authUser } = Auth;
 
-router.post('/', authUser, verifyAdmin, assignRole);
+router.post('/assign', authUser, verifyAdmin, assignRole);
 
 export default router;
