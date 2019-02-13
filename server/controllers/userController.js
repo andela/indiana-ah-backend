@@ -127,37 +127,38 @@ class UserController extends BaseHelper {
    * @param {Function} next passes control to the next middleware
    * @returns {Object} a response object
    */
-  static async loginUser(req, res, next) {
+  static async loginUser(req, res) {
     const { email, password } = req.body;
     try {
       const newUser = await Users.findOne({
         where: { email },
         attributes: ['name', 'username', 'email', 'password', 'role', 'isVerified', 'id']
       });
-      if (!newUser) return errorMessage(res, 401, 'Invalid Email or password');
       const {
         email: dbEmail, username, name, role, isVerified, id
       } = newUser;
       const decodedPassword = await newUser.validatePassword(password);
-      if (!decodedPassword) return errorMessage(res, 401, 'Invalid Email or password');
-      const payload = {
-        email: dbEmail,
-        username,
-        name,
-        role,
-        isVerified,
-        id
-      };
-      const token = assignToken(payload);
-      return res
-        .header('x-auth-token', token)
-        .status(200)
-        .json({
-          message: 'successfully logged in',
-          token
-        });
+      if (dbEmail && decodedPassword) {
+        const payload = {
+          email: dbEmail,
+          username,
+          name,
+          role,
+          isVerified,
+          id
+        };
+        const token = assignToken(payload);
+        return res
+          .header('x-auth-token', token)
+          .status(200)
+          .json({
+            message: 'successfully logged in',
+            token
+          });
+      }
+      return errorMessage(res, 401, 'error logging in');
     } catch (error) {
-      return next(error);
+      return errorMessage(res, 500, 'internal server error');
     }
   }
 

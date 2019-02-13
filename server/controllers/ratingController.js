@@ -9,13 +9,22 @@ const { Ratings, Articles } = models;
  * @class RatingController
  */
 class RatingController {
+  /**
+   * @description controller method for rating an article
+   * @static
+   * @param {object} req Request object
+   * @param {object} res Response object
+   * @param {Function} next passes control to the next middleware
+   * @returns {Object} a response object
+   */
   static async rateArticle(req, res, next) {
     try {
       const { id: userId } = req.user;
       const { articleId } = req.params;
       const { rating } = req.body;
       const article = await Articles.findOne({ where: { id: { [Op.eq]: articleId } } });
-      if (!article) return res.status(404).json({ message: 'Article not found' });
+      if (!article) return errorResponse(res, 404, 'Article not found');
+      if (article.userId === userId) errorResponse(res, 403, 'You cannot rate an article that you authored');
       const alreadyRated = await Ratings.findOne({ where: { userId, articleId } });
 
       if (alreadyRated) {
@@ -37,26 +46,66 @@ class RatingController {
     }
   }
 
+  /**
+   * @description controller method for getting a single article rating
+   * @static
+   * @param {object} req Request object
+   * @param {object} res Response object
+   * @param {Function} next passes control to the next middleware
+   * @returns {Object} a response object
+   */
   static async getOneArticleRating(req, res, next) {
     try {
       const { ratingId } = req.params;
       const articleRating = await Ratings.findOne({
         where: { id: { [Op.eq]: ratingId } }
       });
-      if (!articleRating) return res.status(404).json({ message: 'Article rating not found' });
+      if (!articleRating) return errorResponse(res, 404, 'Article rating not found');
       return res.status(200).json({ articleRating });
     } catch (error) {
       return next(error);
     }
   }
 
+  /**
+   * @description controller method for getting all the ratings for an
+   * @static
+   * @param {object} req Request object
+   * @param {object} res Response object
+   * @param {Function} next passes control to the next middleware
+   * @returns {Object} a response object
+   */
   static async getAllArticleRatings(req, res, next) {
     try {
       const { articleId } = req.params;
       const articleRatings = await Ratings.findAll({ where: { articleId } });
-      if (!articleRatings.length) return res.status(404).json({ message: 'No ratings found for article' });
-      const totalRatings = articleRatings.length;
-      return res.status(200).json({ totalRatings, articleRatings });
+      if (!articleRatings.length) return errorResponse(res, 404, 'No ratings found for this article');
+      const numberOfRatings = articleRatings.length;
+      const ratings = articleRatings.map(article => article.rating);
+      const totalRatings = ratings.reduce((a, b) => a + b);
+      const averageRating = totalRatings / numberOfRatings;
+      return res.status(200).json({ numberOfRatings, averageRating, articleRatings });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  /**
+   * @description controller method for cancelling an article rating
+   * @static
+   * @param {object} req Request object
+   * @param {object} res Response object
+   * @param {Function} next passes control to the next middleware
+   * @returns {Object} a response object
+   */
+  static async cancelRating(req, res, next) {
+    try {
+      const { ratingId: id } = req.params;
+      const { id: userId } = req.user;
+      const rating = await Ratings.findOne({ where: { id, userId } });
+      if (!rating) return errorResponse(res, 404, 'Rating not found');
+      await Ratings.destroy({ where: { id, userId } });
+      return res.status(200).json({ message: 'Rating successfully cancelled' });
     } catch (error) {
       return next(error);
     }

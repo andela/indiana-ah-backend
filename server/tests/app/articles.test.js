@@ -7,12 +7,14 @@ import {
   validArticle,
   articleForUpdate,
   user1,
-  user2
+  user2,
+  user3
 } from './mockData/articlesMockData';
 
 const { Users } = models;
 
 let verifiedToken;
+let verifiedToken2;
 let unverifiedToken;
 let articleSlug;
 let articleId;
@@ -20,6 +22,7 @@ let ratingId;
 
 before(async () => {
   await Users.create(user1);
+  await Users.create(user3);
   return request(app)
     .post('/api/v1/login')
     .send({ email: user1.email, password: user1.password })
@@ -33,6 +36,13 @@ before(() => request(app)
   .send(user2)
   .then((res) => {
     unverifiedToken = res.body.token;
+  }));
+
+before(() => request(app)
+  .post('/api/v1/login')
+  .send(user3)
+  .then((res) => {
+    verifiedToken2 = res.body.token;
   }));
 
 describe('Create an Article', () => {
@@ -162,9 +172,18 @@ describe('Rate an article', () => {
       expect(res.body.message).to.equal('Article not found');
     }));
 
-  it('should rate the article if the article was found and the rating is valid', () => request(app)
+  it('should return a "forbidden response" if the user that wants to rate the article authored it', () => request(app)
     .post(`/api/v1/articles/${articleId}/ratings`)
     .set('x-auth-token', verifiedToken)
+    .send({ rating: 3 })
+    .then((res) => {
+      expect(res.status).to.equal(403);
+      expect(res.body.message).to.equal('You cannot rate an article that you authored');
+    }));
+
+  it('should rate the article if the article was found, the rating is valid and the rater did not author the article', () => request(app)
+    .post(`/api/v1/articles/${articleId}/ratings`)
+    .set('x-auth-token', verifiedToken2)
     .send({ rating: 5 })
     .then((res) => {
       ratingId = res.body.articleRating.id;
@@ -174,7 +193,7 @@ describe('Rate an article', () => {
 
   it('should update the article rating if the user has rated the article previously', () => request(app)
     .post(`/api/v1/articles/${articleId}/ratings`)
-    .set('x-auth-token', verifiedToken)
+    .set('x-auth-token', verifiedToken2)
     .send({ rating: 4 })
     .then((res) => {
       expect(res.status).to.equal(200);
@@ -209,14 +228,16 @@ describe('Get all article ratings', () => {
   it('should return a "not found" error if no ratings was found for an article', () => request(app)
     .get('/api/v1/articles/69feb295-9030-4ef4-b7d7-91198a35b276/ratings')
     .then((res) => {
-      console.log(res.body);
       expect(res.status).to.equal(404);
+      expect(res.body.message).to.equal('No ratings found for this article');
     }));
 
   it('should get all ratings for an article if any', () => request(app)
     .get(`/api/v1/articles/${articleId}/ratings`)
     .then((res) => {
       expect(res.status).to.equal(200);
+      expect(res.body.articleRatings).to.be.an('array');
+      expect(res.body.averageRating).to.be.a('number');
     }));
 });
 

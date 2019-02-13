@@ -7,7 +7,9 @@ export const articleSchema = {
   articleBody: Joi.string()
     .min(10)
     .required(),
-  tags: Joi.string().min(2),
+  tags: Joi.array()
+    .items(Joi.string())
+    .min(2),
   imageUrl: Joi.string().uri()
 };
 

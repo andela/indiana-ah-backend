@@ -27,3 +27,10 @@ export const user2 = {
   email: 'dainty1@gmail.com',
   password: 'chika4life4real'
 };
+
+export const user3 = {
+  username: 'chiga4life',
+  email: 'chigaemezu@gmail.com',
+  password: 'baleesecret48',
+  isVerified: true
+};
