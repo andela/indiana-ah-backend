@@ -11,6 +11,7 @@ let regularUserToken, superAdminToken;
 describe('the admin role', () => {
   before(async () => {
     const {
+      body,
       header: { 'x-auth-token': token }
     } = await request(app)
       .post('/api/v1/login')
@@ -20,6 +21,7 @@ describe('the admin role', () => {
         password: 'baleesecret48'
       });
     regularUserToken = token;
+    console.log(body, 'Body>>>>');
     const {
       header: { 'x-auth-token': token2 }
     } = await request(app)
