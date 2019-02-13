@@ -27,8 +27,8 @@ class BaseHelper {
     if (!data) {
       return res.status(404).json(message);
     }
-    return true;
   }
+
 
   /**
    * @description helper method for calculating time to read an article
@@ -72,20 +72,21 @@ class BaseHelper {
    * @param {object} req Request object
    * @param {object} res Response object
    * @param {object} model Request object
-   * @param {object} modelId Request object
+   * @param {object} queryFields Request object
+   * @param {object} modelIdKeyName Request object
    * @returns {object} a response object
    */
-  static async reaction(req, res, model, modelId) {
+  static async reaction(req, res, model, queryFields, modelIdKeyName) {
     const { reactionType } = req.body;
     const { id: userId } = req.user;
     req.body.userId = userId;
-    const modelIdKeyName = model === 'Articles' ? 'articleId' : 'commentId';
+    // const modelIdKeyName = model === 'Articles' ? 'articleId' : 'commentId';
     const reaction = await model.findOrCreate({
-      where: { [modelIdKeyName]: modelId, userId },
+      where: { ...queryFields, userId },
       defaults: {
         reactionType,
-        [modelIdKeyName]: modelId,
-        userId
+        userId,
+        ...queryFields
       }
     }).spread((
       {
@@ -105,7 +106,7 @@ class BaseHelper {
       await model.update(
         { reactionType },
         {
-          where: { [modelIdKeyName]: modelId, userId },
+          where: { ...queryFields, userId },
           returning: true
         }
       ).then(() => res.status(200).json({
@@ -114,7 +115,7 @@ class BaseHelper {
     }
     if (!created && reactionType === dbReactionType) {
       await model.destroy({
-        where: { [modelIdKeyName]: modelId, userId }
+        where: { ...queryFields, userId }
       });
       return res.status(200).json({ message: 'Reaction successfully deleted' });
     }
