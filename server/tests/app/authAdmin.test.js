@@ -34,7 +34,11 @@ describe('the admin role', () => {
   describe('access the superAdmin route', () => {
     it('should fail if a regular user tries to update another user role', () => {
       request(app)
+<<<<<<< HEAD
         .post('/api/v1/admin/assign')
+=======
+        .post('/api/v1/admin')
+>>>>>>> 19f0e5f8d748f750f9e75bf63418aa7936a84a8b
         .set('content-type', 'application/json')
         .set('x-auth-token', regularUserToken)
         .send({
@@ -48,7 +52,11 @@ describe('the admin role', () => {
     });
     it('should succeed if the superAdmin tries to update a user role', () => {
       request(app)
+<<<<<<< HEAD
         .post('/api/v1/admin/assign')
+=======
+        .post('/api/v1/admin')
+>>>>>>> 19f0e5f8d748f750f9e75bf63418aa7936a84a8b
         .set('content-type', 'application/json')
         .set('x-auth-token', superAdminToken)
         .send({
@@ -63,7 +71,11 @@ describe('the admin role', () => {
     });
     it('should fail if the user does not exist', () => {
       request(app)
+<<<<<<< HEAD
         .post('/api/v1/admin/assign')
+=======
+        .post('/api/v1/admin')
+>>>>>>> 19f0e5f8d748f750f9e75bf63418aa7936a84a8b
         .set('content-type', 'application/json')
         .set('x-auth-token', superAdminToken)
         .send({
