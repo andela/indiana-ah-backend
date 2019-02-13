@@ -134,6 +134,9 @@ class UserController extends BaseHelper {
         where: { email },
         attributes: ['name', 'username', 'email', 'password', 'role', 'isVerified', 'id']
       });
+      if (!newUser) {
+        return errorMessage(res, 404, 'error logging in');
+      }
       const {
         email: dbEmail, username, name, role, isVerified, id
       } = newUser;
@@ -171,7 +174,7 @@ class UserController extends BaseHelper {
    *
    * @memberOf UserController class
    */
-  static async getUserProfile(req, res) {
+  static async getUserProfile(req, res, next) {
     const { username } = req.params;
     try {
       await Users.findOne({
@@ -188,7 +191,7 @@ class UserController extends BaseHelper {
         });
       });
     } catch (error) {
-      errorMessage(res, 500, 'Internal server error');
+      return next(error);
     }
   }
 
@@ -264,7 +267,7 @@ class UserController extends BaseHelper {
           });
         });
       } catch (error) {
-        errorMessage(res, 500, 'Internal server error');
+        return errorMessage(res, 500, 'Internal server error');
       }
     }
     return errorMessage(res, 404, 'User not found');
@@ -285,7 +288,9 @@ class UserController extends BaseHelper {
         where: { email },
         returning: true
       });
-      UserController.checkIfDataExist(req, res, dbUser, { message: 'This email is not registered in our system' });
+      UserController.checkIfDataExist(req, res, dbUser, {
+        message: 'This email is not registered in our system'
+      });
       const { id, username } = dbUser;
       // define token payload and duration
       const jwtKey = process.env.JWT_SECRET;
@@ -306,7 +311,8 @@ class UserController extends BaseHelper {
       <a href=${link}>link</a>. This link will expire after <b>one hour</b></p>`;
       sendEmail(email, subject, message);
       return res.status(200).send({
-        message: `password reset link sent to ${email}, please check your email`, token
+        message: `password reset link sent to ${email}, please check your email`,
+        token
       });
     } catch (error) {
       return errorMessage(res, 500, 'Server currently down');
@@ -331,10 +337,13 @@ class UserController extends BaseHelper {
     try {
       const { email } = decodedToken;
       const { password } = req.body;
-      const response = await Users.update({ password }, {
-        where: { email },
-        returning: true
-      });
+      const response = await Users.update(
+        { password },
+        {
+          where: { email },
+          returning: true
+        }
+      );
       const updatedUser = response[1][0];
       return res.status(200).json({ message: 'Password reset successfully', updatedUser });
     } catch (resetError) {
@@ -342,6 +351,5 @@ class UserController extends BaseHelper {
     }
   }
 }
-
 
 export default UserController;
