@@ -173,18 +173,17 @@ class UserController extends BaseHelper {
   static async getUserProfile(req, res) {
     const { username } = req.params;
     try {
-      await Users.findOne({
+      const user = await Users.findOne({
         where: {
           username
         },
         attributes: ['name', 'username', 'email', 'bio', 'imageUrl', 'createdAt']
-      }).then((user) => {
-        if (!user) {
-          return errorMessage(res, 404, 'User not found');
-        }
-        return res.status(200).json({
-          profile: user.dataValues
-        });
+      });
+      if (!user) {
+        return errorMessage(res, 404, 'User not found');
+      }
+      return res.status(200).json({
+        profile: user.dataValues
       });
     } catch (error) {
       errorMessage(res, 500, 'Internal server error');
@@ -206,7 +205,7 @@ class UserController extends BaseHelper {
     image.url = req.file.url;
     image.id = req.file.public_id;
     try {
-      await Users.update(
+      const updatedUser = await Users.update(
         {
           imageUrl: image.url
         },
@@ -214,18 +213,25 @@ class UserController extends BaseHelper {
           where: { id },
           returning: true
         }
-      ).then(([updatedRows, [updatedUser]]) => {
-        if (!updatedRows) {
-          return errorMessage(res, 404, 'User not found');
-        }
-        return res.status(200).json({
-          avatar: updatedUser.imageUrl
-        });
+      );
+
+      const updatedRows = updatedUser[0];
+      const userValues = updatedUser[1][0];
+      let url = '';
+      if (userValues) {
+        url = userValues.dataValues.imageUrl;
+      }
+      if (updatedRows === 0) {
+        return errorMessage(res, 404, 'User not found');
+      }
+      return res.status(200).json({
+        avatar: url
       });
     } catch (error) {
       errorMessage(res, 500, 'Internal server error');
     }
   }
+
 
   /**
    *
@@ -246,7 +252,7 @@ class UserController extends BaseHelper {
     });
     if (profile) {
       try {
-        await Users.update(
+        const updatedUser = await Users.update(
           {
             name: name || profile.dataValues.name,
             username: username || profile.dataValues.username,
@@ -257,13 +263,15 @@ class UserController extends BaseHelper {
             where: { id },
             returning: true
           }
-        ).then(([updatedRows, [updatedUser]]) => {
-          if (!updatedRows) {
-            return errorMessage(res, 404, 'User not found');
-          }
-          return res.status(200).json({
-            profile: updatedUser
-          });
+        );
+        const updatedRows = updatedUser[0];
+        const updatedUserValues = updatedUser[1][0].dataValues;
+
+        if (updatedRows === 0) {
+          return errorMessage(res, 404, 'User not found');
+        }
+        return res.status(200).json({
+          profile: updatedUserValues
         });
       } catch (error) {
         errorMessage(res, 500, 'Internal server error');
