@@ -31,12 +31,14 @@ class ReportController {
    */
   static async getAllReports(req, res, next) {
     try {
+      const { slug } = req.params;
       const report = await Reports.findAll({
+        where: { slug },
+        returning: true,
         include: [
           {
             model: Users,
-            attributes: ['username', 'bio'],
-
+            attributes: ['username'],
             include: [{ model: Articles, attributes: ['articleTitle', 'articleBody'] }]
           }
         ]

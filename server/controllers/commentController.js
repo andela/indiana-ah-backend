@@ -46,7 +46,7 @@ class CommentController {
         returning: true
       });
       return res.status(201).json({
-        message: 'Comment has been posted successfully',
+        message: 'Comments retrieve successfully',
         data: articleComments
       });
     } catch (error) {

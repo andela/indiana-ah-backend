@@ -24,6 +24,10 @@ export default {
         as: 'articleId'
       }
     },
+    slug: {
+      allowNull: false,
+      type: Sequelize.STRING
+    },
     reportBody: {
       allowNull: false,
       type: Sequelize.STRING
