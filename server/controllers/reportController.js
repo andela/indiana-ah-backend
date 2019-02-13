@@ -29,7 +29,7 @@ class ReportController {
    * @param {object} next Response Object
    * @returns {Object} a response object
    */
-  static async getAllReports(req, res, next) {
+  static async getOneArticleReports(req, res, next) {
     try {
       const { slug } = req.params;
       const report = await Reports.findAll({
@@ -39,12 +39,31 @@ class ReportController {
           {
             model: Users,
             attributes: ['username'],
-            include: [{ model: Articles, attributes: ['articleTitle', 'articleBody'] }]
+            include: [
+              { model: Articles, attributes: ['articleTitle', 'articleBody'], where: { slug } }
+            ]
           }
         ]
       });
       if (!report.length) return errorResponse(res, 404, 'No reports found');
-      return res.status(200).json({ message: 'Report retrieve successful', report });
+      return res.status(200).json({ message: 'Reports retrieve successful', report });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  /**
+   *@description controller method for getting all reports
+   * @param {object} req Request object
+   * @param {object} res Response object
+   * @param {object} next Response Object
+   * @returns {Object} a response object
+   */
+  static async getAllReports(req, res, next) {
+    try {
+      const report = await Reports.findAll({});
+      if (!report.length) return errorResponse(res, 404, 'No reports found');
+      return res.status(200).json({ message: 'Reports retrieve successful', report });
     } catch (error) {
       return next(error);
     }

@@ -28,6 +28,16 @@ describe('Create an Article for comment', () => {
     }));
 });
 
+describe('Admin Should get all report on an article', () => {
+  it('Should get all reports on an article', () => request(app)
+    .get('/api/v1/reports')
+    .set('x-auth-token', verifiedToken)
+    .then((res) => {
+      expect(res.status).to.equal(404);
+      expect(res.body.message).to.equal('No reports found');
+    }));
+});
+
 describe('User report on an article', () => {
   it('Should show article does not exist if slug is invalid', () => request(app)
     .post(`/api/v1/articles/${wrongArticleSlug}/comments`)
@@ -45,5 +55,53 @@ describe('User report on an article', () => {
     .then((res) => {
       expect(res.status).to.equal(201);
       expect(res.body.message).to.equal('Article report is successful');
+    }));
+});
+
+describe('Admin Should get a report on an article', () => {
+  it('Should not get a report on an article', () => request(app)
+    .get(`/api/v1/articles/${wrongArticleSlug}/reports`)
+    .set('x-auth-token', verifiedToken)
+    .then((res) => {
+      expect(res.status).to.equal(404);
+      expect(res.body.message).to.equal('No reports found');
+    }));
+
+  it('Should get a report on an article', () => request(app)
+    .get(`/api/v1/articles/${articleSlug}/reports`)
+    .set('x-auth-token', verifiedToken)
+    .then((res) => {
+      expect(res.status).to.equal(200);
+      expect(res.body.message).to.equal('Reports retrieve successful');
+    }));
+});
+
+describe('Admin Should get all report on an article', () => {
+  it('Should get all reports on an article', () => request(app)
+    .get('/api/v1/reports')
+    .set('x-auth-token', verifiedToken)
+    .then((res) => {
+      expect(res.status).to.equal(200);
+      expect(res.body.message).to.equal('Reports retrieve successful');
+    }));
+});
+
+describe('Welcome to Authors Haven', () => {
+  it('Should welcome users to Authors Haven', () => request(app)
+    .get('/')
+    .set('x-auth-token', verifiedToken)
+    .then((res) => {
+      expect(res.status).to.equal(200);
+      expect(res.body.message).to.equal('welcome to authors haven platform');
+    }));
+});
+
+describe('Welcome to Authors Haven', () => {
+  it('Should welcome users to Authors Haven', () => request(app)
+    .get('/ai')
+    .set('x-auth-token', verifiedToken)
+    .then((res) => {
+      expect(res.status).to.equal(404);
+      expect(res.body.error).to.equal('route does not exist');
     }));
 });
