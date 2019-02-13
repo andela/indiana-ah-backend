@@ -20,7 +20,7 @@ class CommentReactionController extends BaseHelper {
   static async commentReaction(req, res) {
     const { commentId } = req.body;
     try {
-      CommentReactionController.reaction(req, res, CommentReactions, commentId);
+      CommentReactionController.reaction(req, res, CommentReactions, { commentId }, 'commentId');
     } catch (error) {
       return errorMessage(res, 500, 'internal server error');
     }
