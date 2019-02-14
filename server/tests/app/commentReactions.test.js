@@ -73,5 +73,13 @@ describe('Comment Reactions', () => {
         expect(res.status).to.equal(200);
         expect(res.body.message).to.equal('You have successfully disliked');
       }));
+    it('should successfully dislike an article if user is authenticated', () => request(app)
+      .post('/api/v1/comments/reaction')
+      .set('x-auth-token', userToken)
+      .send({ commentId, reactionType: 'dislike' })
+      .then((res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.message).to.equal('Reaction successfully deleted');
+      }));
   });
 });
