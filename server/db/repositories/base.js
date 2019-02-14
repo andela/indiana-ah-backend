@@ -53,21 +53,19 @@ class BaseRepository {
    */
   async update(username, role, res, next) {
     try {
-      await this.models
-        .update(
-          { role },
-          {
-            where: { username },
-            returning: true
-          }
-        )
-        .then((result) => {
-          res.status(200).json({
-            message: 'successfully updated user role',
-            updatedUser: result[1][0].dataValues
-          });
-        })
-        .catch(err => next(err));
+      const updatedRole = await this.models.update(
+        { role },
+        {
+          where: { username },
+          returning: true
+        }
+      );
+      if (updatedRole) {
+        return res.status(200).json({
+          message: 'successfully updated user role',
+          updatedUser: updatedRole[1][0].dataValues
+        });
+      }
     } catch (error) {
       return error;
     }
