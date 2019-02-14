@@ -134,9 +134,7 @@ class UserController extends BaseHelper {
         where: { email },
         attributes: ['name', 'username', 'email', 'password', 'role', 'isVerified', 'id']
       });
-      if (!newUser) {
-        return errorMessage(res, 404, 'error logging in');
-      }
+      UserController.checkIfDataExist(req, res, newUser, { message: 'error logging in' });
       const {
         email: dbEmail, username, name, role, isVerified, id
       } = newUser;
