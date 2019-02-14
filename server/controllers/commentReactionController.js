@@ -1,6 +1,5 @@
 import models from '../db/models';
 import BaseHelper from '../helpers/baseHelper';
-import errorMessage from '../helpers/errorHelpers';
 
 const { CommentReactions } = models;
 /**
@@ -10,19 +9,19 @@ const { CommentReactions } = models;
  */
 class CommentReactionController extends BaseHelper {
   /**
-   * @description commentReaction- controller method for liking and disliking an article
+   * @description commentReaction- controller method for liking and disliking a comment
    * @static
    * @param {object} req Request object
    * @param {object} res Response object
    * @param {object} next Response object
    * @returns {object} a response object
    */
-  static async commentReaction(req, res) {
+  static async commentReaction(req, res, next) {
     const { commentId } = req.body;
     try {
       CommentReactionController.reaction(req, res, CommentReactions, { commentId }, 'commentId');
     } catch (error) {
-      return errorMessage(res, 500, 'internal server error');
+      return next(error);
     }
   }
 }

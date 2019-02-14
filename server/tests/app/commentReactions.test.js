@@ -29,7 +29,7 @@ describe('Comment Reactions', () => {
       });
   });
   describe('Create an article', () => {
-    it('create an article if the user passes authentication', () => request(app)
+    it('should create an article if the user passes authentication', () => request(app)
       .post('/api/v1/articles')
       .set('x-auth-token', userToken)
       .send(article)
@@ -40,7 +40,7 @@ describe('Comment Reactions', () => {
       }));
   });
   describe('Create a comment', () => {
-    it('create a comment if the user passes authentication', () => request(app)
+    it('should create a comment if the user passes authentication', () => request(app)
       .post(`/api/v1/articles/${articleSlug}/comments`)
       .set('x-auth-token', userToken)
       .send(comment)
@@ -57,7 +57,7 @@ describe('Comment Reactions', () => {
         expect(res.status).to.equal(401);
         expect(res.body.message).to.equal('Access denied. You are not authorized to access this route');
       }));
-    it('should successfully like an article if user is authenticated', () => request(app)
+    it('should successfully like an cooment if user is authenticated', () => request(app)
       .post('/api/v1/comments/reaction')
       .set('x-auth-token', userToken)
       .send({ commentId, reactionType: 'like' })
@@ -65,7 +65,7 @@ describe('Comment Reactions', () => {
         expect(res.status).to.equal(200);
         expect(res.body.message).to.equal('You have successfully liked');
       }));
-    it('should successfully dislike an article if user is authenticated', () => request(app)
+    it('should successfully dislike an comment if user is authenticated', () => request(app)
       .post('/api/v1/comments/reaction')
       .set('x-auth-token', userToken)
       .send({ commentId, reactionType: 'dislike' })
@@ -73,7 +73,7 @@ describe('Comment Reactions', () => {
         expect(res.status).to.equal(200);
         expect(res.body.message).to.equal('You have successfully disliked');
       }));
-    it('should successfully dislike an article if user is authenticated', () => request(app)
+    it('should successfully dislike an comment if user is authenticated', () => request(app)
       .post('/api/v1/comments/reaction')
       .set('x-auth-token', userToken)
       .send({ commentId, reactionType: 'dislike' })

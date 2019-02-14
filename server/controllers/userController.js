@@ -336,10 +336,11 @@ class UserController extends BaseHelper {
    * @static sendPasswordResetLink - method to send password reset link to user
    * @param {object} req - the request object
    * @param {object} res - the response object
+   * @param {object} next - the response object
    * @returns {object} user - the user object
    * @memberOf UserController class
    */
-  static async sendPasswordResetLink(req, res) {
+  static async sendPasswordResetLink(req, res, next) {
     try {
       const { email } = req.body;
       const dbUser = await Users.findOne({
@@ -373,7 +374,7 @@ class UserController extends BaseHelper {
         token
       });
     } catch (error) {
-      return errorMessage(res, 500, 'Server currently down');
+      return next(error);
     }
   }
 
@@ -407,10 +408,11 @@ class UserController extends BaseHelper {
    * @static getUserByEmail - the method that handles user password reset
    * @param {object} req - the request object
    * @param {object} res - the response object
+   * @param {object} next - the response object
    * @returns {object} user - the user object
    * @memberOf UserController class
    */
-  static async resetPassword(req, res) {
+  static async resetPassword(req, res, next) {
     const token = req.header('x-auth-token');
     const decodedToken = JWTHelper.verifyToken(token);
     if (!decodedToken) {
@@ -429,7 +431,7 @@ class UserController extends BaseHelper {
       const updatedUser = response[1][0];
       return res.status(200).json({ message: 'Password reset successfully', updatedUser });
     } catch (resetError) {
-      return errorMessage(res, 500, resetError);
+      return next(resetError);
     }
   }
 }

@@ -67,7 +67,7 @@ class BaseHelper {
   }
 
   /**
-   * @description articleReaction- controller method for liking and disliking an article
+   * @description reaction- controller method for adding and removing reactions
    * @static
    * @param {object} req Request object
    * @param {object} res Response object
@@ -133,7 +133,7 @@ class BaseHelper {
   }
 
   /**
-   * @description deleteReaction- controller method for updating likes and dislikes
+   * @description deleteReaction- controller method for deleting likes and dislikes
    * @static
    * @param {object} req Request object
    * @param {object} res Response object
