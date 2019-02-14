@@ -1,4 +1,3 @@
-import '@babel/polyfill';
 import uuid from 'uuid/v4';
 import dotenv from 'dotenv';
 import baseHelpers from '../../helpers/baseHelper';
