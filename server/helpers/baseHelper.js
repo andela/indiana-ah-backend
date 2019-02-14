@@ -102,22 +102,51 @@ class BaseHelper {
       return res.status(200).json({ message: `You have successfully ${reactionType}d` });
     }
     if (!created && reactionType !== dbReactionType) {
-      await model.update(
-        { reactionType },
-        {
-          where: { ...modelColumnObj, userId },
-          returning: true
-        }
-      ); res.status(200).json({
-        message: `You have successfully ${reactionType}d`
-      });
+      BaseHelper.updateReaction(req, res, model, modelColumnObj, userId, reactionType);
     }
     if (!created && reactionType === dbReactionType) {
-      await model.destroy({
-        where: { ...modelColumnObj, userId }
-      });
-      return res.status(200).json({ message: 'Reaction successfully deleted' });
+      BaseHelper.deleteReaction(req, res, model, modelColumnObj, userId);
     }
+  }
+
+  /**
+   * @description updateReaction- controller method for updating likes and dislikes
+   * @static
+   * @param {object} req Request object
+   * @param {object} res Response object
+   * @param {object} model Request object
+   * @param {object} columnObj Request object
+   * @param {object} userId Request object
+   * @param {object} reactionType Request object
+   * @returns {object} a response object
+   */
+  static async updateReaction(req, res, model, columnObj, userId, reactionType) {
+    await model.update(
+      { reactionType },
+      {
+        where: { ...columnObj, userId },
+        returning: true
+      }
+    ); res.status(200).json({
+      message: `You have successfully ${reactionType}d`
+    });
+  }
+
+  /**
+   * @description deleteReaction- controller method for updating likes and dislikes
+   * @static
+   * @param {object} req Request object
+   * @param {object} res Response object
+   * @param {object} model Request object
+   * @param {object} columnObj Request object
+   * @param {object} userId Request object
+   * @returns {object} a response object
+   */
+  static async deleteReaction(req, res, model, columnObj, userId) {
+    await model.destroy({
+      where: { ...columnObj, userId }
+    });
+    return res.status(200).json({ message: 'Reaction successfully deleted' });
   }
 }
 
