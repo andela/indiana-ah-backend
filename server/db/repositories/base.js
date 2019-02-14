@@ -51,7 +51,7 @@ class BaseRepository {
    * @return {Object} the updated user
    * @memberOf BaseRepository
    */
-  async update(username, role, res, next) {
+  async update(username, role, res) {
     try {
       const updatedRole = await this.models.update(
         { role },
