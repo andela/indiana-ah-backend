@@ -11,7 +11,7 @@ const { Users, Follows } = models;
  */
 
 // eslint-disable-next-line require-jsdoc
-class followAndUnfollow {
+class FollowController {
   /**
  *
  * @description Method to follow user
@@ -167,4 +167,4 @@ class followAndUnfollow {
     }
   }
 }
-export default followAndUnfollow;
+export default FollowController;

@@ -6,11 +6,7 @@ const { Users } = models;
 export default async (req, res, action) => {
   const { username } = req.params;
 
-  const user = await Users.findOne({
-    where: {
-      username
-    }
-  });
+  const user = await Users.findOne({ where: { username } });
 
   if (!user) return errorMessage(res, 404, 'user does not exists');
 

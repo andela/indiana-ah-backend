@@ -3,7 +3,7 @@ import UserController from '../controllers/userController';
 import signUpValidator from '../middlewares/validators/signUpValidator';
 import jwtAuth from '../middlewares/jwtAuthentication';
 import parser from '../cloudinaryConfig';
-import followAndUnfollow from '../controllers/followAndUnfollow';
+import followAndUnfollow from '../controllers/followController';
 
 const {
   followUser,
