@@ -4,6 +4,7 @@ import app from '../../index';
 import { user1, validArticle } from './mockData/articlesMockData';
 
 let verifiedToken;
+let adminVerifiedToken;
 let articleSlug;
 let articleId;
 const wrongArticleSlug = 'how-rthy-tyfghbuh';
@@ -13,6 +14,13 @@ before(async () => request(app)
   .send({ email: user1.email, password: user1.password })
   .then((res) => {
     verifiedToken = res.body.token;
+  }));
+
+before(async () => request(app)
+  .post('/api/v1/login')
+  .send({ email: process.env.SUPER_ADMIN_EMAIL, password: process.env.SUPER_ADMIN_PASSWORD })
+  .then((res) => {
+    adminVerifiedToken = res.body.token;
   }));
 
 describe('Create an Article for comment', () => {
@@ -31,7 +39,7 @@ describe('Create an Article for comment', () => {
 describe('Admin Should get all report on an article', () => {
   it('Should get all reports on an article', () => request(app)
     .get('/api/v1/reports')
-    .set('x-auth-token', verifiedToken)
+    .set('x-auth-token', adminVerifiedToken)
     .then((res) => {
       expect(res.status).to.equal(404);
       expect(res.body.message).to.equal('No reports found');
@@ -61,7 +69,7 @@ describe('User report on an article', () => {
 describe('Admin Should get a report on an article', () => {
   it('Should not get a report on an article', () => request(app)
     .get(`/api/v1/articles/${wrongArticleSlug}/reports`)
-    .set('x-auth-token', verifiedToken)
+    .set('x-auth-token', adminVerifiedToken)
     .then((res) => {
       expect(res.status).to.equal(404);
       expect(res.body.message).to.equal('No reports found');
@@ -69,7 +77,7 @@ describe('Admin Should get a report on an article', () => {
 
   it('Should get a report on an article', () => request(app)
     .get(`/api/v1/articles/${articleSlug}/reports`)
-    .set('x-auth-token', verifiedToken)
+    .set('x-auth-token', adminVerifiedToken)
     .then((res) => {
       expect(res.status).to.equal(200);
       expect(res.body.message).to.equal('Reports retrieve successful');
@@ -79,7 +87,7 @@ describe('Admin Should get a report on an article', () => {
 describe('Admin Should get all report on an article', () => {
   it('Should get all reports on an article', () => request(app)
     .get('/api/v1/reports')
-    .set('x-auth-token', verifiedToken)
+    .set('x-auth-token', adminVerifiedToken)
     .then((res) => {
       expect(res.status).to.equal(200);
       expect(res.body.message).to.equal('Reports retrieve successful');
