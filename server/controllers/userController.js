@@ -336,7 +336,11 @@ class UserController extends BaseHelper {
    * @static sendPasswordResetLink - method to send password reset link to user
    * @param {object} req - the request object
    * @param {object} res - the response object
+<<<<<<< HEAD
    * @param {function} next Function to pass control to the next item
+=======
+   * @param {object} next - the response object
+>>>>>>> fix: fix typos
    * @returns {object} user - the user object
    * @memberOf UserController class
    */
@@ -408,7 +412,11 @@ class UserController extends BaseHelper {
    * @static getUserByEmail - the method that handles user password reset
    * @param {object} req - the request object
    * @param {object} res - the response object
+<<<<<<< HEAD
    * @param {function} next Function to pass control to the next item
+=======
+   * @param {object} next - the response object
+>>>>>>> fix: fix typos
    * @returns {object} user - the user object
    * @memberOf UserController class
    */
