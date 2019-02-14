@@ -1,14 +1,13 @@
 import models from '../db/models';
 import commentReportLogic from '../helpers/commentReactionHelper';
-import errorResponse from '../helpers/errorHelpers';
+import BaseHelper from '../helpers/baseHelper';
 
 const { Reports, Articles, Users } = models;
-
 /**
  * @description  Handles Users reports on articles
  * @class CommentController
  */
-class ReportController {
+class ReportController extends BaseHelper {
   /**
    * @description controller method for commenting on an article
    * @static
@@ -45,7 +44,7 @@ class ReportController {
           }
         ]
       });
-      if (!report.length) return errorResponse(res, 404, 'No reports found');
+      ReportController.checkIfDataExist(req, res, report.length, { message: 'No reports found' });
       return res.status(200).json({ message: 'Reports retrieve successful', report });
     } catch (error) {
       return next(error);
@@ -62,7 +61,7 @@ class ReportController {
   static async getAllReports(req, res, next) {
     try {
       const report = await Reports.findAll({});
-      if (!report.length) return errorResponse(res, 404, 'No reports found');
+      ReportController.checkIfDataExist(req, res, report.length, { message: 'No reports found' });
       return res.status(200).json({ message: 'Reports retrieve successful', report });
     } catch (error) {
       return next(error);
