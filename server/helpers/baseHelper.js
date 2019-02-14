@@ -62,7 +62,7 @@ class BaseHelper {
       const response = bcrypt.hashSync(password, saltRounds);
       return response;
     } catch (error) {
-      return error;
+      return undefined;
     }
   }
 }

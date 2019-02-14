@@ -35,7 +35,7 @@ describe('the admin role', () => {
   describe('access the superAdmin route', () => {
     it('should fail if a regular user tries to update another user role', () => {
       request(app)
-        .post('/api/v1/admin/assign')
+        .post('/api/v1/admin/role')
         .set('content-type', 'application/json')
         .set('x-auth-token', regularUserToken)
         .send({
@@ -49,7 +49,7 @@ describe('the admin role', () => {
     });
     it('should succeed if the superAdmin tries to update a user role', () => {
       request(app)
-        .post('/api/v1/admin/assign')
+        .post('/api/v1/admin/role')
         .set('content-type', 'application/json')
         .set('x-auth-token', superAdminToken)
         .send({
@@ -64,7 +64,7 @@ describe('the admin role', () => {
     });
     it('should fail if the user does not exist', () => {
       request(app)
-        .post('/api/v1/admin/assign')
+        .post('/api/v1/admin/role')
         .set('content-type', 'application/json')
         .set('x-auth-token', superAdminToken)
         .send({
@@ -74,6 +74,20 @@ describe('the admin role', () => {
         .then((res) => {
           expect(res.status).to.equal(404);
           expect(res.body.message).to.equal('this user was not found');
+        });
+    });
+    it('should fail if new role for the user is not permitted ', () => {
+      request(app)
+        .post('/api/v1/admin/role')
+        .set('content-type', 'application/json')
+        .set('x-auth-token', superAdminToken)
+        .send({
+          username: 'cima',
+          role: 'admina'
+        })
+        .then((res) => {
+          expect(res.status).to.equal(403);
+          expect(res.body.message).to.equal('this is not a permitted role');
         });
     });
   });

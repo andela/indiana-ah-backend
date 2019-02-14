@@ -182,9 +182,7 @@ class UserController extends BaseHelper {
         },
         attributes: ['name', 'username', 'email', 'bio', 'imageUrl', 'createdAt']
       });
-      if (!user) {
-        return errorMessage(res, 404, 'User not found');
-      }
+      UserController.checkIfDataExist(req, res, user, { message: 'User not found' });
       return res.status(200).json({
         profile: user.dataValues
       });

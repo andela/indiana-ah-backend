@@ -1,5 +1,6 @@
 import errorMessage from '../helpers/errorHelpers';
 import UserRepository from '../db/repositories/user';
+import baseHelper from '../helpers/baseHelper';
 
 const usersRepo = new UserRepository();
 /**
@@ -21,14 +22,19 @@ class RoleAssignController {
    */
   static async assignRole(req, res, next) {
     const { username, role } = req.body;
-    try {
-      const existingRole = await usersRepo.role(username, res);
-      if (existingRole === role) {
-        return errorMessage(res, 401, `this user is already an ${role}`);
+    const Allowedroles = ['admin', 'user'];
+    if (Allowedroles.includes(role)) {
+      try {
+        const existingRole = await usersRepo.role(username, res);
+        if (existingRole === role) {
+          return errorMessage(res, 401, `this user is already a/an ${role}`);
+        }
+        await usersRepo.updated(username, role, res);
+      } catch (error) {
+        return next(error);
       }
-      await usersRepo.updated(username, role, res);
-    } catch (error) {
-      return next(error);
+    } else {
+      return next(errorMessage(res, 403, 'this is not a permitted role'));
     }
   }
 }
