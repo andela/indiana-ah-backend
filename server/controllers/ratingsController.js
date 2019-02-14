@@ -7,9 +7,9 @@ const { Ratings, Articles } = models;
 
 /**
  * @description A collection of controller methods for rating an article
- * @class RatingControllers
+ * @class RatingsController
  */
-class RatingControllers extends Basehelper {
+class RatingsController extends Basehelper {
   /**
    * @description controller method for rating an article
    * @static
@@ -24,7 +24,7 @@ class RatingControllers extends Basehelper {
       const { articleId } = req.params;
       const { rating } = req.body;
       const article = await Articles.findOne({ where: { id: { [Op.eq]: articleId } } });
-      RatingControllers.checkIfDataExist(req, res, article, { message: 'Article not found' });
+      RatingsController.checkIfDataExist(req, res, article, { message: 'Article not found' });
       if (article.userId === userId) errorResponse(res, 403, 'You cannot rate an article that you authored');
       const alreadyRated = await Ratings.findOne({ where: { userId, articleId } });
 
@@ -61,7 +61,7 @@ class RatingControllers extends Basehelper {
       const articleRating = await Ratings.findOne({
         where: { id: { [Op.eq]: ratingId } }
       });
-      RatingControllers.checkIfDataExist(req, res, articleRating, {
+      RatingsController.checkIfDataExist(req, res, articleRating, {
         message: 'Article rating not found'
       });
       return res.status(200).json({ articleRating });
@@ -82,7 +82,7 @@ class RatingControllers extends Basehelper {
     try {
       const { articleId } = req.params;
       const articleRatings = await Ratings.findAll({ where: { articleId } });
-      RatingControllers.checkIfDataExist(req, res, articleRatings.length, {
+      RatingsController.checkIfDataExist(req, res, articleRatings.length, {
         message: 'No ratings found for this article'
       });
       const numberOfRatings = articleRatings.length;
@@ -108,7 +108,7 @@ class RatingControllers extends Basehelper {
       const { ratingId: id } = req.params;
       const { id: userId } = req.user;
       const rating = await Ratings.findOne({ where: { id, userId } });
-      RatingControllers.checkIfDataExist(req, res, rating, {
+      RatingsController.checkIfDataExist(req, res, rating, {
         message: 'Article rating not found'
       });
       await Ratings.destroy({ where: { id, userId } });
@@ -119,4 +119,4 @@ class RatingControllers extends Basehelper {
   }
 }
 
-export default RatingControllers;
+export default RatingsController;
