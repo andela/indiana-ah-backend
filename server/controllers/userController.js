@@ -100,6 +100,7 @@ class UserController extends BaseHelper {
       },
       { where: { id: decodedToken.id }, returning: true }
     );
+
     const {
       id, username, email, isVerified, role
     } = user[1][0];

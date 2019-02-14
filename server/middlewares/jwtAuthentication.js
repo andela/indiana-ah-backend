@@ -19,11 +19,7 @@ class Auth {
     const token = req.header('x-auth-token');
     const decodedToken = verifyToken(token);
     if (!decodedToken) {
-      return errorResponse(
-        res,
-        401,
-        'Access denied. You are not authorized to access this route'
-      );
+      return errorResponse(res, 401, 'Access denied. You are not authorized to access this route');
     }
     if (!decodedToken.isVerified) return errorResponse(res, 403, 'Access denied. You are not a verified user');
     req.user = decodedToken;

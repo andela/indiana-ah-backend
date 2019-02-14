@@ -42,7 +42,10 @@ app.use('/api/v1', routes);
 
 // / catch 404 and forward to error handler
 app.use('*', (req, res) => res.status(404).json({ error: 'route does not exist' }));
-app.use((req, res) => errorMessage(res, 500, 'internal server error'));
+
+// / catch all unhandled errors
+/* eslint-disable-next-line */
+app.use((error, req, res, next) => errorMessage(res, 500, error.message || 'internal server error'));
 
 // finally, let's start our server...
 app.listen(PORT, () => {

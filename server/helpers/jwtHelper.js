@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken';
 
 /**
-* @description A collection of helper methods for JWT operations
-* @class JWTHelper
-*/
+ * @description A collection of helper methods for JWT operations
+ * @class JWTHelper
+ */
 class JWTHelper {
   /**
    * @description helper method for verifying a jwt token
