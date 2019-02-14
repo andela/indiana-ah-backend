@@ -20,6 +20,7 @@ before(async () => {
   await Users.create(user1);
   return request(app)
     .post('/api/v1/login')
+    .set('content-type', 'application/json')
     .send({ email: user1.email, password: user1.password })
     .then((res) => {
       verifiedToken = res.body.token;

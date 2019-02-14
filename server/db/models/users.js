@@ -34,7 +34,8 @@ export default (sequelize, DataTypes) => {
       },
       role: {
         defaultValue: 'user',
-        type: DataTypes.STRING
+        type: DataTypes.ENUM,
+        values: ['user', 'superAdmin', 'admin']
       },
       imageUrl: {
         defaultValue: 'http://s3.amazonaws.com/37assets/svn/765-default-avatar.png',

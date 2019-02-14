@@ -59,7 +59,8 @@ class UserController extends BaseHelper {
         };
         const token = assignToken(payload);
         const location = req.get('host');
-        const link = `${location}/api/v1/user/verify?token=${token}`;
+        const url = '/api/v1/user/verify';
+        const link = UserController.generateEmailLink(location, url, token);
         const message = `<h1 style='color: Goldenrod' > Welcome to Author's Haven</h1><hr/>
           <p>Please click this link to verify your Author's Haven account
           <a href=${link}>link</a></p>`;
@@ -133,6 +134,7 @@ class UserController extends BaseHelper {
         where: { email },
         attributes: ['name', 'username', 'email', 'password', 'role', 'isVerified', 'id']
       });
+      UserController.checkIfDataExist(req, res, newUser, { message: 'error logging in' });
       const {
         email: dbEmail, username, name, role, isVerified, id
       } = newUser;
@@ -170,7 +172,7 @@ class UserController extends BaseHelper {
    *
    * @memberOf UserController class
    */
-  static async getUserProfile(req, res) {
+  static async getUserProfile(req, res, next) {
     const { username } = req.params;
     try {
       const user = await Users.findOne({
@@ -179,14 +181,12 @@ class UserController extends BaseHelper {
         },
         attributes: ['name', 'username', 'email', 'bio', 'imageUrl', 'createdAt']
       });
-      if (!user) {
-        return errorMessage(res, 404, 'User not found');
-      }
+      UserController.checkIfDataExist(req, res, user, { message: 'User not found' });
       return res.status(200).json({
         profile: user.dataValues
       });
     } catch (error) {
-      errorMessage(res, 500, 'Internal server error');
+      return next(error);
     }
   }
 
@@ -231,7 +231,6 @@ class UserController extends BaseHelper {
     }
   }
 
-
   /**
    *
    *
@@ -271,7 +270,7 @@ class UserController extends BaseHelper {
           profile: updatedUserValues
         });
       } catch (error) {
-        errorMessage(res, 500, 'Internal server error');
+        return errorMessage(res, 500, 'Internal server error');
       }
     }
     return errorMessage(res, 404, 'User not found');
