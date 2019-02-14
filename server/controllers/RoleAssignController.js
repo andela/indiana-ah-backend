@@ -1,6 +1,5 @@
 import errorMessage from '../helpers/errorHelpers';
 import UserRepository from '../db/repositories/user';
-import baseHelper from '../helpers/baseHelper';
 
 const usersRepo = new UserRepository();
 /**
