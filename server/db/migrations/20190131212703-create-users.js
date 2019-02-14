@@ -30,7 +30,8 @@ export default {
     },
     role: {
       defaultValue: 'user',
-      type: Sequelize.STRING
+      type: Sequelize.ENUM,
+      values: ['user', 'superAdmin', 'admin']
     },
     isVerified: {
       defaultValue: false,

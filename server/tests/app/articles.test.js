@@ -25,6 +25,7 @@ before(async () => {
   await Users.create(user3);
   return request(app)
     .post('/api/v1/login')
+    .set('content-type', 'application/json')
     .send({ email: user1.email, password: user1.password })
     .then((res) => {
       verifiedToken = res.body.token;
@@ -90,6 +91,8 @@ describe('Create an Article', () => {
       articleId = res.body.article.id;
       expect(res.status).to.equal(201);
       expect(res.body.article).to.be.an('object');
+      expect(res.body.timeToRead).to.equal('a couple of secs');
+      expect(res.body.timeToRead).to.be.a('string');
     }));
 });
 
@@ -115,6 +118,8 @@ describe('Get one article', () => {
     .then((res) => {
       expect(res.status).to.equal(200);
       expect(res.body.article).to.be.an('object');
+      expect(res.body.timeToRead).to.equal('a couple of secs');
+      expect(res.body.timeToRead).to.be.a('string');
     }));
 });
 

@@ -59,7 +59,8 @@ class UserController extends BaseHelper {
         };
         const token = assignToken(payload);
         const location = req.get('host');
-        const link = `${location}/api/v1/user/verify?token=${token}`;
+        const url = '/api/v1/user/verify';
+        const link = UserController.generateEmailLink(location, url, token);
         const message = `<h1 style='color: Goldenrod' > Welcome to Author's Haven</h1><hr/>
           <p>Please click this link to verify your Author's Haven account
           <a href=${link}>link</a></p>`;
@@ -134,6 +135,7 @@ class UserController extends BaseHelper {
         where: { email },
         attributes: ['name', 'username', 'email', 'password', 'role', 'isVerified', 'id']
       });
+      UserController.checkIfDataExist(req, res, newUser, { message: 'error logging in' });
       const {
         email: dbEmail, username, name, role, isVerified, id
       } = newUser;
@@ -171,24 +173,21 @@ class UserController extends BaseHelper {
    *
    * @memberOf UserController class
    */
-  static async getUserProfile(req, res) {
+  static async getUserProfile(req, res, next) {
     const { username } = req.params;
     try {
-      await Users.findOne({
+      const user = await Users.findOne({
         where: {
           username
         },
         attributes: ['name', 'username', 'email', 'bio', 'imageUrl', 'createdAt']
-      }).then((user) => {
-        if (!user) {
-          return errorMessage(res, 404, 'User not found');
-        }
-        return res.status(200).json({
-          profile: user.dataValues
-        });
+      });
+      UserController.checkIfDataExist(req, res, user, { message: 'User not found' });
+      return res.status(200).json({
+        profile: user.dataValues
       });
     } catch (error) {
-      errorMessage(res, 500, 'Internal server error');
+      return next(error);
     }
   }
 
@@ -207,7 +206,7 @@ class UserController extends BaseHelper {
     image.url = req.file.url;
     image.id = req.file.public_id;
     try {
-      await Users.update(
+      const updatedUser = await Users.update(
         {
           imageUrl: image.url
         },
@@ -215,13 +214,18 @@ class UserController extends BaseHelper {
           where: { id },
           returning: true
         }
-      ).then(([updatedRows, [updatedUser]]) => {
-        if (!updatedRows) {
-          return errorMessage(res, 404, 'User not found');
-        }
-        return res.status(200).json({
-          avatar: updatedUser.imageUrl
-        });
+      );
+
+      const updatedRows = updatedUser[0];
+      const userValues = updatedUser[1][0];
+      let url = '';
+      if (userValues) {
+        url = userValues.dataValues.imageUrl;
+      }
+
+      UserController.checkIfDataExist(req, res, updatedRows, 'User not found');
+      return res.status(200).json({
+        avatar: url
       });
     } catch (error) {
       errorMessage(res, 500, 'Internal server error');
@@ -247,7 +251,7 @@ class UserController extends BaseHelper {
     });
     if (profile) {
       try {
-        await Users.update(
+        const updatedUser = await Users.update(
           {
             name: name || profile.dataValues.name,
             username: username || profile.dataValues.username,
@@ -258,16 +262,16 @@ class UserController extends BaseHelper {
             where: { id },
             returning: true
           }
-        ).then(([updatedRows, [updatedUser]]) => {
-          if (!updatedRows) {
-            return errorMessage(res, 404, 'User not found');
-          }
-          return res.status(200).json({
-            profile: updatedUser
-          });
+        );
+        const updatedRows = updatedUser[0];
+        const updatedUserValues = updatedUser[1][0].dataValues;
+
+        UserController.checkIfDataExist(req, res, updatedRows, 'User not found');
+        return res.status(200).json({
+          profile: updatedUserValues
         });
       } catch (error) {
-        errorMessage(res, 500, 'Internal server error');
+        return errorMessage(res, 500, 'Internal server error');
       }
     }
     return errorMessage(res, 404, 'User not found');

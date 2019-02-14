@@ -1,5 +1,6 @@
 import errorResponse from '../helpers/errorHelpers';
 import models from '../db/models';
+import BaseHelper from '../helpers/baseHelper';
 
 const {
   Articles, Users, Comments, Reactions
@@ -9,7 +10,7 @@ const {
  * @description A collection of controller methods for article CRUD operations
  * @class ArticleController
  */
-class ArticleController {
+class ArticleController extends BaseHelper {
   /**
    * @description controller method for creating an article
    * @static
@@ -22,8 +23,10 @@ class ArticleController {
     try {
       const { id: userId } = req.user;
       req.body.userId = userId;
+      const userArticle = req.body.articleBody;
+      const timeToRead = ArticleController.calculateTimeToRead(userArticle);
       const article = await Articles.create(req.body);
-      return res.status(201).json({ article });
+      return res.status(201).json({ article, timeToRead });
     } catch (error) {
       return next(error);
     }
@@ -131,7 +134,8 @@ class ArticleController {
         ]
       });
       if (!article) return errorResponse(res, 404, 'Article not found');
-      return res.status(200).json({ article });
+      const timeToRead = ArticleController.calculateTimeToRead(article.articleBody);
+      return res.status(200).json({ article, timeToRead });
     } catch (error) {
       return next(error);
     }

@@ -65,6 +65,7 @@ The preferred JSON object to be returned by the API should be structured as foll
       "following": false
     }
   }
+  "timeToRead": "1 min read"
 }
 ```
 
@@ -324,9 +325,8 @@ Example request body:
 ```source-json
 {
   "article": {
-    "title": "How to train your dragon",
-    "description": "Ever wonder how?",
-    "body": "You have to believe",
+    "articleTitle": "How to train your dragon",
+    "articleBody": "You have to believe",
     "tagList": ["reactjs", "angularjs", "dragons"]
   }
 }
