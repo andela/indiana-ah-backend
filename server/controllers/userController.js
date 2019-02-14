@@ -194,6 +194,26 @@ class UserController extends BaseHelper {
   /**
    *
    *
+   * @static getAllUsersProfile - the method that handles getting all users profile
+   * @param {object} req - the request object
+   * @param {object} res - the response object
+   *
+   * @memberOf UserController class
+   */
+  static async getAllUsersProfile(req, res, next) {
+    try {
+      const users = await Users.findAll({
+        attributes: ['name', 'username', 'email', 'bio', 'imageUrl', 'createdAt']
+      });
+      return res.status(200).json(users);
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  /**
+   *
+   *
    * @static uploadUserPicture - the method that handles editing user picture
    * @param {object} req - the request object
    * @param {object} res - the response object
