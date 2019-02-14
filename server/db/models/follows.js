@@ -20,11 +20,13 @@ export default (sequelize, DataTypes) => {
   Follows.associate = ({ Users }) => {
     Follows.belongsTo(Users, {
       foreignKey: 'authorId',
-      onDelete: 'CASCADE'
+      onDelete: 'CASCADE',
+      as: 'authorDetails'
     });
     Follows.belongsTo(Users, {
       foreignKey: 'followerId',
-      onDelete: 'CASCADE'
+      onDelete: 'CASCADE',
+      as: 'followerDetails'
     });
   };
   return Follows;

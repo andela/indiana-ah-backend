@@ -12,7 +12,7 @@ export default {
       references: {
         model: 'Users',
         key: 'id',
-        as: 'userId'
+        as: 'authorId'
       }
     },
     followerId: {
@@ -21,7 +21,7 @@ export default {
       references: {
         model: 'Users',
         key: 'id',
-        as: 'userId'
+        as: 'followerId'
       }
     },
     createdAt: {
