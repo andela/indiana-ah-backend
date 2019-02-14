@@ -3,7 +3,7 @@ import Auth from '../middlewares/jwtAuthentication';
 import { validateArticle, validateRating } from '../middlewares/validators/articleValidators';
 import ArticleController from '../controllers/articleController';
 import CommentController from '../controllers/commentController';
-import RatingController from '../controllers/ratingController';
+import RatingsController from '../controllers/ratingsController';
 
 const {
   createArticle,
@@ -17,7 +17,7 @@ const {
 const { articleComment } = CommentController;
 const {
   rateArticle, getOneArticleRating, getAllArticleRatings, cancelRating
-} = RatingController;
+} = RatingsController;
 
 const { authUser } = Auth;
 
