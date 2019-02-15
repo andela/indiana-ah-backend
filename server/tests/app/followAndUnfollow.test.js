@@ -88,7 +88,7 @@ describe('Follow  and Unfollow Feature', () => {
       expect(res.body.message).to.equal('You currently do not have any followers');
     }));
 
-  it('should return a list of all user I follow', () => request(app)
+  it('should return a list of all users I follow', () => request(app)
     .get('/api/v1/profiles/users/followers')
     .set('x-auth-token', tokenForAkeem)
     .then((res) => {
