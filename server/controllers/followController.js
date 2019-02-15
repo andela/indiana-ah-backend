@@ -9,8 +9,6 @@ const { Users, Follows } = models;
  * @export
  * @class followAndUnfollow
  */
-
-// eslint-disable-next-line require-jsdoc
 class FollowController {
   /**
  *
@@ -19,10 +17,9 @@ class FollowController {
  * @param {object} req client request
  * @param {object} res erver response
  * @returns {Object} server response object
+ * @param {object} next server response
  * @memberof FollowController
  */
-
-  // eslint-disable-next-line require-jsdoc
   static async followUser(req, res, next) {
     try {
       const heplerResult = await followhelper(req, res, 'followUser');
@@ -50,12 +47,11 @@ class FollowController {
  * @description Method to unfollow user
  * @static
  * @param {object} req client request
- * @param {object} res erver response
+ * @param {object} res server response
+ * @param {object} next server response
  * @returns {Object} server response object
  * @memberof FollowController
  */
-
-  // eslint-disable-next-line require-jsdoc
   static async unFollowUser(req, res, next) {
     try {
       const heplerResult = await followhelper(req, res, 'unFollowUser');
@@ -86,10 +82,9 @@ class FollowController {
  * @param {object} req client request
  * @param {object} res erver response
  * @returns {Object} server response object
+ * @param {object} next server response
  * @memberof followAndUnfollow
  */
-
-  // eslint-disable-next-line require-jsdoc
   static async fetchUsersIFollow(req, res, next) {
     try {
       const usersIfollow = await Follows.findAll({
@@ -130,10 +125,9 @@ class FollowController {
  * @param {object} req client request
  * @param {object} res erver response
  * @returns {Object} server response object
+ * @param {object} next server response
  * @memberof followAndUnfollow
  */
-
-  // eslint-disable-next-line require-jsdoc
   static async fetchFollowers(req, res, next) {
     try {
       const myFollowers = await Follows.findAll({
