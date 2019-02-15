@@ -110,29 +110,6 @@ class BaseHelper {
   }
 
   /**
-   * @description updateReaction- controller method for updating likes and dislikes
-   * @static
-   * @param {object} req Request object
-   * @param {object} res Response object
-   * @param {object} model Request object
-   * @param {object} columnObj Request object
-   * @param {uuid} userId User Id
-   * @param {string} reactionType type of reaction
-   * @returns {object} a response object
-   */
-  static async updateReaction(req, res, model, columnObj, userId, reactionType) {
-    await model.update(
-      { reactionType },
-      {
-        where: { ...columnObj, userId },
-        returning: true
-      }
-    ); res.status(200).json({
-      message: `You have successfully ${reactionType}d`
-    });
-  }
-
-  /**
    * @description deleteReaction- controller method for deleting likes and dislikes
    * @static
    * @param {object} req Request object
