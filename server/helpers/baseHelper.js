@@ -73,7 +73,6 @@ class BaseHelper {
    * @param {object} res Response object
    * @param {object} model Request object
    * @param {object} modelColumnObj Request object
-   * @param {string} modelIdKeyName Request object
    * @returns {object} a response object
    */
   static async reaction(req, res, model, modelColumnObj) {

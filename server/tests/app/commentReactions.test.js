@@ -73,7 +73,7 @@ describe('Comment Reactions', () => {
         expect(res.status).to.equal(200);
         expect(res.body.message).to.equal('Reaction created');
       }));
-    it('should successfully dislike a comment if user is authenticated', () => request(app)
+    it('should successfully delete a comment if user is authenticated', () => request(app)
       .post('/api/v1/comments/reaction')
       .set('x-auth-token', userToken)
       .send({ commentId, reactionType: 'dislike' })
