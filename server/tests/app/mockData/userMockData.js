@@ -26,3 +26,24 @@ export const badPayload = {
   role: 'user',
   isVerified: true
 };
+
+export const userBiola = {
+  username: 'balogun',
+  email: 'balogunbiola101@gmail.com',
+  password: 'customer24',
+  isVerified: true
+};
+
+export const userBalogun = {
+  username: 'biola',
+  email: 'biola101@gmail.com',
+  password: 'customer24',
+  isVerified: true
+};
+
+export const userAkeem = {
+  username: 'Akeem',
+  email: 'Akeem@gmail.com',
+  password: 'customer24',
+  isVerified: true
+};

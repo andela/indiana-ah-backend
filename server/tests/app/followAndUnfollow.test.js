@@ -2,33 +2,28 @@ import request from 'supertest';
 import { expect } from 'chai';
 import app from '../../index';
 import models from '../../db/models';
+import {
+  userBiola,
+  userBalogun,
+  userAkeem
+} from './mockData/userMockData';
 
 const { Users } = models;
 
 let tokenForBalogun;
+// eslint-disable-next-line no-unused-vars
 let tokenForBiola;
 let tokenForAkeem;
 
-const userBiola = {
-  username: 'balogun',
-  email: 'balogunbiola101@gmail.com',
-  password: 'customer24',
-  isVerified: true
-};
-
-const userBalogun = {
-  username: 'biola',
-  email: 'biola101@gmail.com',
-  password: 'customer24',
-  isVerified: true
-};
-
-const userAkeem = {
-  username: 'Akeem',
-  email: 'Akeem@gmail.com',
-  password: 'customer24',
-  isVerified: true
-};
+before(async () => {
+  await Users.create(userBalogun);
+  return request(app)
+    .post('/api/v1/login')
+    .send({ email: userBalogun.email, password: userBalogun.password })
+    .then((res) => {
+      tokenForBalogun = res.body.token;
+    });
+});
 
 before(async () => {
   await Users.create(userBiola);
@@ -40,15 +35,6 @@ before(async () => {
     });
 });
 
-before(async () => {
-  await Users.create(userBalogun);
-  return request(app)
-    .post('/api/v1/login')
-    .send({ email: userBalogun.email, password: userBalogun.password })
-    .then((res) => {
-      tokenForBalogun = res.body.token;
-    });
-});
 
 before(async () => {
   await Users.create(userAkeem);
