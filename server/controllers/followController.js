@@ -15,7 +15,7 @@ class FollowController {
  * @description Method to follow user
  * @static
  * @param {object} req client request
- * @param {object} res erver response
+ * @param {object} res server response
  * @returns {Object} server response object
  * @param {object} next server response
  * @memberof FollowController
@@ -123,7 +123,7 @@ class FollowController {
  * @description Method to fetch all users who follow me
  * @static
  * @param {object} req client request
- * @param {object} res erver response
+ * @param {object} res server response
  * @returns {Object} server response object
  * @param {object} next server response
  * @memberof FollowController
