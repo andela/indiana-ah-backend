@@ -17,7 +17,7 @@ class FollowController {
  * @param {object} req client request
  * @param {object} res server response
  * @returns {Object} server response object
- * @param {object} next server response
+ * @param  {Function} next passes control to the next middleware
  * @memberof FollowController
  */
   static async followUser(req, res, next) {
@@ -48,7 +48,7 @@ class FollowController {
  * @static
  * @param {object} req client request
  * @param {object} res server response
- * @param {object} next server response
+ * @param  {Function} next passes control to the next middleware
  * @returns {Object} server response object
  * @memberof FollowController
  */
@@ -82,7 +82,7 @@ class FollowController {
  * @param {object} req client request
  * @param {object} res server response
  * @returns {Object} server response object
- * @param {object} next server response
+ * @param  {Function} next passes control to the next middleware
  * @memberof FollowController
  */
   static async fetchUsersIFollow(req, res, next) {
@@ -125,7 +125,7 @@ class FollowController {
  * @param {object} req client request
  * @param {object} res server response
  * @returns {Object} server response object
- * @param {object} next server response
+ * @param {Function} next passes control to the next middleware
  * @memberof FollowController
  */
   static async fetchFollowers(req, res, next) {
