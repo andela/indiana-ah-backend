@@ -3,11 +3,7 @@ import Auth from '../middlewares/jwtAuthentication';
 import { validateArticle, validateRating } from '../middlewares/validators/articleValidators';
 import ArticleController from '../controllers/articleController';
 import CommentController from '../controllers/commentController';
-<<<<<<< HEAD
 import RatingsController from '../controllers/ratingsController';
-=======
-import ArticleSearchController from '../controllers/articleSearchController';
->>>>>>> feat: implement search functionality
 
 const {
   createArticle,
@@ -15,15 +11,14 @@ const {
   updateArticle,
   getOneArticle,
   getAllUserArticles,
-  deleteArticle
+  deleteArticle,
+  searchArticles
 } = ArticleController;
 
 const {
   rateArticle, getOneArticleRating, getAllArticleRatings, cancelRating
 } = RatingsController;
 const { articleComment, getArticleComment } = CommentController;
-
-const { searchArticles } = ArticleSearchController;
 
 const { authUser } = Auth;
 

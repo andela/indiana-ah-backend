@@ -28,7 +28,7 @@ export default {
     },
     tags: {
       allowNull: true,
-      type: Sequelize.ARRAY(Sequelize.STRING)
+      type: Sequelize.STRING
     },
     userId: {
       type: Sequelize.UUID,

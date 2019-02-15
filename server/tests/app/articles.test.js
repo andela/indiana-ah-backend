@@ -262,6 +262,29 @@ describe('cancel an article rating', () => {
     }));
 });
 
+describe('Search all articles', () => {
+  it('should return a "bad request" response if an invalid search parameter was used in the request', () => request(app)
+    .get('/api/v1/articles/search?findBy=age&value=25')
+    .then((res) => {
+      expect(res.status).to.equal(400);
+      expect(res.body.message).to.equal('Invalid search parameter');
+    }));
+
+  it('should return a "not found" response if no articles were found matching the search value', () => request(app)
+    .get('/api/v1/articles/search?findBy=author&value=chizoba')
+    .then((res) => {
+      expect(res.status).to.equal(404);
+      expect(res.body.message).to.equal('Couldn\'t find articles matching your search');
+    }));
+
+  it('should fetch all matching articles if the search parameter is valid and matching articles were found', () => request(app)
+    .get('/api/v1/articles/search?findBy=tag&value=yes')
+    .then((res) => {
+      expect(res.status).to.equal(200);
+      expect(res.body.searchResults).to.be.an('array');
+    }));
+});
+
 describe('Delete an article', () => {
   it('should return a "not found" response if an article requested for delete was not found', () => request(app)
     .delete('/api/v1/articles/yeah-yeah-yeah/delete')

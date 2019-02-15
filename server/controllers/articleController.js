@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import errorResponse from '../helpers/errorHelpers';
 import models from '../db/models';
 import BaseHelper from '../helpers/baseHelper';
@@ -160,6 +161,47 @@ class ArticleController extends BaseHelper {
         where: { slug }
       });
       return res.status(200).json({ message: 'Article successfully deleted' });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  /**
+   * @description controller method for searching/filtering articles
+   * @static
+   * @param {object} req Request object
+   * @param {object} res Response object
+   * @param {Function} next passes control to the next middleware
+   * @returns {Object} a response object
+   */
+  static async searchArticles(req, res, next) {
+    try {
+      const { findBy, value } = req.query;
+      if (!['author', 'keyword', 'title', 'tag'].includes(findBy)) {
+        return res.status('400').json({ message: 'Invalid search parameter' });
+      }
+      let queryCondition;
+      const conditions = {
+        author: {
+          [Op.or]: [
+            { '$author.username$': { [Op.iLike]: `%${value}%` } },
+            { '$author.name$': { [Op.iLike]: `%${value}%` } }
+          ]
+        },
+        title: { articleTitle: { [Op.iLike]: `%${value}%` } },
+        keyword: {
+          [Op.or]: [
+            { articleBody: { [Op.iLike]: `%${value}%` } },
+            { articleTitle: { [Op.iLike]: `%${value}%` } }
+          ]
+        },
+        tag: { tags: { [Op.iRegexp]: `[[:<:]]${value}[[:>:]]` } }
+      };
+      Object.keys(conditions).forEach((item) => {
+        if (findBy === item) queryCondition = conditions[item];
+      });
+
+      await ArticleController.search(res, queryCondition);
     } catch (error) {
       return next(error);
     }
