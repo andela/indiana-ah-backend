@@ -14,7 +14,7 @@ class CommentReactionController extends BaseHelper {
    * @static
    * @param {object} req Request object
    * @param {object} res Response object
-   * @param {object} next Response object
+   * @param {function} next Function to pass control to the next item
    * @returns {object} a response object
    */
   static async commentReaction(req, res, next) {
