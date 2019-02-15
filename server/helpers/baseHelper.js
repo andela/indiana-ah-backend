@@ -73,13 +73,12 @@ class BaseHelper {
    * @param {object} res Response object
    * @param {object} model Request object
    * @param {object} modelColumnObj Request object
-   * @param {object} modelIdKeyName Request object
+   * @param {string} modelIdKeyName Request object
    * @returns {object} a response object
    */
   static async reaction(req, res, model, modelColumnObj, modelIdKeyName) {
     const { reactionType } = req.body;
     const { id: userId } = req.user;
-    req.body.userId = userId;
     const reaction = await model.findOrCreate({
       where: { ...modelColumnObj, userId },
       defaults: {
@@ -116,8 +115,8 @@ class BaseHelper {
    * @param {object} res Response object
    * @param {object} model Request object
    * @param {object} columnObj Request object
-   * @param {object} userId Request object
-   * @param {object} reactionType Request object
+   * @param {uuid} userId User Id
+   * @param {string} reactionType type of reaction
    * @returns {object} a response object
    */
   static async updateReaction(req, res, model, columnObj, userId, reactionType) {
@@ -139,7 +138,7 @@ class BaseHelper {
    * @param {object} res Response object
    * @param {object} model Request object
    * @param {object} columnObj Request object
-   * @param {object} userId Request object
+   * @param {uuid} userId User Id
    * @returns {object} a response object
    */
   static async deleteReaction(req, res, model, columnObj, userId) {
