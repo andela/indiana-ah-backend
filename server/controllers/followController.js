@@ -19,7 +19,7 @@ class FollowController {
  * @param {object} req client request
  * @param {object} res erver response
  * @returns {Object} server response object
- * @memberof followAndUnfollow
+ * @memberof FollowController
  */
 
   // eslint-disable-next-line require-jsdoc
@@ -52,7 +52,7 @@ class FollowController {
  * @param {object} req client request
  * @param {object} res erver response
  * @returns {Object} server response object
- * @memberof followAndUnfollow
+ * @memberof FollowController
  */
 
   // eslint-disable-next-line require-jsdoc
