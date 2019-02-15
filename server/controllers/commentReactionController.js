@@ -1,5 +1,6 @@
 import models from '../db/models';
 import BaseHelper from '../helpers/baseHelper';
+import errorMessage from '../helpers/errorHelpers';
 
 const { CommentReactions } = models;
 /**
@@ -17,9 +18,15 @@ class CommentReactionController extends BaseHelper {
    * @returns {object} a response object
    */
   static async commentReaction(req, res, next) {
-    const { commentId } = req.body;
+    const { commentId, reactionType } = req.body;
+    const allowedReactionTypes = ['like', 'dislike'];
+
     try {
-      CommentReactionController.reaction(req, res, CommentReactions, { commentId }, 'commentId');
+      if (allowedReactionTypes.includes(reactionType.toLowerCase())) {
+        CommentReactionController.reaction(req, res, CommentReactions, { commentId });
+      } else {
+        return errorMessage(res, 400, 'This is not an allowed reaction type');
+      }
     } catch (error) {
       return next(error);
     }

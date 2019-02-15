@@ -63,7 +63,7 @@ describe('Comment Reactions', () => {
       .send({ commentId, reactionType: 'like' })
       .then((res) => {
         expect(res.status).to.equal(200);
-        expect(res.body.message).to.equal('You have successfully liked');
+        expect(res.body.message).to.equal('Reaction updated');
       }));
     it('should successfully dislike a comment if user is authenticated', () => request(app)
       .post('/api/v1/comments/reaction')
@@ -71,7 +71,7 @@ describe('Comment Reactions', () => {
       .send({ commentId, reactionType: 'dislike' })
       .then((res) => {
         expect(res.status).to.equal(200);
-        expect(res.body.message).to.equal('You have successfully disliked');
+        expect(res.body.message).to.equal('Reaction created');
       }));
     it('should successfully dislike a comment if user is authenticated', () => request(app)
       .post('/api/v1/comments/reaction')
@@ -80,6 +80,14 @@ describe('Comment Reactions', () => {
       .then((res) => {
         expect(res.status).to.equal(200);
         expect(res.body.message).to.equal('Reaction successfully deleted');
+      }));
+    it('should fail with error 400 if reactionType is not like or dislike', () => request(app)
+      .post('/api/v1/comments/reaction')
+      .set('x-auth-token', userToken)
+      .send({ commentId, reactionType: 'dislikeee' })
+      .then((res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('This is not an allowed reaction type');
       }));
   });
 });

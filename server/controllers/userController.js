@@ -59,7 +59,7 @@ class UserController extends BaseHelper {
         };
         const token = assignToken(payload);
         const location = req.get('host');
-        const url = '/api/v1/user/verify';
+        const url = '/api/v1/users/verify';
         const link = UserController.generateEmailLink(location, url, token);
         const message = `<h1 style='color: Goldenrod' > Welcome to Author's Haven</h1><hr/>
           <p>Please click this link to verify your Author's Haven account

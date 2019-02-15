@@ -76,35 +76,36 @@ class BaseHelper {
    * @param {string} modelIdKeyName Request object
    * @returns {object} a response object
    */
-  static async reaction(req, res, model, modelColumnObj, modelIdKeyName) {
+  static async reaction(req, res, model, modelColumnObj) {
     const { reactionType } = req.body;
     const { id: userId } = req.user;
-    const reaction = await model.findOrCreate({
-      where: { ...modelColumnObj, userId },
-      defaults: {
-        reactionType,
-        userId,
-        ...modelColumnObj
+    let deleted = false;
+    let id;
+    const response = await model.findOne({
+      where: { ...modelColumnObj, userId }
+    });
+    if (response) {
+      const dbReaction = response.dataValues;
+      const { reactionType: dbReactionType, id: reactionId } = dbReaction;
+      id = reactionId;
+      if (reactionType === dbReactionType) {
+        deleted = true;
+        BaseHelper.deleteReaction(req, res, model, modelColumnObj, userId);
       }
-    }).spread((
-      {
-        dataValues: {
-          [modelIdKeyName]: dbModelId, userId: dbUserId, reactionType: dbReactionType
-        }
-      },
-      created
-    ) => ({
-      dbModelId, dbUserId, dbReactionType, created
-    }));
-    const { created, dbReactionType } = reaction;
-    if (created) {
-      return res.status(200).json({ message: `You have successfully ${reactionType}d` });
     }
-    if (!created && reactionType !== dbReactionType) {
-      BaseHelper.updateReaction(req, res, model, modelColumnObj, userId, reactionType);
-    }
-    if (!created && reactionType === dbReactionType) {
-      BaseHelper.deleteReaction(req, res, model, modelColumnObj, userId);
+    if (!deleted) {
+      const updateOrCreate = await model.upsert({
+        id,
+        ...modelColumnObj,
+        userId,
+        reactionType
+      });
+      if (updateOrCreate) {
+        return res.status(200).json({
+          message: 'Reaction updated'
+        });
+      }
+      return res.status(200).json({ message: 'Reaction created' });
     }
   }
 
