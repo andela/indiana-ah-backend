@@ -337,10 +337,14 @@ class UserController extends BaseHelper {
    * @param {object} req - the request object
    * @param {object} res - the response object
 <<<<<<< HEAD
+<<<<<<< HEAD
    * @param {function} next Function to pass control to the next item
 =======
    * @param {object} next - the response object
 >>>>>>> fix: fix typos
+=======
+   * @param {function} next Function to pass control to the next item
+>>>>>>> feat: refactor User Controller
    * @returns {object} user - the user object
    * @memberOf UserController class
    */
@@ -413,10 +417,14 @@ class UserController extends BaseHelper {
    * @param {object} req - the request object
    * @param {object} res - the response object
 <<<<<<< HEAD
+<<<<<<< HEAD
    * @param {function} next Function to pass control to the next item
 =======
    * @param {object} next - the response object
 >>>>>>> fix: fix typos
+=======
+   * @param {function} next Function to pass control to the next item
+>>>>>>> feat: refactor User Controller
    * @returns {object} user - the user object
    * @memberOf UserController class
    */
