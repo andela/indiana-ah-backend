@@ -7,7 +7,7 @@ const { Users, Follows } = models;
 /**
  * @description Contains all follow and unfollow functionalities
  * @export
- * @class followAndUnfollow
+ * @class FollowController
  */
 class FollowController {
   /**
