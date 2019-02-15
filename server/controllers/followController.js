@@ -38,7 +38,7 @@ class FollowController {
         return errorMessage(res, 400, `You are already following ${username}`);
       });
     } catch (error) {
-      next(error);
+      return next(error);
     }
   }
 
@@ -70,7 +70,7 @@ class FollowController {
         });
       }
     } catch (error) {
-      next(error);
+      return next(error);
     }
   }
 
@@ -114,7 +114,7 @@ class FollowController {
       ));
       return res.status(200).json({ following: response, count: response.length });
     } catch (error) {
-      next(error);
+      return next(error);
     }
   }
 
@@ -157,7 +157,7 @@ class FollowController {
       ));
       return res.status(200).json({ following: response, count: response.length });
     } catch (error) {
-      next(error);
+      return next(error);
     }
   }
 }
