@@ -5,7 +5,7 @@ import BaseHelper from '../helpers/baseHelper';
 const { Reports, Articles, Users } = models;
 /**
  * @description  Handles Users reports on articles
- * @class reportController
+ * @class ReportController
  */
 class ReportController extends BaseHelper {
   /**
@@ -13,7 +13,7 @@ class ReportController extends BaseHelper {
    * @static
    * @param {object} req Request object
    * @param {object} res Response object
-   * @param {object} next Response object
+   * @param {Function} next passes control to the next middleware
    * @returns {Object} a response object
    */
   static async reportArticle(req, res, next) {
@@ -25,7 +25,7 @@ class ReportController extends BaseHelper {
    *@description controller method for getting all reports
    * @param {object} req Request object
    * @param {object} res Response object
-   * @param {object} next Response Object
+    * @param {Function} next passes control to the next middleware
    * @returns {Object} a response object
    */
   static async getOneArticleReports(req, res, next) {
@@ -55,7 +55,7 @@ class ReportController extends BaseHelper {
    *@description controller method for getting all reports
    * @param {object} req Request object
    * @param {object} res Response object
-   * @param {object} next Response Object
+    * @param {Function} next passes control to the next middleware
    * @returns {Object} a response object
    */
   static async getAllReports(req, res, next) {
