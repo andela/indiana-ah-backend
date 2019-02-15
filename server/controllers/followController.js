@@ -22,8 +22,8 @@ class FollowController {
  */
   static async followUser(req, res, next) {
     try {
-      const heplerResult = await followhelper(req, res, 'followUser');
-      const { user, followerId } = heplerResult;
+      const helperResult = await followhelper(req, res, 'followUser');
+      const { user, followerId } = helperResult;
       const { id: authorId, username } = user;
       Follows.findOrCreate({
         where: { authorId, followerId },
