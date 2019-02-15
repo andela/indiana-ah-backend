@@ -54,8 +54,8 @@ class FollowController {
  */
   static async unFollowUser(req, res, next) {
     try {
-      const heplerResult = await followhelper(req, res, 'unFollowUser');
-      const { user, followerId } = heplerResult;
+      const helperResult = await followhelper(req, res, 'unFollowUser');
+      const { user, followerId } = helperResult;
       const authorId = user.id;
       const userToUnfollow = await Follows.findOne({
         where: { authorId, followerId }
