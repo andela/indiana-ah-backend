@@ -83,7 +83,7 @@ class FollowController {
  * @param {object} res erver response
  * @returns {Object} server response object
  * @param {object} next server response
- * @memberof followAndUnfollow
+ * @memberof FollowController
  */
   static async fetchUsersIFollow(req, res, next) {
     try {
@@ -126,7 +126,7 @@ class FollowController {
  * @param {object} res erver response
  * @returns {Object} server response object
  * @param {object} next server response
- * @memberof followAndUnfollow
+ * @memberof FollowController
  */
   static async fetchFollowers(req, res, next) {
     try {
