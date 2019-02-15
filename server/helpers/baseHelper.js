@@ -101,10 +101,10 @@ class BaseHelper {
       });
       if (updateOrCreate) {
         return res.status(200).json({
-          message: 'Reaction updated'
+          message: 'Reaction created'
         });
       }
-      return res.status(200).json({ message: 'Reaction created' });
+      return res.status(200).json({ message: 'Reaction updated' });
     }
   }
 
