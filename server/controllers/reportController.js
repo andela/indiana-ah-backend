@@ -5,7 +5,7 @@ import BaseHelper from '../helpers/baseHelper';
 const { Reports, Articles, Users } = models;
 /**
  * @description  Handles Users reports on articles
- * @class CommentController
+ * @class reportController
  */
 class ReportController extends BaseHelper {
   /**
