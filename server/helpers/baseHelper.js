@@ -125,6 +125,7 @@ class BaseHelper {
     await model.destroy({
       where: { ...columnObj, userId }
     });
+
     return res.status(200).json({ message: 'Reaction successfully deleted' });
   }
 
