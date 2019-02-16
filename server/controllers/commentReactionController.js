@@ -42,6 +42,9 @@ class CommentReactionController extends BaseHelper {
    */
   static async getAllCommentReactions(req, res, next) {
     const { commentId } = req.body;
+    if (!commentId) {
+      return res.status(400).json({ error: 'Please supply a valid comment Id' });
+    }
     try {
       CommentReactionController.countReactions(req, res, CommentReactions, { commentId });
     } catch (error) {

@@ -62,12 +62,12 @@ class BaseHelper {
       where: { ...modelColumnObj }
     });
     const reactions = reactionsObj;
-    const likes = reactions.filter(reaction => reaction.dataValues.reactionType === 'like');
-    const dislikes = reactions.filter(reaction => reaction.dataValues.reactionType === 'dislike');
+    const likes = reactions.filter(reaction => reaction.dataValues.reactionType === 'like').length;
+    const dislikes = reactions.filter(reaction => reaction.dataValues.reactionType === 'dislike').length;
 
     const reactionsCount = {
-      likes: likes.length,
-      dislikes: dislikes.length
+      likes,
+      dislikes
     };
     return res.status(200).json({
       message: 'Reactions retrieved successfully',

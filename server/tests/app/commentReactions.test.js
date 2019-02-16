@@ -89,21 +89,20 @@ describe('Comment Reactions', () => {
         expect(res.status).to.equal(400);
         expect(res.body.message).to.equal('This is not an allowed reaction type');
       }));
-    it('should successfully delete a comment if user is authenticated', () => request(app)
-      .post('/api/v1/comments/reaction')
-      .set('x-auth-token', userToken)
-      .send({ commentId, reactionType: 'dislike' })
+    it('should fetch all reactions for a particular comment', () => request(app)
+      .get('/api/v1/comments/reaction')
+      .send({ commentId })
       .then((res) => {
         expect(res.status).to.equal(200);
-        expect(res.body.message).to.equal('Reaction successfully deleted');
+        expect(res.body.message).to.equal('Reactions retrieved successfully');
+        expect(res.body.reactionsCount).to.be.an('object');
+        expect(res.body.reactionsCount.likes).to.be.a('number');
       }));
-    it('should fail with error 400 if reactionType is not like or dislike', () => request(app)
-      .post('/api/v1/comments/reaction')
-      .set('x-auth-token', userToken)
-      .send({ commentId, reactionType: 'dislikeee' })
+    it('should return a bad request error if commentId is not provided', () => request(app)
+      .get('/api/v1/comments/reaction')
       .then((res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('This is not an allowed reaction type');
+        expect(res.body.error).to.equal('Please supply a valid comment Id');
       }));
   });
 });
