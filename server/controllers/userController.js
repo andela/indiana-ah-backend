@@ -59,7 +59,7 @@ class UserController extends BaseHelper {
         };
         const token = assignToken(payload);
         const location = req.get('host');
-        const url = '/api/v1/user/verify';
+        const url = '/api/v1/users/verify';
         const link = UserController.generateEmailLink(location, url, token);
         const message = `<h1 style='color: Goldenrod' > Welcome to Author's Haven</h1><hr/>
           <p>Please click this link to verify your Author's Haven account
@@ -336,10 +336,11 @@ class UserController extends BaseHelper {
    * @static sendPasswordResetLink - method to send password reset link to user
    * @param {object} req - the request object
    * @param {object} res - the response object
+   * @param {function} next Function to pass control to the next item
    * @returns {object} user - the user object
    * @memberOf UserController class
    */
-  static async sendPasswordResetLink(req, res) {
+  static async sendPasswordResetLink(req, res, next) {
     try {
       const { email } = req.body;
       const dbUser = await Users.findOne({
@@ -351,7 +352,7 @@ class UserController extends BaseHelper {
       });
       const { id, username } = dbUser;
       // define token payload and duration
-      const jwtKey = process.env.JWT_SECRET;
+      const jwtKey = process.env.JWT_SECRET_KEY;
       const jwtDuration = { expiresIn: '1hrs' };
       const payload = {
         id,
@@ -373,7 +374,7 @@ class UserController extends BaseHelper {
         token
       });
     } catch (error) {
-      return errorMessage(res, 500, 'Server currently down');
+      return next(error);
     }
   }
 
@@ -407,10 +408,11 @@ class UserController extends BaseHelper {
    * @static getUserByEmail - the method that handles user password reset
    * @param {object} req - the request object
    * @param {object} res - the response object
+   * @param {function} next Function to pass control to the next item
    * @returns {object} user - the user object
    * @memberOf UserController class
    */
-  static async resetPassword(req, res) {
+  static async resetPassword(req, res, next) {
     const token = req.header('x-auth-token');
     const decodedToken = JWTHelper.verifyToken(token);
     if (!decodedToken) {
@@ -429,7 +431,7 @@ class UserController extends BaseHelper {
       const updatedUser = response[1][0];
       return res.status(200).json({ message: 'Password reset successfully', updatedUser });
     } catch (resetError) {
-      return errorMessage(res, 500, resetError);
+      return next(resetError);
     }
   }
 }

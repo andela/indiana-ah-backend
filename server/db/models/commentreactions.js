@@ -16,8 +16,10 @@ export default (sequelize, DataTypes) => {
       },
       reactionType: {
         allowNull: false,
-        type: DataTypes.STRING
+        type: DataTypes.ENUM,
+        values: ['like', 'dislike']
       }
+
     },
     {}
   );
