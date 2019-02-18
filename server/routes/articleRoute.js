@@ -26,7 +26,6 @@ const router = Router();
 
 router.post('/', authUser, validateArticle, createArticle);
 router.post('/:articleId/ratings', authUser, validateRating, rateArticle);
-router.get('/', getAllArticles);
 router.get('/ratings/:ratingId', getOneArticleRating);
 router.get('/:articleId/ratings', getAllArticleRatings);
 router.get('/user/:username', getAllUserArticles);
