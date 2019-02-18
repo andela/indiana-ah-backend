@@ -178,9 +178,11 @@ class ArticleController extends BaseHelper {
     try {
       const { findBy, value } = req.query;
       if (!['author', 'keyword', 'title', 'tag'].includes(findBy)) {
-        return res.status('400').json({ message: 'Invalid search parameter' });
+        return errorResponse(res, 400, 'Invalid search parameter');
       }
+
       let queryCondition;
+
       const conditions = {
         author: {
           [Op.or]: [
@@ -197,6 +199,7 @@ class ArticleController extends BaseHelper {
         },
         tag: { tags: { [Op.iRegexp]: `[[:<:]]${value}[[:>:]]` } }
       };
+
       Object.keys(conditions).forEach((item) => {
         if (findBy === item) queryCondition = conditions[item];
       });
