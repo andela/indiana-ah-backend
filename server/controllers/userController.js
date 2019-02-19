@@ -135,7 +135,7 @@ class UserController extends BaseHelper {
         where: { email },
         attributes: ['name', 'username', 'email', 'password', 'role', 'isVerified', 'id']
       });
-      UserController.checkIfDataExist(req, res, newUser, { message: 'error logging in' });
+      UserController.checkIfDataExist(res, newUser, { message: 'error logging in' });
       const {
         email: dbEmail, username, name, role, isVerified, id
       } = newUser;
@@ -182,7 +182,7 @@ class UserController extends BaseHelper {
         },
         attributes: ['name', 'username', 'email', 'bio', 'imageUrl', 'createdAt']
       });
-      UserController.checkIfDataExist(req, res, user, { message: 'User not found' });
+      UserController.checkIfDataExist(res, user, { message: 'User not found' });
       return res.status(200).json({
         profile: user.dataValues
       });
@@ -243,7 +243,7 @@ class UserController extends BaseHelper {
         url = userValues.dataValues.imageUrl;
       }
 
-      UserController.checkIfDataExist(req, res, updatedRows, 'User not found');
+      UserController.checkIfDataExist(res, updatedRows, 'User not found');
       return res.status(200).json({
         avatar: url
       });
@@ -286,7 +286,7 @@ class UserController extends BaseHelper {
         const updatedRows = updatedUser[0];
         const updatedUserValues = updatedUser[1][0].dataValues;
 
-        UserController.checkIfDataExist(req, res, updatedRows, 'User not found');
+        UserController.checkIfDataExist(res, updatedRows, 'User not found');
         return res.status(200).json({
           profile: updatedUserValues
         });
@@ -347,7 +347,7 @@ class UserController extends BaseHelper {
         where: { email },
         returning: true
       });
-      UserController.checkIfDataExist(req, res, dbUser, {
+      UserController.checkIfDataExist(res, dbUser, {
         message: 'This email is not registered in our system'
       });
       const { id, username } = dbUser;

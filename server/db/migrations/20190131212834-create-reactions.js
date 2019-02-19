@@ -25,7 +25,9 @@ export default {
       }
     },
     reactionType: {
-      type: Sequelize.STRING
+      allowNull: false,
+      type: Sequelize.ENUM,
+      values: ['like', 'dislike']
     },
     createdAt: {
       allowNull: false,

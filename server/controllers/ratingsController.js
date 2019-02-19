@@ -24,7 +24,7 @@ class RatingsController extends Basehelper {
       const { articleId } = req.params;
       const { rating } = req.body;
       const article = await Articles.findOne({ where: { id: { [Op.eq]: articleId } } });
-      RatingsController.checkIfDataExist(req, res, article, { message: 'Article not found' });
+      RatingsController.checkIfDataExist(res, article, { message: 'Article not found' });
       if (article.userId === userId) errorResponse(res, 403, 'You cannot rate an article that you authored');
       const alreadyRated = await Ratings.findOne({ where: { userId, articleId } });
 
@@ -61,7 +61,7 @@ class RatingsController extends Basehelper {
       const articleRating = await Ratings.findOne({
         where: { id: { [Op.eq]: ratingId } }
       });
-      RatingsController.checkIfDataExist(req, res, articleRating, {
+      RatingsController.checkIfDataExist(res, articleRating, {
         message: 'Article rating not found'
       });
       return res.status(200).json({ articleRating });
@@ -82,7 +82,7 @@ class RatingsController extends Basehelper {
     try {
       const { articleId } = req.params;
       const articleRatings = await Ratings.findAll({ where: { articleId } });
-      RatingsController.checkIfDataExist(req, res, articleRatings.length, {
+      RatingsController.checkIfDataExist(res, articleRatings.length, {
         message: 'No ratings found for this article'
       });
       const numberOfRatings = articleRatings.length;
@@ -108,7 +108,7 @@ class RatingsController extends Basehelper {
       const { ratingId: id } = req.params;
       const { id: userId } = req.user;
       const rating = await Ratings.findOne({ where: { id, userId } });
-      RatingsController.checkIfDataExist(req, res, rating, {
+      RatingsController.checkIfDataExist(res, rating, {
         message: 'Article rating not found'
       });
       await Ratings.destroy({ where: { id, userId } });

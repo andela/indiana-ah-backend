@@ -17,13 +17,12 @@ class BaseHelper {
 
   /**
    *
-   * @param { string } req
    * @param {string} res
    * @param { string } data
    * @param { string } message
    * @returns {boolean} returns a boolean
    */
-  static checkIfDataExist(req, res, data, message) {
+  static checkIfDataExist(res, data, message) {
     if (!data) {
       return res.status(404).json(message);
     }
@@ -76,7 +75,8 @@ class BaseHelper {
    * @returns {object} a response object
    */
   static async reaction(req, res, model, modelColumnObj) {
-    const { reactionType } = req.body;
+    let { reactionType } = req.body;
+    reactionType = reactionType.toLowerCase();
     const { id: userId } = req.user;
     let deleted = false;
     let id;

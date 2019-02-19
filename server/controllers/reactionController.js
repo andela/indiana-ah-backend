@@ -2,7 +2,7 @@ import models from '../db/models';
 import errorMessage from '../helpers/errorHelpers';
 import BaseHelper from '../helpers/baseHelper';
 
-const { Reactions } = models;
+const { Reactions, Articles } = models;
 /**
  *
  *
@@ -14,56 +14,28 @@ class ReactionController extends BaseHelper {
    * @static
    * @param {object} req Request object
    * @param {object} res Response object
+   * @param {function} next Function to pass control to the next item
    * @returns {object} a response object
    */
-  static async articleReaction(req, res) {
-    const { articleId, reactionType } = req.body;
-    const { id: userId } = req.user;
-    req.body.userId = userId;
-
+  static async articleReaction(req, res, next) {
+    const { slug } = req.params;
+    const { reactionType } = req.body;
+    const allowedReactionTypes = ['like', 'dislike'];
+    const article = await Articles.findOne({
+      where: { slug },
+    });
+    if (!article) {
+      return errorMessage(res, 404, 'Article not found');
+    }
+    const articleId = article.id;
     try {
-      const reaction = await Reactions.findOrCreate({
-        where: { articleId, userId },
-        defaults: {
-          reactionType,
-          articleId,
-          userId
-        }
-      }).spread((
-        {
-          dataValues: {
-            articleId: dbArticleId, userId: dbUserId, reactionType: dbReactionType
-          }
-        },
-        created
-      ) => ({
-        dbArticleId, dbUserId, dbReactionType, created
-      }));
-      const { created, dbReactionType } = reaction;
-      if (created) {
-        return res.status(200).json({ message: `You have successfully ${reactionType}d this article` });
-      }
-      if (!created && reactionType !== dbReactionType) {
-        await Reactions.update(
-          { reactionType },
-          {
-            where: { articleId, userId },
-            returning: true
-          }
-        ).then(() => {
-          return res.status(200).json({
-            message: `You have successfully ${reactionType}d this article`
-          });
-        });
-      }
-      if (!created && reactionType === dbReactionType) {
-        await Reactions.destroy({
-          where: { articleId, userId }
-        });
-        return res.status(200).json({ message: 'Reaction successfully deleted' });
+      if (allowedReactionTypes.includes(reactionType.toLowerCase())) {
+        ReactionController.reaction(req, res, Reactions, { articleId });
+      } else {
+        return errorMessage(res, 400, 'This is not an allowed reaction type');
       }
     } catch (error) {
-      return errorMessage(res, 500, 'Internal Server Error');
+      return next(error);
     }
   }
 }
