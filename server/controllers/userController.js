@@ -300,6 +300,33 @@ class UserController extends BaseHelper {
   /**
    *
    *
+   * @static deleteUserProfile - the method that handles deleting a user profile
+   * @param {object} req - the request object
+   * @param {object} res - the response object
+   *
+   * @memberOf UserController class
+   */
+  static async deleteUserProfile(req, res, next) {
+    const user = req.params.username;
+
+    try {
+      const response = await Users.findOne({
+        where: { username: user }
+      });
+      if (!response) return errorMessage(res, 404, 'User not found');
+      await Users.destroy({
+        where: { username: user },
+      });
+      return res.status(200).json({ message: 'Profile successfully deleted' });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+
+  /**
+   *
+   *
    * @static handleSocialAuth - the method that saves socially /
    * authenticated user's data into the database
    * @param {string} accessToken

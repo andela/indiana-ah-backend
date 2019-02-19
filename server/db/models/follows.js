@@ -8,7 +8,7 @@ export default (sequelize, DataTypes) => {
         primaryKey: true,
         type: DataTypes.UUID
       },
-      authorId: {
+      userId: {
         type: DataTypes.UUID
       },
       followerId: {
