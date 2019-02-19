@@ -88,9 +88,17 @@ describe('Follow  and Unfollow Feature', () => {
       expect(res.body.message).to.equal('You currently do not have any followers');
     }));
 
+  it('should allow a user to follow an existing user', () => request(app)
+    .post(`/api/v1/profiles/${userBiola.username}/follow`)
+    .set('x-auth-token', tokenForBalogun)
+    .then((res) => {
+      expect(res.status).to.equal(200);
+      expect(res.body.message).to.equal(`You are now following ${userBiola.username}`);
+    }));
+
   it('should return a list of all users I follow', () => request(app)
     .get('/api/v1/profiles/users/followers')
-    .set('x-auth-token', tokenForAkeem)
+    .set('x-auth-token', tokenForBiola)
     .then((res) => {
       expect(res.body.following).to.be.an('array');
     }));
