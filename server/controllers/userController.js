@@ -7,9 +7,10 @@ import errorMessage from '../helpers/errorHelpers';
 import sendEmail from '../services/email';
 import JWTHelper from '../helpers/jwtHelper';
 import BaseHelper from '../helpers/baseHelper';
+import paginator from '../helpers/paginator';
 
 dotenv.config();
-const { Users } = models;
+const { Users, Articles } = models;
 const { verifyToken } = JWTHelper;
 /**
  *
@@ -202,10 +203,9 @@ class UserController extends BaseHelper {
    */
   static async getAllUsersProfile(req, res, next) {
     try {
-      const users = await Users.findAll({
-        attributes: ['name', 'username', 'email', 'bio', 'imageUrl', 'createdAt']
-      });
-      return res.status(200).json(users);
+      const includedModels = [{ model: Articles }];
+      const profiles = await paginator(Users, req, includedModels);
+      return res.status(200).json({ profiles });
     } catch (error) {
       return next(error);
     }
