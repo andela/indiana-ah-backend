@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import { Op } from 'sequelize';
 
 export default (sequelize, DataTypes) => {
   const Users = sequelize.define(
@@ -77,7 +78,15 @@ export default (sequelize, DataTypes) => {
           models = Object.values(sequelize.models);
           // eslint-disable-next-line array-callback-return
           return models.map((model) => {
-            model.destroy({ where: { userId: id } });
+            if (model === sequelize.models.Follows) {
+              model.destroy({
+                where: {
+                  [Op.or]: [{ authorId: id }, { followerId: id }]
+                }
+              });
+            } else {
+              model.destroy({ where: { userId: id } });
+            }
           });
         }
       }
@@ -101,7 +110,7 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'userId',
     });
     Users.hasMany(Follows, {
-      foreignKey: 'userId',
+      foreignKey: 'authorId',
     });
     Users.hasMany(Bookmarks, {
       foreignKey: 'userId',

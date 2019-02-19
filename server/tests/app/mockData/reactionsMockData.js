@@ -1,12 +1,6 @@
-export const user = {
+const user = {
   email: 'ezenwa9000@gmail.com',
   password: 'baleesecret48'
 };
 
-export const like = {
-  reactionType: 'like'
-};
-
-export const dislike = {
-  reactionType: 'dislike'
-};
+export default user;

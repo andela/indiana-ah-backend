@@ -14,7 +14,7 @@ describe('..db/models/follows', () => {
   checkModelName(Follow)('Follows');
   // check for attributes
   context('properties', () => {
-    ['id', 'userId', 'followerId']
+    ['id', 'authorId', 'followerId']
       .forEach(checkPropertyExists(follow));
   });
   // test associations

@@ -8,7 +8,7 @@ export default (sequelize, DataTypes) => {
         primaryKey: true,
         type: DataTypes.UUID
       },
-      userId: {
+      authorId: {
         allowNull: false,
         type: DataTypes.UUID
       },

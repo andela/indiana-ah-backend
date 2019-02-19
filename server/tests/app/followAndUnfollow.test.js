@@ -35,7 +35,6 @@ before(async () => {
     });
 });
 
-
 before(async () => {
   await Users.create(userAkeem);
   return request(app)
