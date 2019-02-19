@@ -3,6 +3,7 @@ import userRoute from './userRoute';
 import articleRoute from './articleRoute';
 import adminRoute from './adminRoute';
 import commentReactionRoute from './commentReactionRoute';
+import articleHighlight from './highlightRoute';
 import reportRoute from './reportRoute';
 import Auth from '../middlewares/jwtAuthentication';
 import ReportController from '../controllers/reportController';
@@ -19,5 +20,6 @@ router.get('/reports', authUser, verifyAdmin, getAllReports);
 router.use('/', userRoute);
 router.use('/admin', adminRoute);
 router.use('/comments', commentReactionRoute);
+router.use('/articles', articleHighlight);
 
 export default router;
