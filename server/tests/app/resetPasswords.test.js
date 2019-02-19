@@ -31,8 +31,12 @@ describe('Send reset password link to user', () => {
 });
 
 describe('Password reset funcionality for users', () => {
+  const invalidToken = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
+    eyJpZCI6ImM3MjNmNmMzLTM3MjktNDk1YS04NTAzLWQzNDE2YWY4NjdjMyIsInVzZXJuYW1lIjoib21lbmtpc2gxI
+    iwiZW1haWwiOiJvbWVua2lzaDFAZ21haWwuY29tIiwicm9sZSI6InVzZXIiLCJ
+    pYXQiOjE1NTA1Nzk1MzUsImV4cCI6MTU1MDY2NTkzNX0.xGV14r8s5TxeW93Jrjy-iD6BT2j-VCmtsyaq-AT775p`;
   it('should return status code 200 on successful password reset', () => request(app)
-    .patch('/api/v1/users/reset-password')
+    .patch(`/api/v1/users/reset-password?query=${token.token}`)
     .set('x-auth-token', token.token)
     .send(user1)
     .then((res) => {
@@ -40,7 +44,7 @@ describe('Password reset funcionality for users', () => {
       expect(res.body.message).to.equal('Password reset successfully');
     }));
   it('should return status code 401 if link has either expired or is invalid', () => request(app)
-    .patch('/api/v1/users/reset-password')
+    .patch(`/api/v1/users/reset-password?query=${invalidToken}`)
     .send(user1)
     .then((res) => {
       expect(res.statusCode).to.equal(401);

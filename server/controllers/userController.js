@@ -369,7 +369,7 @@ class UserController extends BaseHelper {
       };
       const token = assignToken(payload, jwtKey, jwtDuration);
       const location = req.get('host');
-      const url = '/api/v1/user/resetpassword';
+      const url = '/api/v1/user/reset-password';
       // define sendEmail parameter list
       const link = UserController.generateEmailLink(location, url, token);
       const subject = 'Authors\' Haven password reset';
@@ -429,7 +429,8 @@ class UserController extends BaseHelper {
    * @memberOf UserController class
    */
   static async resetPassword(req, res, next) {
-    const token = req.header('x-auth-token');
+    // const token = req.header('x-auth-token');
+    const { query: token } = req.query;
     const decodedToken = JWTHelper.verifyToken(token);
     if (!decodedToken) {
       return errorMessage(res, 401, 'This link is invalid or expired!!');
