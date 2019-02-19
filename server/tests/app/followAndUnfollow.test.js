@@ -11,8 +11,8 @@ import {
 const { Users } = models;
 
 let tokenForBalogun;
-// eslint-disable-next-line no-unused-vars
 let tokenForBiola;
+// eslint-disable-next-line no-unused-vars
 let tokenForAkeem;
 
 before(async () => {
