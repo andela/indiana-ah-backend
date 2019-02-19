@@ -26,7 +26,7 @@ export default {
     },
     commentId: {
       required: false,
-      type: Sequelize.Sequelize.UUID,
+      type: Sequelize.UUID,
       onDelete: 'CASCADE',
       allowNull: true,
       references: {
@@ -35,10 +35,8 @@ export default {
       }
     },
     highlight: {
-      required: true,
-      type: Sequelize.TEXT,
-      unique: false,
-      allowNull: false
+      allowNull: false,
+      type: Sequelize.TEXT
     },
     createdAt: {
       allowNull: false,
