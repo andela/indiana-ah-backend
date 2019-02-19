@@ -14,7 +14,8 @@ export default (sequelize, DataTypes) => {
         onDelete: 'CASCADE',
         references: {
           model: 'Users',
-          key: 'id'
+          key: 'id',
+          as: 'userId'
         }
       },
       articleId: {
@@ -23,7 +24,8 @@ export default (sequelize, DataTypes) => {
         onDelete: 'CASCADE',
         references: {
           model: 'Articles',
-          key: 'id'
+          key: 'id',
+          as: 'articleId'
         }
       },
       commentId: {
@@ -32,21 +34,26 @@ export default (sequelize, DataTypes) => {
         onDelete: 'CASCADE',
         references: {
           model: 'Comments',
-          key: 'id'
+          key: 'id',
+          as: 'commentId'
         }
       },
       highlight: {
-        required: true,
-        type: DataTypes.TEXT,
-        unique: false,
-        allowNull: false
+        allowNull: false,
+        type: DataTypes.TEXT
       }
     },
     {}
   );
   Highlight.associate = (models) => {
-    Highlight.belongsTo(models.Comment, { foreignKey: 'commentId' });
-    Highlight.belongsTo(models.Article, { foreignKey: 'articleId' });
+    Highlight.belongsTo(models.Comments, {
+      foreignKey: 'commentId',
+      onDelete: 'CASCADE'
+    });
+    Highlight.belongsTo(models.Articles, {
+      foreignKey: 'articleId',
+      onDelete: 'CASCADE'
+    });
   };
   return Highlight;
 };
