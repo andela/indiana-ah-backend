@@ -3,7 +3,6 @@ import Auth from '../middlewares/jwtAuthentication';
 import { validateArticle } from '../middlewares/validators/articleValidators';
 import ArticleController from '../controllers/articleController';
 import CommentController from '../controllers/commentController';
-// import RatingsController from '../controllers/ratingsController';
 import ReactionController from '../controllers/reactionController';
 
 const {
