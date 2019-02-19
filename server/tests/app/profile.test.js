@@ -56,11 +56,11 @@ describe('user profile', () => {
 
 describe('get all users profile', () => {
   it('should return the profiles of all users', () => request(app)
-    .get('/api/v1/profiles')
+    .get('/api/v1/profiles?page=1')
     .set('x-auth-token', secondToken)
     .then((res) => {
       expect(res.status).to.equal(200);
-      expect(res.body).to.be.an('array');
+      expect(res.body.profiles).to.be.an('array');
     }));
 });
 
