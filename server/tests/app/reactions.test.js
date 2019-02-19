@@ -10,7 +10,6 @@ import {
 } from './mockData/articlesMockData';
 
 let userToken = '',
-  articleId,
   articleSlug;
   user,
   like;
@@ -29,7 +28,6 @@ describe('Create an Article', () => {
     .send(validArticle)
     .then((res) => {
       articleSlug = res.body.article.slug;
-      articleId = res.body.article.id;
       expect(res.status).to.equal(201);
       expect(res.body.article).to.be.an('object');
     }));
@@ -42,20 +40,44 @@ describe('Article Likes and dislikes', () => {
       expect(res.status).to.equal(401);
       expect(res.body.message).to.equal('Access denied. You are not authorized to access this route');
     }));
+  it('should return an error if an invalid reaction is passed', () => request(app)
+    .post(`/api/v1/articles/${articleSlug}/reaction`)
+    .set('x-auth-token', userToken)
+    .send({ reactionType: 'Awesome' })
+    .then((res) => {
+      expect(res.status).to.equal(400);
+      expect(res.body.message).to.equal('This is not an allowed reaction type');
+    }));
+  it('should return an error if an invalid article slug is passed', () => request(app)
+    .post('/api/v1/articles/enjoying-andela/reaction')
+    .set('x-auth-token', userToken)
+    .send({ reactionType: 'Awesome' })
+    .then((res) => {
+      expect(res.status).to.equal(404);
+      expect(res.body.message).to.equal('Article not found');
+    }));
   it('should successfully like an article if user is authenticated', () => request(app)
     .post(`/api/v1/articles/${articleSlug}/reaction`)
     .set('x-auth-token', userToken)
-    .send({ articleId, reactionType: 'like' })
+    .send({ reactionType: 'like' })
     .then((res) => {
       expect(res.status).to.equal(200);
-      expect(res.body.message).to.equal('You have successfully liked this article');
+      expect(res.body.message).to.equal('Reaction created');
     }));
   it('should successfully dislike an article if user is authenticated', () => request(app)
     .post(`/api/v1/articles/${articleSlug}/reaction`)
     .set('x-auth-token', userToken)
-    .send({ articleId, reactionType: 'dislike' })
+    .send({ reactionType: 'dislike' })
     .then((res) => {
       expect(res.status).to.equal(200);
-      expect(res.body.message).to.equal('You have successfully disliked this article');
+      expect(res.body.message).to.equal('Reaction updated');
+    }));
+  it('should successfully delete a reaction if user is authenticated', () => request(app)
+    .post(`/api/v1/articles/${articleSlug}/reaction`)
+    .set('x-auth-token', userToken)
+    .send({ reactionType: 'dislike' })
+    .then((res) => {
+      expect(res.status).to.equal(200);
+      expect(res.body.message).to.equal('Reaction successfully deleted');
     }));
 });

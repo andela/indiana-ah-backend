@@ -15,7 +15,9 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.UUID
       },
       reactionType: {
-        type: DataTypes.STRING
+        allowNull: false,
+        type: DataTypes.ENUM,
+        values: ['like', 'dislike']
       }
     },
     { paranoid: true }
