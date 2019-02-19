@@ -29,43 +29,10 @@ class ReactionController extends BaseHelper {
     }
     const articleId = article.id;
     try {
-      const reaction = await Reactions.findOrCreate({
-        where: { articleId, userId },
-        defaults: {
-          reactionType,
-          articleId,
-          userId
-        }
-      }).spread((
-        {
-          dataValues: {
-            articleId: dbArticleId, userId: dbUserId, reactionType: dbReactionType
-          }
-        },
-        created
-      ) => ({
-        dbArticleId, dbUserId, dbReactionType, created
-      }));
-      const { created, dbReactionType } = reaction;
-      if (created) {
-        return res.status(200).json({ message: `You have successfully ${reactionType}d this article` });
-      }
-      if (!created && reactionType !== dbReactionType) {
-        await Reactions.update(
-          { reactionType },
-          {
-            where: { articleId, userId },
-            returning: true
-          }
-        ).then(() => res.status(200).json({
-          message: `You have successfully ${reactionType}d this article`
-        }));
-      }
-      if (!created && reactionType === dbReactionType) {
-        await Reactions.destroy({
-          where: { articleId, userId }
-        });
-        return res.status(200).json({ message: 'Reaction successfully deleted' });
+      if (allowedReactionTypes.includes(reactionType.toLowerCase())) {
+        ReactionController.reaction(req, res, Reactions, { articleId });
+      } else {
+        return errorMessage(res, 400, 'This is not an allowed reaction type');
       }
     } catch (error) {
       return next(error);

@@ -12,7 +12,6 @@ const {
   fetchFollowers
 } = followAndUnfollow;
 
-
 const router = express.Router();
 const {
   registerUser,

@@ -30,7 +30,7 @@ router.get('/user/:username', getAllUserArticles);
 router.put('/:slug/update', authUser, updateArticle);
 router.get('/:slug', getOneArticle);
 router.delete('/:slug/delete', authUser, deleteArticle);
-router.post('/:slug/comments', authUser, articleComment);
 router.post('/:slug/reaction', authUser, articleReaction);
+router.post('/:slug/comments', authUser, articleComment);
 
 export default router;
