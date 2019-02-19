@@ -30,6 +30,10 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'articleId',
       onDelete: 'CASCADE'
     });
+    Comments.hasMany(models.CommentReactions, {
+      foreignKey: 'commentId',
+      onDelete: 'CASCADE'
+    });
   };
   return Comments;
 };
