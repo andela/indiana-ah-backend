@@ -9,9 +9,11 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.UUID
       },
       authorId: {
+        allowNull: false,
         type: DataTypes.UUID
       },
       followerId: {
+        allowNull: false,
         type: DataTypes.UUID
       }
     },
@@ -20,11 +22,13 @@ export default (sequelize, DataTypes) => {
   Follows.associate = ({ Users }) => {
     Follows.belongsTo(Users, {
       foreignKey: 'authorId',
-      onDelete: 'CASCADE'
+      onDelete: 'CASCADE',
+      as: 'authorDetails'
     });
     Follows.belongsTo(Users, {
       foreignKey: 'followerId',
-      onDelete: 'CASCADE'
+      onDelete: 'CASCADE',
+      as: 'followerDetails'
     });
   };
   return Follows;

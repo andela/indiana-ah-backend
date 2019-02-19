@@ -3,6 +3,13 @@ import UserController from '../controllers/userController';
 import signUpValidator from '../middlewares/validators/signUpValidator';
 import jwtAuth from '../middlewares/jwtAuthentication';
 import parser from '../cloudinaryConfig';
+import followAndUnfollow from '../controllers/followController';
+
+const {
+  follow,
+  fetchFollowing,
+  fetchFollowers
+} = followAndUnfollow;
 
 const router = express.Router();
 const {
@@ -30,5 +37,7 @@ router.get('/', (req, res) => res.status(200).json({
 }));
 router.post('/users/begin-password-reset', sendPasswordResetLink);
 router.patch('/users/reset-password', resetPassword);
-
+router.post('/profiles/:username/follow', jwtAuth.authUser, follow);
+router.get('/profiles/users/following', jwtAuth.authUser, fetchFollowing);
+router.get('/profiles/users/followers', jwtAuth.authUser, fetchFollowers);
 export default router;
