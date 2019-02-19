@@ -264,10 +264,10 @@ class UserController extends BaseHelper {
   static async editUserProfile(req, res) {
     const { name, bio, password } = req.body;
     const user = req.params.username;
-    const { id, username } = req.user;
+    const { username } = req.user;
 
     const profile = await Users.findOne({
-      where: { id, username: user }
+      where: { username: user }
     });
     if (profile) {
       try {
@@ -279,12 +279,14 @@ class UserController extends BaseHelper {
             password: password || profile.dataValues.password
           },
           {
-            where: { id },
+            where: { username },
             returning: true
           }
         );
         const updatedRows = updatedUser[0];
         const updatedUserValues = updatedUser[1][0].dataValues;
+        delete updatedUserValues.password;
+        delete updatedUserValues.role;
 
         UserController.checkIfDataExist(res, updatedRows, 'User not found');
         return res.status(200).json({
