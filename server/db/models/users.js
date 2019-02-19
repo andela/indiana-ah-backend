@@ -64,6 +64,21 @@ export default (sequelize, DataTypes) => {
             user.attributes.password = await bcrypt.hash(user.attributes.password, saltRounds);
           }
           return user;
+        },
+        beforeBulkDestroy: async (user) => {
+          const { username } = user.where;
+          const deletedUser = await sequelize.models.Users.findOne({
+            where: { username },
+            raw: true
+          });
+          const { id } = deletedUser;
+          let { models } = sequelize;
+          delete models.Users;
+          models = Object.values(sequelize.models);
+          // eslint-disable-next-line array-callback-return
+          return models.map((model) => {
+            model.destroy({ where: { userId: id } });
+          });
         }
       }
     }
@@ -77,30 +92,26 @@ export default (sequelize, DataTypes) => {
     Articles, Comments, Reactions, Follows, Bookmarks, Reports, Ratings
   }) => {
     Users.hasMany(Articles, {
-      foreignKey: 'userId'
+      foreignKey: 'userId',
     });
     Users.hasMany(Comments, {
-      foreignKey: 'userId'
+      foreignKey: 'userId',
     });
     Users.hasMany(Reactions, {
-      foreignKey: 'userId'
+      foreignKey: 'userId',
     });
     Users.hasMany(Follows, {
-      foreignKey: 'followerId',
-      as: 'followerDetails'
-    });
-    Users.hasMany(Follows, {
-      foreignKey: 'authorId',
+      foreignKey: 'userId',
       as: 'authorDetails'
     });
     Users.hasMany(Bookmarks, {
-      foreignKey: 'userId'
+      foreignKey: 'userId',
     });
     Users.hasMany(Reports, {
-      foreignKey: 'userId'
+      foreignKey: 'userId',
     });
     Users.hasMany(Ratings, {
-      foreignKey: 'userId'
+      foreignKey: 'userId',
     });
   };
   return Users;

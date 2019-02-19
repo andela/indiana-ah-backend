@@ -6,7 +6,7 @@ export default {
       primaryKey: true,
       type: Sequelize.UUID
     },
-    authorId: {
+    userId: {
       type: Sequelize.UUID,
       onDelete: 'CASCADE',
       references: {

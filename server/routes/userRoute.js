@@ -21,16 +21,18 @@ const {
   uploadUserPicture,
   verifyUser,
   sendPasswordResetLink,
-  resetPassword
+  resetPassword,
+  deleteUserProfile
 } = UserController;
 
 router.post('/register', signUpValidator, registerUser);
+router.patch('/users/verify', verifyUser);
 router.post('/login', loginUser);
 router.get('/profiles/:username', jwtAuth.authUser, getUserProfile);
 router.get('/profiles', jwtAuth.authUser, getAllUsersProfile);
 router.patch('/profiles/:username/update', jwtAuth.authUser, editUserProfile);
-router.patch('/users/verify', verifyUser);
 router.patch('/profiles/image', jwtAuth.authUser, parser.single('image'), uploadUserPicture);
+router.delete('/profiles/:username/delete', jwtAuth.authUser, deleteUserProfile);
 
 router.get('/', (req, res) => res.status(200).json({
   message: 'welcome to authors haven platform'
