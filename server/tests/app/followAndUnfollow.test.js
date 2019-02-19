@@ -61,7 +61,7 @@ describe('Follow  and Unfollow Feature', () => {
     .set('x-auth-token', tokenForBalogun)
     .then((res) => {
       expect(res.status).to.equal(404);
-      expect(res.body.message).to.equal('user does not exists');
+      expect(res.body.message).to.equal('user does not exist');
     }));
 
   it('should allow a user to follow an existing user', () => request(app)

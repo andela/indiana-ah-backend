@@ -8,7 +8,7 @@ export default async (req, res, action) => {
 
   const user = await Users.findOne({ where: { username } });
 
-  if (!user) return errorMessage(res, 404, 'user does not exists');
+  if (!user) return errorMessage(res, 404, 'user does not exist');
 
   const followOrUnFollow = action === 'followUser' ? 'follow' : 'unfollow';
 
