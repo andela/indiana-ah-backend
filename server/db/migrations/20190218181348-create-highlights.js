@@ -38,6 +38,10 @@ export default {
       allowNull: false,
       type: Sequelize.TEXT
     },
+    comment: {
+      allowNull: false,
+      type: Sequelize.STRING
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE

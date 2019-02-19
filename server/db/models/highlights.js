@@ -41,6 +41,10 @@ export default (sequelize, DataTypes) => {
       highlight: {
         allowNull: false,
         type: DataTypes.TEXT
+      },
+      comment: {
+        allowNull: false,
+        type: DataTypes.STRING
       }
     },
     {}
