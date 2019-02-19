@@ -4,12 +4,14 @@ import signUpValidator from '../middlewares/validators/signUpValidator';
 import jwtAuth from '../middlewares/jwtAuthentication';
 import parser from '../cloudinaryConfig';
 import followAndUnfollow from '../controllers/followController';
+import validateUser from '../middlewares/verifyUser';
 
 const {
   follow,
   fetchFollowing,
   fetchFollowers
 } = followAndUnfollow;
+
 
 const router = express.Router();
 const {
@@ -30,9 +32,9 @@ router.patch('/users/verify', verifyUser);
 router.post('/login', loginUser);
 router.get('/profiles/:username', jwtAuth.authUser, getUserProfile);
 router.get('/profiles', jwtAuth.authUser, getAllUsersProfile);
-router.patch('/profiles/:username/update', jwtAuth.authUser, editUserProfile);
-router.patch('/profiles/image', jwtAuth.authUser, parser.single('image'), uploadUserPicture);
-router.delete('/profiles/:username/delete', jwtAuth.authUser, deleteUserProfile);
+router.patch('/profiles/:username/update', jwtAuth.authUser, validateUser, editUserProfile);
+router.patch('/profiles/:username/image', jwtAuth.authUser, validateUser, parser.single('image'), uploadUserPicture);
+router.delete('/profiles/:username/delete', jwtAuth.authUser, validateUser, deleteUserProfile);
 
 router.get('/', (req, res) => res.status(200).json({
   message: 'welcome to authors haven platform'
