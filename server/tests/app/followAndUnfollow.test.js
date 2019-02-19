@@ -72,12 +72,12 @@ describe('Follow  and Unfollow Feature', () => {
       expect(res.body.message).to.equal(`You are now following ${userAkeem.username}`);
     }));
 
-  it('should not allow a user to follow an already followed user', () => request(app)
+  it('should allow a user to unfollow a currently follwed user', () => request(app)
     .post(`/api/v1/profiles/${userAkeem.username}/follow`)
     .set('x-auth-token', tokenForBalogun)
     .then((res) => {
-      expect(res.status).to.equal(400);
-      expect(res.body.message).to.equal(`You are already following ${userAkeem.username}`);
+      expect(res.status).to.equal(200);
+      expect(res.body.message).to.equal(`You have unfollowed ${userAkeem.username}`);
     }));
 
   it('should notify users without followers that they do not have followers', () => request(app)

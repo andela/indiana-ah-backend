@@ -9,9 +9,11 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.UUID
       },
       authorId: {
+        allowNull: false,
         type: DataTypes.UUID
       },
       followerId: {
+        allowNull: false,
         type: DataTypes.UUID
       }
     },

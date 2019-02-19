@@ -1,5 +1,4 @@
 import models from '../db/models';
-import errorMessage from '../helpers/errorHelpers';
 import followhelper from '../helpers/followAndUnFollow';
 
 const { Users, Follows } = models;
@@ -12,7 +11,7 @@ const { Users, Follows } = models;
 class FollowController {
   /**
  *
- * @description Method to follow user
+ * @description Method to follow and unfollow user
  * @static
  * @param {object} req client request
  * @param {object} res server response
@@ -20,60 +19,30 @@ class FollowController {
  * @param  {Function} next passes control to the next middleware
  * @memberof FollowController
  */
-  static async followUser(req, res, next) {
+  static async follow(req, res, next) {
     try {
       const helperResult = await followhelper(req, res, 'followUser');
       const { user, followerId } = helperResult;
       const { id: authorId, username } = user;
-      Follows.findOrCreate({
+      await Follows.findOrCreate({
         where: { authorId, followerId },
         attributes: ['id', 'followerId', 'authorId']
-      }).spread((follow, created) => {
-        if (created) {
+      }).spread(async (follow, created) => {
+        if (created) return res.status(200).json({ status: '200', message: `You are now following ${username}` });
+
+        const result = await follow.destroy();
+        const { _changed: { deletedAt } } = result;
+        if (deletedAt) {
           return res.status(200).json({
             status: '200',
-            message: `You are now following ${username}`
+            message: `You have unfollowed ${username}`
           });
         }
-        return errorMessage(res, 400, `You are already following ${username}`);
       });
     } catch (error) {
       return next(error);
     }
   }
-
-  /**
- *
- * @description Method to unfollow user
- * @static
- * @param {object} req client request
- * @param {object} res server response
- * @param  {Function} next passes control to the next middleware
- * @returns {Object} server response object
- * @memberof FollowController
- */
-  static async unFollowUser(req, res, next) {
-    try {
-      const helperResult = await followhelper(req, res, 'unFollowUser');
-      const { user, followerId } = helperResult;
-      const authorId = user.id;
-      const userToUnfollow = await Follows.findOne({
-        where: { authorId, followerId }
-      });
-      if (!userToUnfollow) return errorMessage(res, 400, `You are not following ${user.username}`);
-      const result = await userToUnfollow.destroy();
-      const { _changed: { deletedAt } } = result;
-      if (deletedAt) {
-        return res.status(200).json({
-          status: '200',
-          message: `You are now unfollowing ${user.username}`
-        });
-      }
-    } catch (error) {
-      return next(error);
-    }
-  }
-
 
   /**
  *
@@ -85,7 +54,7 @@ class FollowController {
  * @param  {Function} next passes control to the next middleware
  * @memberof FollowController
  */
-  static async fetchUsersIFollow(req, res, next) {
+  static async fetchFollowing(req, res, next) {
     try {
       const usersIfollow = await Follows.findAll({
         where: { followerId: req.user.id },

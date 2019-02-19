@@ -6,9 +6,8 @@ import parser from '../cloudinaryConfig';
 import followAndUnfollow from '../controllers/followController';
 
 const {
-  followUser,
-  unFollowUser,
-  fetchUsersIFollow,
+  follow,
+  fetchFollowing,
   fetchFollowers
 } = followAndUnfollow;
 
@@ -38,9 +37,7 @@ router.get('/', (req, res) => res.status(200).json({
 }));
 router.post('/users/begin-password-reset', sendPasswordResetLink);
 router.patch('/users/reset-password', resetPassword);
-
-router.post('/profiles/:username/follow', jwtAuth.authUser, followUser);
-router.delete('/profiles/:username/unfollow', jwtAuth.authUser, unFollowUser);
-router.get('/profiles/users/following', jwtAuth.authUser, fetchUsersIFollow);
+router.post('/profiles/:username/follow', jwtAuth.authUser, follow);
+router.get('/profiles/users/following', jwtAuth.authUser, fetchFollowing);
 router.get('/profiles/users/followers', jwtAuth.authUser, fetchFollowers);
 export default router;
