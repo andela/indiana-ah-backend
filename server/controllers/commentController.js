@@ -1,14 +1,15 @@
 import models from '../db/models';
 import commentReportLogic from '../helpers/commentReportHelper';
+import BaseHelper from '../helpers/baseHelper';
 import errorMessage from '../helpers/errorHelpers';
 
-const { Comments, Articles } = models;
+const { Comments, Articles, Comment } = models;
 
 /**
  * @description  Handles Users comments on articles
  * @class CommentController
  */
-class CommentController {
+class CommentController extends BaseHelper {
   /**
    * @description controller method for commenting on an article
    * @static
@@ -49,6 +50,15 @@ class CommentController {
     } catch (error) {
       return next(error);
     }
+  }
+
+  static async updateComment(req, res) {
+    try {
+      const { commentId } = req.params;
+      const comment = await Comments.findOne({ where: { commentId } });
+      CommentController.checkIfDataExist(req, res, comment, 'Comment not found');
+      
+    } catch (error) {}
   }
 }
 

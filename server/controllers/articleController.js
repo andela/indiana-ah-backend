@@ -122,7 +122,7 @@ class ArticleController extends BaseHelper {
   static async getOneArticle(req, res, next) {
     try {
       const { slug } = req.params;
-      const article = await Articles.findOne({
+      let article = await Articles.findOne({
         where: { slug },
         include: [
           {
@@ -133,6 +133,7 @@ class ArticleController extends BaseHelper {
           { model: Reactions }
         ]
       });
+      article = article.toJSON();
       if (!article) return errorResponse(res, 404, 'Article not found');
       const timeToRead = ArticleController.calculateTimeToRead(article.articleBody);
       return res.status(200).json({ article, timeToRead });
