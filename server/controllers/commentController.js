@@ -4,7 +4,7 @@ import BaseHelper from '../helpers/baseHelper';
 import errorMessage from '../helpers/errorHelpers';
 import BaseHelper from '../helpers/baseHelper';
 
-const { Comments, Articles, Comment } = models;
+const { Comments, Articles } = models;
 
 /**
  * @description  Handles Users comments on articles
