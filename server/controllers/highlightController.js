@@ -36,6 +36,38 @@ class HighlightController extends BaseHelper {
       return next(error);
     }
   }
+
+  /**
+   *
+   * @param {object} req  Request object
+   * @param {object} res  Response onject
+   * @param {function} next Function to pass control to the next item
+   * @returns {object} a response object
+   */
+  static async deleteHighlight(req, res, next) {
+    try {
+      const { slug } = req.params;
+      const article = await Articles.findOne({
+        where: { slug },
+        returning: true
+      });
+      HighlightController.checkIfDataExist(req, res, article, {
+        message: 'Article not found'
+      });
+      const { articleId } = article.dataValues.id;
+      const textHighlight = await Highlights.findOne({
+        where: { articleId },
+        returning: true
+      });
+      if (textHighlight.dataValues.userId === article.dataValues.userId);
+      await Highlights.destroy({ where: textHighlight.dataValues.id });
+      return res.status(200).json({
+        message: 'Highlight removed successful'
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
 }
 
 export default HighlightController;
