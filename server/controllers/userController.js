@@ -290,7 +290,14 @@ class UserController extends BaseHelper {
 
         UserController.checkIfDataExist(res, updatedRows, 'User not found');
         return res.status(200).json({
-          profile: updatedUserValues
+          profile: {
+            name: updatedUserValues.name,
+            username: updatedUserValues.username,
+            email: updatedUserValues.email,
+            bio: updatedUserValues.bio,
+            imageUrl: updatedUserValues.imageUrl,
+            createdAt: updatedUserValues.createdAt
+          }
         });
       } catch (error) {
         return errorMessage(res, 500, 'Internal server error');
