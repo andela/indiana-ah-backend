@@ -110,6 +110,7 @@ class BaseHelper {
     const response = await model.findOne({
       where: { ...modelColumnObj, userId }
     });
+
     if (response) {
       const dbReaction = response.dataValues;
       const { reactionType: dbReactionType, id: reactionId } = dbReaction;

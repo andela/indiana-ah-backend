@@ -2,7 +2,7 @@ import models from '../db/models';
 import BaseHelper from '../helpers/baseHelper';
 import errorMessage from '../helpers/errorHelpers';
 
-const { CommentReactions } = models;
+const { CommentReactions, Comments } = models;
 /**
  *
  *
@@ -18,10 +18,17 @@ class CommentReactionController extends BaseHelper {
    * @returns {object} a response object
    */
   static async commentReaction(req, res, next) {
-    const { commentId, reactionType } = req.body;
+    let { reactionType } = req.body;
+    const { commentId } = req.body;
     const allowedReactionTypes = ['like', 'dislike'];
-
+    reactionType = reactionType.toLowerCase();
     try {
+      const findComment = await Comments.findOne({
+        where: { id: commentId }
+      });
+      if (!findComment) {
+        return errorMessage(res, 404, 'No comment found with this Id');
+      }
       if (allowedReactionTypes.includes(reactionType.toLowerCase())) {
         CommentReactionController.reaction(req, res, CommentReactions, { commentId });
       } else {

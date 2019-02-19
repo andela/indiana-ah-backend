@@ -39,7 +39,7 @@ describe('Password reset funcionality for users', () => {
       expect(res.statusCode).to.equal(200);
       expect(res.body.message).to.equal('Password reset successfully');
     }));
-  it('should return status code 200 on successful password reset', () => request(app)
+  it('should return status code 401 if link has either expired or is invalid', () => request(app)
     .patch('/api/v1/users/reset-password')
     .send(user1)
     .then((res) => {
