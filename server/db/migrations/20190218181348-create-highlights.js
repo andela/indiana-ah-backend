@@ -24,16 +24,6 @@ export default {
         key: 'id'
       }
     },
-    commentId: {
-      required: false,
-      type: Sequelize.UUID,
-      onDelete: 'CASCADE',
-      allowNull: true,
-      references: {
-        model: 'Comments',
-        key: 'id'
-      }
-    },
     highlight: {
       allowNull: false,
       type: Sequelize.TEXT

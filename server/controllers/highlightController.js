@@ -54,13 +54,12 @@ class HighlightController extends BaseHelper {
       HighlightController.checkIfDataExist(req, res, article, {
         message: 'Article not found'
       });
-      const { articleId } = article.dataValues.id;
       const textHighlight = await Highlights.findOne({
-        where: { articleId },
+        where: { articleId: article.dataValues.id },
         returning: true
       });
       if (textHighlight.dataValues.userId === article.dataValues.userId);
-      await Highlights.destroy({ where: textHighlight.dataValues.id });
+      await Highlights.destroy({ where: { id: textHighlight.dataValues.id }, returning: true });
       return res.status(200).json({
         message: 'Highlight removed successful'
       });
@@ -83,19 +82,19 @@ class HighlightController extends BaseHelper {
         where: { slug },
         returning: true
       });
-      HighlightController.checkIfDataExist(req, res, article, {
+      HighlightController.checkIfDataExist(res, article, {
         message: 'Article not found'
       });
-      const { articleId } = article.dataValues.id;
+      const articleId = article.dataValues.id;
       const textHighlight = await Highlights.findOne({
         where: { articleId },
         returning: true
       });
       if (textHighlight.dataValues.userId === article.dataValues.userId);
-      const updatedHighlight = await Highlights.update(
-        { where: textHighlight.dataValues.id },
-        req.body
-      );
+      const updatedHighlight = await Highlights.update(req.body, {
+        returning: true,
+        where: { id: textHighlight.dataValues.id }
+      });
       return res.status(200).json({
         message: 'Highlight updated successfully',
         data: updatedHighlight

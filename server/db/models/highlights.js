@@ -28,16 +28,6 @@ export default (sequelize, DataTypes) => {
           as: 'articleId'
         }
       },
-      commentId: {
-        required: true,
-        type: DataTypes.INTEGER,
-        onDelete: 'CASCADE',
-        references: {
-          model: 'Comments',
-          key: 'id',
-          as: 'commentId'
-        }
-      },
       highlight: {
         allowNull: false,
         type: DataTypes.TEXT
