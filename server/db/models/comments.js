@@ -34,6 +34,10 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'commentId',
       onDelete: 'CASCADE'
     });
+    Comments.hasMany(models.CommentEditHistories, {
+      foreignKey: 'commentId',
+      onDelete: 'CASCADE'
+    });
   };
   return Comments;
 };

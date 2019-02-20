@@ -151,6 +151,23 @@ class BaseHelper {
     if (!articles.length) return res.status(404).json({ message: 'Couldn\'t find articles matching your search' });
     return res.status(200).json({ searchResults: articles });
   }
+
+  static getReactions(model, reactionObj) {
+    const reactions = model[reactionObj].map(reaction => reaction.reactionType);
+    const likes = reactions.filter(reaction => reaction === 'like').length;
+    const dislikes = reactions.filter(reaction => reaction === 'dislike').length;
+    model.likes = likes;
+    model.dislikes = dislikes;
+    delete model[reactionObj];
+  }
+
+  static getCommentReactions(model) {
+    const comments = model.map((comment) => {
+      this.getReactions(comment, 'CommentReactions');
+      return comment;
+    });
+    return comments;
+  }
 }
 
 export default BaseHelper;
