@@ -4,6 +4,7 @@ import { validateArticle, validateRating } from '../middlewares/validators/artic
 import ArticleController from '../controllers/articleController';
 import CommentController from '../controllers/commentController';
 import RatingsController from '../controllers/ratingsController';
+import BookmarkController from '../controllers/bookmarkController';
 
 const {
   createArticle,
@@ -15,6 +16,8 @@ const {
 } = ArticleController;
 
 const { articleComment } = CommentController;
+const { createOrRemoveBookmark } = BookmarkController;
+
 const {
   rateArticle, getOneArticleRating, getAllArticleRatings, cancelRating
 } = RatingsController;
@@ -25,6 +28,7 @@ const router = Router();
 
 router.post('/', authUser, validateArticle, createArticle);
 router.post('/:articleId/ratings', authUser, validateRating, rateArticle);
+router.post('/:articleId/bookmark', authUser, createOrRemoveBookmark);
 router.get('/', getAllArticles);
 router.get('/ratings/:ratingId', getOneArticleRating);
 router.get('/:articleId/ratings', getAllArticleRatings);

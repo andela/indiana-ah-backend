@@ -1,6 +1,5 @@
 import express from 'express';
 import UserController from '../controllers/userController';
-import bookmarkController from '../controllers/bookmarkController';
 import signUpValidator from '../middlewares/validators/signUpValidator';
 import jwtAuth from '../middlewares/jwtAuthentication';
 import parser from '../cloudinaryConfig';
@@ -26,11 +25,9 @@ const {
   resetPassword
 } = UserController;
 
-const { createOrRemoveBookmark } = bookmarkController;
 
 router.post('/register', signUpValidator, registerUser);
 router.post('/login', loginUser);
-router.post('/users/:articleId/bookmark', jwtAuth.authUser, createOrRemoveBookmark);
 router.get('/profiles/:username', jwtAuth.authUser, getUserProfile);
 router.get('/profiles', jwtAuth.authUser, getAllUsersProfile);
 router.patch('/profiles/:username/update', jwtAuth.authUser, editUserProfile);
