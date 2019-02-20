@@ -130,7 +130,6 @@ class ArticleController extends BaseHelper {
             as: 'author',
             attributes: ['username', 'bio', 'imageUrl']
           },
-          { model: Comments },
           { model: Reactions }
         ]
       });
@@ -177,14 +176,10 @@ class ArticleController extends BaseHelper {
   static async searchArticles(req, res, next) {
     try {
       const {
-        author, title, tag, query
+        author, title, tag, q
       } = req.query;
 
-      // // if (!['author', 'keyword', 'title', 'tag'].includes(findBy)) {
-      // //   return errorResponse(res, 400, 'Invalid search parameter');
-      // // }
-
-      let queryCondition;
+      const queryCondition = {};
 
       const conditions = {
         author: {
@@ -195,20 +190,25 @@ class ArticleController extends BaseHelper {
         },
         title: { articleTitle: { [Op.iLike]: `%${title}%` } },
         tag: { tags: { [Op.iLike]: `%${tag}%` } },
-        query: {
+        q: {
           [Op.or]: [
-            { articleBody: { [Op.iLike]: `%${query}%` } },
-            { articleTitle: { [Op.iLike]: `%${query}%` } },
-            { '$author.username$': { [Op.iLike]: `%${query}%` } },
-            { '$author.name$': { [Op.iLike]: `%${query}%` } },
-            { tags: { [Op.iLike]: `%${query}%` } }
+            { articleBody: { [Op.iLike]: `%${q}%` } },
+            { articleTitle: { [Op.iLike]: `%${q}%` } },
+            { '$author.username$': { [Op.iLike]: `%${q}%` } },
+            { '$author.name$': { [Op.iLike]: `%${q}%` } },
+            { tags: { [Op.iLike]: `%${q}%` } }
           ]
         }
       };
 
       Object.keys(conditions).forEach((item) => {
-        if (req.query[item]) queryCondition = conditions[item];
+        if (req.query[item]) Object.assign(queryCondition, conditions[item]);
       });
+
+      if (
+        !Object.keys(queryCondition).length
+        && !Object.getOwnPropertySymbols(queryCondition).length
+      ) return errorResponse(res, 400, 'Invalid search parameter');
 
       await ArticleController.search(res, queryCondition);
     } catch (error) {
