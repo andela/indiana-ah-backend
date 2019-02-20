@@ -26,6 +26,13 @@ class HighlightController extends BaseHelper {
       if (!article) {
         return errorMessage(res, 404, 'Article not found');
       }
+
+      const { highlight } = req.body;
+      // check if the highlighted text exist  in the article
+      const findHighlight = article.dataValues.articleBody.includes(highlight);
+      if (!findHighlight) {
+        return errorMessage(res, 404, 'Article Highlighted text doesn\'t exist');
+      }
       req.body.userId = article.dataValues.userId;
       req.body.articleId = article.dataValues.id;
       const articleHighlight = await Highlights.create(req.body);
@@ -94,13 +101,18 @@ class HighlightController extends BaseHelper {
         where: { articleId },
         returning: true
       });
-      const findHighlight = textHighlight.dataValues.indexOf(req.body.highlight);
-      if (findHighlight === -1) {
-        return errorMessage(res, 404, 'No highlight on this Article');
+
+      const { highlight } = req.body;
+      // check if the highlighted text exist  in the article
+      const findHighlight = textHighlight.dataValues.includes(highlight);
+      if (!findHighlight) {
+        return errorMessage(res, 404, 'Article Highlighted text doesn\'t exist');
       }
+
+      // check if the UserID that created the hignlight is same as the one that highlighted the text
       if (textHighlight.dataValues.userId !== article.dataValues.userId) {
         return res.status(401).json({
-          message: 'You are not Authorised',
+          message: 'You are not Authorized'
         });
       }
       const updatedHighlight = await Highlights.update(req.body, {
