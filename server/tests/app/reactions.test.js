@@ -3,9 +3,7 @@ import { expect } from 'chai';
 import app from '../../index';
 import user from './mockData/reactionsMockData';
 
-import {
-  validArticle,
-} from './mockData/articlesMockData';
+import { validArticle } from './mockData/articlesMockData';
 
 let userToken = '',
   articleSlug;
