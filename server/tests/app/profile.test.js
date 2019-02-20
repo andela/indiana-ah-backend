@@ -109,7 +109,7 @@ describe('Edit user picture', () => {
     .attach('image', 'server/tests/testImage/feather.jpg')
     .then((res) => {
       expect(res.status).to.equal(200);
-      expect(res.body.avatar).to.match(/^http/);
+      expect(res.body.picture).to.match(/^http/);
     }));
   it('should return an error when an invalid ID type is passed', () => request(app)
     .patch('/api/v1/profiles/cim/image')

@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import logger from '../winstonConfig';
 /**
  * @class BaseHelper
  */
@@ -123,6 +124,47 @@ class BaseHelper {
       where: { ...columnObj, userId }
     });
     return res.status(200).json({ message: 'Reaction successfully deleted' });
+  }
+
+  /**
+   * @description uploadPicture- controller method for uploading pictures
+   * @static
+   * @param {object} req Request object
+   * @param {object} res Response object
+   * @param {object} model Request object
+   * @param {object} modelColumnObj Request object
+   * @param {function} next Function to pass control to the next function
+   * @returns {object} a response object
+   */
+  static async uploadPicture(req, res, model, modelColumnObj, next) {
+    const image = {};
+    image.url = req.file.url;
+    image.id = req.file.public_id;
+    try {
+      const updatedModel = await model.update(
+        {
+          imageUrl: image.url
+        },
+        {
+          where: { ...modelColumnObj },
+          returning: true
+        }
+      );
+
+      const updatedRows = updatedModel[0];
+      const updatedValues = updatedModel[1][0];
+      let url = '';
+      if (updatedValues) {
+        url = updatedValues.dataValues.imageUrl;
+      }
+
+      if (!updatedRows) return res.status(404).json({ message: `${model === 'Users' ? 'User' : 'Article'} not found` });
+      return res.status(200).json({
+        picture: url
+      });
+    } catch (error) {
+      next(error);
+    }
   }
 }
 

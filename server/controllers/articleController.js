@@ -23,6 +23,7 @@ class ArticleController extends BaseHelper {
     try {
       const { id: userId } = req.user;
       req.body.userId = userId;
+      if (req.file) req.body.imageUrl = req.file.url;
       const userArticle = req.body.articleBody;
       const timeToRead = ArticleController.calculateTimeToRead(userArticle);
       const article = await Articles.create(req.body);
@@ -97,6 +98,7 @@ class ArticleController extends BaseHelper {
     try {
       const { slug } = req.params;
       const { id: userId } = req.user;
+      if (req.file) req.body.imageUrl = req.file.url;
       const response = await Articles.update(req.body, {
         where: { slug, userId },
         returning: true
@@ -108,6 +110,20 @@ class ArticleController extends BaseHelper {
     } catch (error) {
       return next(error);
     }
+  }
+
+  /**
+   *@description controller method for uploading article picture
+   * @static
+   * @param {object} req - the request object
+   * @param {object} res - the response object
+   * @param {function} next passes control to the next function
+   * @returns {Object} a response object
+   * @memberOf ArticleController class
+   */
+  static async updateArticlePicture(req, res, next) {
+    const { slug } = req.params;
+    ArticleController.uploadPicture(req, res, Articles, { slug }, next);
   }
 
   /**

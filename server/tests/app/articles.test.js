@@ -211,7 +211,7 @@ describe('Get one article rating', () => {
     .get('/api/v1/articles/ratings/69feb295-9030-4ef4-b7d7')
     .then((res) => {
       expect(res.status).to.equal(500);
-      expect(res.body.message).match(/invalid input syntax/);
+      expect(res.body.message).to.equal('Internal server error');
     }));
 
   it('should return a "not found" response if the rating was not found', () => request(app)

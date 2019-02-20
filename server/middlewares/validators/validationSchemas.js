@@ -10,7 +10,6 @@ export const articleSchema = {
   tags: Joi.array()
     .items(Joi.string())
     .min(2),
-  imageUrl: Joi.string().uri()
 };
 
 export const ratingSchema = {

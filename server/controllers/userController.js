@@ -224,36 +224,9 @@ class UserController extends BaseHelper {
    *
    * @memberOf UserController class
    */
-  static async uploadUserPicture(req, res) {
-    const image = {};
+  static async uploadUserPicture(req, res, next) {
     const { id } = req.user;
-    image.url = req.file.url;
-    image.id = req.file.public_id;
-    try {
-      const updatedUser = await Users.update(
-        {
-          imageUrl: image.url
-        },
-        {
-          where: { id },
-          returning: true
-        }
-      );
-
-      const updatedRows = updatedUser[0];
-      const userValues = updatedUser[1][0];
-      let url = '';
-      if (userValues) {
-        url = userValues.dataValues.imageUrl;
-      }
-
-      UserController.checkIfDataExist(res, updatedRows, 'User not found');
-      return res.status(200).json({
-        avatar: url
-      });
-    } catch (error) {
-      errorMessage(res, 500, 'Internal server error');
-    }
+    UserController.uploadPicture(req, res, Users, { id }, next);
   }
 
   /**
