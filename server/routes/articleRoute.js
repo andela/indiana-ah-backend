@@ -14,10 +14,10 @@ const {
   deleteArticle
 } = ArticleController;
 
-const { articleComment } = CommentController;
 const {
   rateArticle, getOneArticleRating, getAllArticleRatings, cancelRating
 } = RatingsController;
+const { articleComment, getArticleComment } = CommentController;
 
 const { authUser } = Auth;
 
@@ -34,5 +34,6 @@ router.get('/:slug', getOneArticle);
 router.delete('/:slug/delete', authUser, deleteArticle);
 router.delete('/ratings/:ratingId/cancel', authUser, cancelRating);
 router.post('/:slug/comments', authUser, articleComment);
+router.get('/:slug/comments', authUser, getArticleComment);
 
 export default router;

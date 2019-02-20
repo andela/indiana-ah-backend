@@ -24,7 +24,7 @@ export default {
         as: 'articleId'
       }
     },
-    commentBody: {
+    reportBody: {
       allowNull: false,
       type: Sequelize.STRING
     },
