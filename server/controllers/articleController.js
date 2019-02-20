@@ -176,32 +176,38 @@ class ArticleController extends BaseHelper {
    */
   static async searchArticles(req, res, next) {
     try {
-      const { findBy, value } = req.query;
-      if (!['author', 'keyword', 'title', 'tag'].includes(findBy)) {
-        return errorResponse(res, 400, 'Invalid search parameter');
-      }
+      const {
+        author, title, tag, query
+      } = req.query;
+
+      // // if (!['author', 'keyword', 'title', 'tag'].includes(findBy)) {
+      // //   return errorResponse(res, 400, 'Invalid search parameter');
+      // // }
 
       let queryCondition;
 
       const conditions = {
         author: {
           [Op.or]: [
-            { '$author.username$': { [Op.iLike]: `%${value}%` } },
-            { '$author.name$': { [Op.iLike]: `%${value}%` } }
+            { '$author.username$': { [Op.iLike]: `%${author}%` } },
+            { '$author.name$': { [Op.iLike]: `%${author}%` } }
           ]
         },
-        title: { articleTitle: { [Op.iLike]: `%${value}%` } },
-        keyword: {
+        title: { articleTitle: { [Op.iLike]: `%${title}%` } },
+        tag: { tags: { [Op.iLike]: `%${tag}%` } },
+        query: {
           [Op.or]: [
-            { articleBody: { [Op.iLike]: `%${value}%` } },
-            { articleTitle: { [Op.iLike]: `%${value}%` } }
+            { articleBody: { [Op.iLike]: `%${query}%` } },
+            { articleTitle: { [Op.iLike]: `%${query}%` } },
+            { '$author.username$': { [Op.iLike]: `%${query}%` } },
+            { '$author.name$': { [Op.iLike]: `%${query}%` } },
+            { tags: { [Op.iLike]: `%${query}%` } }
           ]
-        },
-        tag: { tags: { [Op.iRegexp]: `[[:<:]]${value}[[:>:]]` } }
+        }
       };
 
       Object.keys(conditions).forEach((item) => {
-        if (findBy === item) queryCondition = conditions[item];
+        if (req.query[item]) queryCondition = conditions[item];
       });
 
       await ArticleController.search(res, queryCondition);
