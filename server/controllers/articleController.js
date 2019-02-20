@@ -5,7 +5,7 @@ import BaseHelper from '../helpers/baseHelper';
 import paginator from '../helpers/paginator';
 
 const {
-  Articles, Users, Comments, Reactions, CommentReactions
+  Articles, Users, Comments, Reactions, CommentReactions, CommentEditHistories
 } = models;
 
 /**
@@ -132,22 +132,17 @@ class ArticleController extends BaseHelper {
             as: 'author',
             attributes: ['username', 'bio', 'imageUrl']
           },
-          { model: Comments, include: [CommentReactions] },
+          {
+            model: Comments,
+            include: [{ model: CommentReactions }, { model: CommentEditHistories }]
+          },
           { model: Reactions }
         ]
       });
       if (!article) return errorResponse(res, 404, 'Article not found');
       article = article.toJSON();
-      const comments = article.Comments.map((comment) => {
-        const reactions = comment.CommentReactions.map(reaction => reaction.reactionType);
-        const likes = reactions.filter(reaction => reaction === 'like').length;
-        const dislikes = reactions.filter(reaction => reaction === 'dislike').length;
-        comment.likes = likes;
-        comment.dislikes = dislikes;
-        delete comment.CommentReactions;
-        return comment;
-      });
-      article.Comments = comments;
+      ArticleController.getReactions(article, 'Reactions');
+      article.Comments = ArticleController.getCommentReactions(article.Comments);
       const timeToRead = ArticleController.calculateTimeToRead(article.articleBody);
       return res.status(200).json({ article, timeToRead });
     } catch (error) {

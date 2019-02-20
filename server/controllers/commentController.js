@@ -4,7 +4,7 @@ import BaseHelper from '../helpers/baseHelper';
 import errorMessage from '../helpers/errorHelpers';
 import BaseHelper from '../helpers/baseHelper';
 
-const { Comments, Articles } = models;
+const { Comments, Articles, CommentEditHistories } = models;
 
 /**
  * @description  Handles Users comments on articles
@@ -80,14 +80,30 @@ class CommentController extends BaseHelper {
     } catch (error) {
       return next(error);
     }
-  static async updateComment(req, res) {
+  
+  static async updateComment(req, res, next) {
     try {
+      const { userId } = req.query;
       const { commentId } = req.params;
       const comment = await Comments.findOne({ where: { commentId } });
       CommentController.checkIfDataExist(req, res, comment, 'Comment not found');
-      
-    } catch (error) {}
+      const { createdAt, commentBody } = comment;
+      await CommentEditHistories.create({ commentBody, commentId, createdAt });
+      const updatedComment = await Comments.update({
+        where: { userId, commentId },
+        returning: true
+      });
+      return res
+        .status(200)
+        .json({ message: 'Comment successfully updated', comment: updatedComment });
+    } catch (error) {
+      next(error);
+    }
   }
+
+  // static async getOneComment(req, res, next) {
+  //   const
+  // }
 }
 
 export default CommentController;
