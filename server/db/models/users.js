@@ -75,7 +75,7 @@ export default (sequelize, DataTypes) => {
           const { id } = deletedUser;
           let { models } = sequelize;
           delete models.Users;
-          models = Object.values(sequelize.models);
+          models = Object.values(models);
           // eslint-disable-next-line array-callback-return
           return models.map((model) => {
             if (model === sequelize.models.Follows) {
