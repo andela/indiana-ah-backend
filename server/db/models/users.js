@@ -111,6 +111,7 @@ export default (sequelize, DataTypes) => {
     });
     Users.hasMany(Follows, {
       foreignKey: 'authorId',
+      as: 'authorDetails'
     });
     Users.hasMany(Bookmarks, {
       foreignKey: 'userId',

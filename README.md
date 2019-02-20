@@ -250,6 +250,12 @@ Authentication required, returns the Updated User
 
 Accepted fields: `name`, `username`, `bio`
 
+### Delete User Profile
+
+`DELETE api/v1/profiles/:username/delete`
+
+Authentication required, deletes a user's profile/account
+
 ### Get Profile
 
 `GET /api/v1/profiles/:username`
@@ -338,6 +344,7 @@ Required fields: `title`, `description`, `body`
 
 Optional fields: `tagList` as an array of Strings
 
+
 ### Update Article
 
 `PUT /api/articles/:slug`
@@ -358,11 +365,30 @@ Optional fields: `title`, `description`, `body`
 
 The `slug` also gets updated when the `title` is changed
 
+
+### Like, Unlike, Dislike an Article
+
+`POST /api/articles/:slug/reaction`
+
+Example request body:
+
+```source-json
+{
+  "reactionType": "like"
+}
+```
+
+Authentication required, returns a message that Reaction created, updated or deleted.
+
+Required field: `reactionType`
+
+
 ### Delete Article
 
 `DELETE /api/articles/:slug`
 
 Authentication required
+
 
 ### Add Comments to an Article
 
