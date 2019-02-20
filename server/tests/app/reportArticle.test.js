@@ -62,7 +62,7 @@ describe('User report on an article', () => {
     .send({ reportBody: 'This article is gender biased', articleId })
     .then((res) => {
       expect(res.status).to.equal(201);
-      expect(res.body.message).to.equal('Article report is successful');
+      expect(res.body.message).to.equal('Article reported successfully');
     }));
 });
 
@@ -105,7 +105,7 @@ describe('Welcome to Authors Haven', () => {
 });
 
 describe('Welcome to Authors Haven', () => {
-  it('Should welcome users to Authors Haven', () => request(app)
+  it('Should throw an error if hitting wrong routes', () => request(app)
     .get('/ai')
     .set('x-auth-token', verifiedToken)
     .then((res) => {

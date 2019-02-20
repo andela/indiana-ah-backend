@@ -15,10 +15,6 @@ export default {
         as: 'userId'
       }
     },
-    slug: {
-      allowNull: false,
-      type: Sequelize.STRING
-    },
     articleId: {
       type: Sequelize.UUID,
       onDelete: 'CASCADE',

@@ -11,10 +11,6 @@ export default (sequelize, DataTypes) => {
       userId: {
         type: DataTypes.UUID
       },
-      slug: {
-        allowNull: false,
-        type: DataTypes.STRING
-      },
       articleId: {
         type: DataTypes.UUID
       },

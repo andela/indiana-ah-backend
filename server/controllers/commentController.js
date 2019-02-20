@@ -1,5 +1,6 @@
 import models from '../db/models';
-import commentReportLogic from '../helpers/commentReactionHelper';
+import commentReportLogic from '../helpers/commentReportHelper';
+import errorMessage from '../helpers/errorHelpers';
 
 const { Comments, Articles } = models;
 
@@ -17,7 +18,7 @@ class CommentController {
    * @returns {Object} a response object
    */
   static async articleComment(req, res, next) {
-    const message = 'Comment has been posted successfully';
+    const message = 'Comment posted successfully';
     commentReportLogic(req, res, next, Articles, Comments, message);
   }
 
@@ -36,17 +37,13 @@ class CommentController {
         where: { slug },
         returning: true
       });
-      if (!article) {
-        return res.status(404).json({
-          message: 'Article not found'
-        });
-      }
+      if (!article) return errorMessage(res, 404, 'Article not found');
       const articleComments = await Comments.findAll({
-        where: { slug },
+        where: { id: article.dataValues.id },
         returning: true
       });
-      return res.status(201).json({
-        message: 'Comments retrieve successfully',
+      return res.status(200).json({
+        message: 'Comment retrieved successfully',
         data: articleComments
       });
     } catch (error) {

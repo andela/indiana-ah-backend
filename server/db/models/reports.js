@@ -14,10 +14,6 @@ export default (sequelize, DataTypes) => {
       articleId: {
         type: DataTypes.UUID
       },
-      slug: {
-        allowNull: false,
-        type: DataTypes.STRING
-      },
       reportBody: {
         allowNull: false,
         type: DataTypes.STRING

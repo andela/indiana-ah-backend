@@ -1,6 +1,7 @@
 import models from '../db/models';
-import commentReportLogic from '../helpers/commentReactionHelper';
+import commentReportLogic from '../helpers/commentReportHelper';
 import BaseHelper from '../helpers/baseHelper';
+import errorMessage from '../helpers/errorHelpers';
 
 const { Reports, Articles, Users } = models;
 /**
@@ -17,7 +18,7 @@ class ReportController extends BaseHelper {
    * @returns {Object} a response object
    */
   static async reportArticle(req, res, next) {
-    const message = 'Article report is successful';
+    const message = 'Article reported successfully';
     commentReportLogic(req, res, next, Articles, Reports, message);
   }
 
@@ -44,7 +45,7 @@ class ReportController extends BaseHelper {
           }
         ]
       });
-      ReportController.checkIfDataExist(req, res, report.length, { message: 'No reports found' });
+      if (!report) return errorMessage(res, 404, 'No reports found');
       return res.status(200).json({ message: 'Reports retrieve successful', report });
     } catch (error) {
       return next(error);
@@ -61,7 +62,7 @@ class ReportController extends BaseHelper {
   static async getAllReports(req, res, next) {
     try {
       const report = await Reports.findAll({});
-      ReportController.checkIfDataExist(req, res, report.length, { message: 'No reports found' });
+      if (!report) return errorMessage(res, 404, 'No reports found');
       return res.status(200).json({ message: 'Reports retrieve successful', report });
     } catch (error) {
       return next(error);
