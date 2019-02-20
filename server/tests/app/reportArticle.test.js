@@ -80,7 +80,7 @@ describe('Admin Should get a report on an article', () => {
     .set('x-auth-token', adminVerifiedToken)
     .then((res) => {
       expect(res.status).to.equal(200);
-      expect(res.body.message).to.equal('Reports retrieve successful');
+      expect(res.body.message).to.equal('Reports retrieved successfully');
     }));
 });
 
@@ -90,7 +90,7 @@ describe('Admin Should get all report on an article', () => {
     .set('x-auth-token', adminVerifiedToken)
     .then((res) => {
       expect(res.status).to.equal(200);
-      expect(res.body.message).to.equal('Reports retrieve successful');
+      expect(res.body.message).to.equal('Reports retrieved successfully');
     }));
 });
 

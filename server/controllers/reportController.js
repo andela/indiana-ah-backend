@@ -26,14 +26,19 @@ class ReportController extends BaseHelper {
    *@description controller method for getting all reports
    * @param {object} req Request object
    * @param {object} res Response object
-    * @param {Function} next passes control to the next middleware
+   * @param {Function} next passes control to the next middleware
    * @returns {Object} a response object
    */
   static async getOneArticleReports(req, res, next) {
     try {
       const { slug } = req.params;
-      const report = await Reports.findAll({
+      const article = await Articles.findOne({
         where: { slug },
+        returning: true
+      });
+      if (!article) return errorMessage(res, 404, 'No reports found');
+      const report = await Reports.findAll({
+        where: { articleId: article.dataValues.id },
         returning: true,
         include: [
           {
@@ -46,7 +51,7 @@ class ReportController extends BaseHelper {
         ]
       });
       if (!report) return errorMessage(res, 404, 'No reports found');
-      return res.status(200).json({ message: 'Reports retrieve successful', report });
+      return res.status(200).json({ message: 'Reports retrieved successfully', report });
     } catch (error) {
       return next(error);
     }
@@ -56,14 +61,14 @@ class ReportController extends BaseHelper {
    *@description controller method for getting all reports
    * @param {object} req Request object
    * @param {object} res Response object
-    * @param {Function} next passes control to the next middleware
+   * @param {Function} next passes control to the next middleware
    * @returns {Object} a response object
    */
   static async getAllReports(req, res, next) {
     try {
       const report = await Reports.findAll({});
-      if (!report) return errorMessage(res, 404, 'No reports found');
-      return res.status(200).json({ message: 'Reports retrieve successful', report });
+      if (!report.length) return errorMessage(res, 404, 'No reports found');
+      return res.status(200).json({ message: 'Reports retrieved successfully', report });
     } catch (error) {
       return next(error);
     }
