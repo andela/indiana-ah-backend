@@ -1,5 +1,6 @@
 import models from '../db/models';
 import BaseHelper from '../helpers/baseHelper';
+import errorMessage from '../helpers/errorHelpers';
 
 const { Articles, Highlights } = models;
 
@@ -22,9 +23,9 @@ class HighlightController extends BaseHelper {
         where: { slug },
         returning: true
       });
-      HighlightController.checkIfDataExist(req, res, article, {
-        message: 'Article not found'
-      });
+      if (!article) {
+        return errorMessage(res, 404, 'Article not found');
+      }
       req.body.userId = article.dataValues.userId;
       req.body.articleId = article.dataValues.id;
       const articleHighlight = await Highlights.create(req.body);
@@ -51,13 +52,16 @@ class HighlightController extends BaseHelper {
         where: { slug },
         returning: true
       });
-      HighlightController.checkIfDataExist(req, res, article, {
-        message: 'Article not found'
-      });
+      if (!article) {
+        return errorMessage(res, 404, 'Article not found');
+      }
       const textHighlight = await Highlights.findOne({
         where: { articleId: article.dataValues.id },
         returning: true
       });
+      if (!textHighlight) {
+        return errorMessage(res, 404, 'No highlight on this Article');
+      }
       if (textHighlight.dataValues.userId === article.dataValues.userId);
       await Highlights.destroy({ where: { id: textHighlight.dataValues.id }, returning: true });
       return res.status(200).json({
@@ -82,15 +86,23 @@ class HighlightController extends BaseHelper {
         where: { slug },
         returning: true
       });
-      HighlightController.checkIfDataExist(res, article, {
-        message: 'Article not found'
-      });
+      if (!article) {
+        return errorMessage(res, 404, 'Article not found');
+      }
       const articleId = article.dataValues.id;
       const textHighlight = await Highlights.findOne({
         where: { articleId },
         returning: true
       });
-      if (textHighlight.dataValues.userId === article.dataValues.userId);
+      const findHighlight = textHighlight.dataValues.indexOf(req.body.highlight);
+      if (findHighlight === -1) {
+        return errorMessage(res, 404, 'No highlight on this Article');
+      }
+      if (textHighlight.dataValues.userId !== article.dataValues.userId) {
+        return res.status(401).json({
+          message: 'You are not Authorised',
+        });
+      }
       const updatedHighlight = await Highlights.update(req.body, {
         returning: true,
         where: { id: textHighlight.dataValues.id }
