@@ -7,6 +7,6 @@ const { articleTextHighlight, editHighlight, deleteHighlight } = HighlightContro
 const router = express.Router();
 router.post('/:slug/highlights', authUser, articleTextHighlight);
 router.patch('/:slug/highlights', authUser, editHighlight);
-router.delete('./:slug/highlights', authUser, deleteHighlight);
+router.delete('/:slug/highlights', authUser, deleteHighlight);
 
 export default router;

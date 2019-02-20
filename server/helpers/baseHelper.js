@@ -29,7 +29,7 @@ class BaseHelper {
    */
   static checkIfDataExist(req, res, data, message) {
     if (!data) {
-      return res.status(404).json(message);
+      res.status(404).json(message);
     }
   }
 
