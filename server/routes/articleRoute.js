@@ -11,10 +11,11 @@ const {
   updateArticle,
   getOneArticle,
   getAllUserArticles,
-  deleteArticle
+  deleteArticle,
+  searchArticles
 } = ArticleController;
 
-const { articleComment } = CommentController;
+const { articleComment, getArticleComment } = CommentController;
 
 const {
   articleReaction,
@@ -27,10 +28,13 @@ const router = Router();
 router.post('/', authUser, validateArticle, createArticle);
 router.get('/', getAllArticles);
 router.get('/user/:username', getAllUserArticles);
-router.put('/:slug/update', authUser, updateArticle);
+router.get('/search', searchArticles);
 router.get('/:slug', getOneArticle);
+router.get('/', getAllArticles);
+router.put('/:slug/update', authUser, updateArticle);
 router.delete('/:slug/delete', authUser, deleteArticle);
 router.post('/:slug/reaction', authUser, articleReaction);
 router.post('/:slug/comments', authUser, articleComment);
+router.get('/:slug/comments', authUser, getArticleComment);
 
 export default router;

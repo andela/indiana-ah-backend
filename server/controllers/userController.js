@@ -89,7 +89,7 @@ class UserController extends BaseHelper {
    * @memberOf UserController class
    */
   static async verifyUser(req, res) {
-    const { token } = req.query;
+    const { query: token } = req.query;
     const decodedToken = verifyToken(token);
     if (decodedToken.name === 'JsonWebTokenError' || decodedToken.name === 'TokenExpiredError') {
       return errorMessage(res, 401, 'Access denied. You are not authorized to acceess this route');
