@@ -4,22 +4,22 @@ const paginator = async (
   includedModels,
   whereClause
 ) => {
+  const MAX = 8;
+  if (limit > MAX) {
+    limit = MAX;
+  }
   const modifiedPage = page - 1;
   const offset = parseInt(modifiedPage, 10) * limit;
-  const endOfList = 'This is the end of the list';
-  if (page <= 0 || Number.isInteger(Number(modifiedPage) === false || limit > 8)) {
+  if (page <= 0 || Number.isInteger(Number(modifiedPage) === false)) {
     return undefined;
   }
   try {
-    const { rows, count } = await modelName.findAndCountAll({
+    const { rows } = await modelName.findAndCountAll({
       limit,
       offset,
       where: whereClause,
       include: includedModels
     });
-    if (offset >= count) {
-      return endOfList;
-    }
     const data = rows.map(row => row.dataValues);
     return data;
   } catch (error) {

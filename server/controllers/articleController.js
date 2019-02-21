@@ -54,9 +54,8 @@ class ArticleController extends BaseHelper {
         { model: Reactions }
       ];
       const articles = await paginator(Articles, req, includedModels);
-      if (typeof articles === 'string') return Response(res, 200, articles);
       if (articles === undefined) return Response(res, 400, 'pagination error');
-      if (!articles.length) return Response(res, 200, 'No articles found');
+      if (!articles.length) return Response(res, 200, 'No articles created yet');
       return res.status(200).json({ articles });
     } catch (error) {
       return next(error);
