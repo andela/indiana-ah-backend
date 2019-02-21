@@ -132,6 +132,7 @@ class BaseHelper {
 
   /** @description helper method for searching articles
    * @static
+   * @param {Object} req response object
    * @param {Object} res response object
    * @param {Object} condition query condition
    * @returns {Object} response object
