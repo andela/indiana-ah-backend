@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import errorResponse from '../helpers/errorHelpers';
 import models from '../db/models';
 import BaseHelper from '../helpers/baseHelper';
@@ -160,6 +161,60 @@ class ArticleController extends BaseHelper {
         where: { slug }
       });
       return res.status(200).json({ message: 'Article successfully deleted' });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  /**
+   * @description controller method for searching/filtering articles
+   * @static
+   * @param {object} req Request object
+   * @param {object} res Response object
+   * @param {Function} next passes control to the next middleware
+   * @returns {Object} a response object
+   */
+  static async searchArticles(req, res, next) {
+    try {
+      const {
+        author, title, tag, q
+      } = req.query;
+
+      let queryCondition = {};
+
+      if (q) {
+        queryCondition = {
+          [Op.or]: [
+            { articleBody: { [Op.iLike]: `%${q}%` } },
+            { articleTitle: { [Op.iLike]: `%${q}%` } },
+            { '$author.username$': { [Op.iLike]: `%${q}%` } },
+            { '$author.name$': { [Op.iLike]: `%${q}%` } },
+            { tags: { [Op.iLike]: `%${q}%` } }
+          ]
+        };
+      } else {
+        const conditions = {
+          author: {
+            [Op.or]: [
+              { '$author.username$': { [Op.iLike]: `%${author}%` } },
+              { '$author.name$': { [Op.iLike]: `%${author}%` } }
+            ]
+          },
+          title: { articleTitle: { [Op.iLike]: `%${title}%` } },
+          tag: { tags: { [Op.iLike]: `%${tag}%` } }
+        };
+
+        Object.entries(conditions).forEach(([key, value]) => {
+          if (req.query[key]) Object.assign(queryCondition, value);
+        });
+      }
+
+      if (
+        !Object.keys(queryCondition).length
+        && !Object.getOwnPropertySymbols(queryCondition).length
+      ) return errorResponse(res, 400, 'Invalid search parameter');
+
+      await ArticleController.search(res, queryCondition);
     } catch (error) {
       return next(error);
     }
