@@ -40,8 +40,8 @@ export default (sequelize, DataTypes) => {
     {}
   );
   Highlight.associate = (models) => {
-    Highlight.belongsTo(models.Comments, {
-      foreignKey: 'commentId',
+    Highlight.belongsTo(models.Users, {
+      foreignKey: 'userId',
       onDelete: 'CASCADE'
     });
     Highlight.belongsTo(models.Articles, {

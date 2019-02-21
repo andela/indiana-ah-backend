@@ -6,13 +6,15 @@ export const invalidArticle = {
 
 export const validArticle = {
   articleTitle: 'How I got into Andela',
-  articleBody: 'djdjjdjdjjdjdjjdjdjdjjdjdjjjd'
+  articleBody:
+    'Array.prototype.push is an impure function: it alters the original array. But there’s more! Do you rememeber the third principle of Redux? The state is immutable and cannot change in place. Instead in our reducer we’re mutating the original object!'
 };
 
 export const articleForUpdate = {
   articleTitle: 'How I got into Andela',
-  articleBody: 'djdjjdjdjjdjdjjdjdjdjjdjdjjjd',
-  tags: 'yes, no, true'
+  articleBody:
+    'Array.prototype.push is an impure function: it alters the original array. But there’s more! Do you rememeber the third principle of Redux? The state is immutable and cannot change in place. Instead in our reducer we’re mutating the original object!',
+  tags: ['yes', 'no', 'true']
 };
 
 export const user1 = {
