@@ -4,6 +4,38 @@ export const data = {
   password: 'sammy12345'
 };
 
+export const badName = {
+  name: 'E',
+};
+
+export const invalidName = {
+  name: 177,
+};
+
+export const badUsername = {
+  username: 'Er',
+};
+
+export const invalidUsername = {
+  username: 24,
+};
+
+export const badPassword = {
+  password: 'sammy'
+};
+
+export const shortPassword = {
+  password: 'sammy1'
+};
+
+export const badEmail = {
+  email: 'tiku.yahoo'
+};
+
+export const badBio = {
+  bio: 34
+};
+
 export const mockData = {
   bio: 'I am a boy',
   name: 'Emeka',

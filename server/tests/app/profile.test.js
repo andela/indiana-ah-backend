@@ -3,11 +3,8 @@ import { expect } from 'chai';
 import app from '../../index';
 import assignToken from '../../helpers/assignJwtToken';
 import {
-  data,
-  mockData,
-  payload,
-  badPayload,
-  user1
+  data, payload, badPayload, user1, badBio, badEmail, badName,
+  badPassword, badUsername, shortPassword, invalidUsername, invalidName
 } from './mockData/profileMockData';
 
 const falseToken = assignToken(payload);
@@ -22,7 +19,7 @@ before(async () => {
     .send(user1);
   firstToken = res.body.token;
 });
-describe('user verification', () => {
+describe('User verification', () => {
   it('should verify a user\'s account', () => request(app)
     .patch(`/api/v1/users/verify?token=${firstToken}`)
     .then((res) => {
@@ -32,7 +29,7 @@ describe('user verification', () => {
     }));
 });
 
-describe('user profile', () => {
+describe('User profile', () => {
   it('should return an error if an invalid username is provided', () => request(app)
     .get('/api/v1/profiles/tiku')
     .set('x-auth-token', secondToken)
@@ -50,7 +47,7 @@ describe('user profile', () => {
     }));
 });
 
-describe('get all users profile', () => {
+describe('Get all users profile', () => {
   it('should return the profiles of all users', () => request(app)
     .get('/api/v1/profiles')
     .set('x-auth-token', secondToken)
@@ -68,14 +65,6 @@ describe('Edit user profile', () => {
       expect(res.status).to.equal(401);
       expect(res.body.message).to.equal('Access denied. You are not authorized to access this route');
     }));
-  it('should return updated user profile if user is authenticated and verified', () => request(app)
-    .patch('/api/v1/profiles/cim/update')
-    .set('x-auth-token', secondToken)
-    .send(data)
-    .then((res) => {
-      expect(res.status).to.equal(200);
-      expect(res.body.profile).to.be.an('object');
-    }));
   it('should return an error when invalid ID passed', () => request(app)
     .patch('/api/v1/profiles/tiku/update')
     .set('x-auth-token', falseToken)
@@ -84,13 +73,85 @@ describe('Edit user profile', () => {
       expect(res.status).to.equal(404);
       expect(res.body.message).to.equal('User not found');
     }));
-  it('should return an error when invalid username is passed', () => request(app)
+  it('should return an error when a user who is not the owner of the profile tries to visit the route', () => request(app)
     .patch('/api/v1/profiles/king/update')
     .set('x-auth-token', secondToken)
     .send(data)
     .then((res) => {
       expect(res.status).to.equal(401);
       expect(res.body.message).to.equal('You are not authorized to access this route');
+    }));
+  it('should return an error when short username is passed', () => request(app)
+    .patch('/api/v1/profiles/cim/update')
+    .set('x-auth-token', secondToken)
+    .send(badUsername)
+    .then((res) => {
+      expect(res.status).to.equal(400);
+      expect(res.body.message).to.equal('Username must be at least 3 characters long');
+    }));
+  it('should return an error when invalid username is passed', () => request(app)
+    .patch('/api/v1/profiles/cim/update')
+    .set('x-auth-token', secondToken)
+    .send(invalidUsername)
+    .then((res) => {
+      expect(res.status).to.equal(400);
+      expect(res.body.message).to.equal('Username must be a string');
+    }));
+  it('should return an error when short name is passed', () => request(app)
+    .patch('/api/v1/profiles/cim/update')
+    .set('x-auth-token', secondToken)
+    .send(badName)
+    .then((res) => {
+      expect(res.status).to.equal(400);
+      expect(res.body.message).to.equal('Name must be at least 2 characters long');
+    }));
+  it('should return an error when invalid name is passed', () => request(app)
+    .patch('/api/v1/profiles/cim/update')
+    .set('x-auth-token', secondToken)
+    .send(invalidName)
+    .then((res) => {
+      expect(res.status).to.equal(400);
+      expect(res.body.message).to.equal('Name must be a string');
+    }));
+  it('should return an error when invalid bio is passed', () => request(app)
+    .patch('/api/v1/profiles/cim/update')
+    .set('x-auth-token', secondToken)
+    .send(badBio)
+    .then((res) => {
+      expect(res.status).to.equal(400);
+      expect(res.body.message).to.equal('Bio must be a string');
+    }));
+  it('should return an error when invalid password is passed', () => request(app)
+    .patch('/api/v1/profiles/cim/update')
+    .set('x-auth-token', secondToken)
+    .send(badPassword)
+    .then((res) => {
+      expect(res.status).to.equal(400);
+      expect(res.body.message).to.equal('Password should be Alphanumeric');
+    }));
+  it('should return an error when password isn\'t long enough', () => request(app)
+    .patch('/api/v1/profiles/cim/update')
+    .set('x-auth-token', secondToken)
+    .send(shortPassword)
+    .then((res) => {
+      expect(res.status).to.equal(400);
+      expect(res.body.message).to.equal('Password length must be at least 8 characters long');
+    }));
+  it('should return an error when invalid email passed', () => request(app)
+    .patch('/api/v1/profiles/cim/update')
+    .set('x-auth-token', secondToken)
+    .send(badEmail)
+    .then((res) => {
+      expect(res.status).to.equal(400);
+      expect(res.body.message).to.equal('Email is not valid');
+    }));
+  it('should return updated user profile if user is authenticated and verified', () => request(app)
+    .patch('/api/v1/profiles/cim/update')
+    .set('x-auth-token', secondToken)
+    .send(data)
+    .then((res) => {
+      expect(res.status).to.equal(200);
+      expect(res.body.profile).to.be.an('object');
     }));
 });
 
