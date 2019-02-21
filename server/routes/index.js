@@ -10,6 +10,7 @@ import Auth from '../middlewares/jwtAuthentication';
 import ReportController from '../controllers/reportController';
 import verifyAdmin from '../middlewares/verifyAdmin';
 import commentRoute from './commentRoute';
+import readingStats from './readingStatRoute';
 
 const { authUser } = Auth;
 const { getAllReports } = ReportController;
@@ -23,5 +24,6 @@ router.use('/admin', adminRoute);
 router.use('/comments', commentReactionRoute);
 router.use('/', commentRoute);
 router.use('/articles', articleHighlight);
+router.use('/statistics', readingStats);
 
 export default router;
