@@ -15,7 +15,6 @@ google(passport);
 facebook(passport);
 twitter(passport);
 
-
 // Create global app object
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -27,7 +26,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.get('/', (req, res) => res.status(200).json({
-  message: 'welcome to authors haven platform'
+  message: 'Welcome to authors haven platform'
 }));
 
 app.use(session({

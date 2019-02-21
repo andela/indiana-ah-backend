@@ -41,8 +41,4 @@ router.post('/profiles/:username/follow', jwtAuth.authUser, follow);
 router.get('/profiles/users/following', jwtAuth.authUser, fetchFollowing);
 router.get('/profiles/users/followers', jwtAuth.authUser, fetchFollowers);
 
-router.get('/', (req, res) => res.status(200).json({
-  message: 'welcome to authors haven platform'
-}));
-
 export default router;

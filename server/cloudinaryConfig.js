@@ -5,27 +5,19 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET
-});
+const configTestObj = {
+  cloud_name: process.env.CLOUD_NAME_TEST,
+  api_key: process.env.API_KEY_TEST,
+  api_secret: process.env.API_SECRET_TEST
+};
 
+const configDevObj = {
+  cloud_name: process.env.CLOUD_NAME_DEV,
+  api_key: process.env.API_KEY_DEV,
+  api_secret: process.env.API_SECRET_DEV
+};
 
-// module.exports = {
-//   development: {
-//     url: process.env.DATABASE_URL_DEV,
-//     dialect: 'postgres'
-//   },
-//   test: {
-//     url: process.env.DATABASE_URL_TEST,
-//     dialect: 'postgres'
-//   },
-//   production: {
-//     url: process.env.DATABASE_URL,
-//     dialect: 'postgres'
-//   }
-// };
+cloudinary.config(process.env.NODE_ENV === 'development' ? configDevObj : configTestObj);
 
 const storage = cloudinaryStorage({
   cloudinary,
