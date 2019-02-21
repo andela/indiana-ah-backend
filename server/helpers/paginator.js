@@ -1,5 +1,9 @@
-const paginator = async (modelName, { query: { page, limit } }, includedModels, whereClause) => {
-  limit = 4;
+const paginator = async (
+  modelName,
+  { query: { page, limit = 4 } },
+  includedModels,
+  whereClause
+) => {
   const modifiedPage = page - 1;
   const offset = parseInt(modifiedPage, 10) * limit;
   const endOfList = 'This is the end of the list';

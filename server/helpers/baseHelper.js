@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import models from '../db/models';
+import paginator from './paginator';
 
 const { Articles, Users } = models;
 
@@ -137,17 +138,15 @@ class BaseHelper {
    *
    * @memberOf BaseHelper
    */
-  static async search(res, condition) {
-    const articles = await Articles.findAll({
-      include: [
-        {
-          model: Users,
-          as: 'author',
-          attributes: ['name', 'username', 'bio', 'imageUrl']
-        }
-      ],
-      where: condition
-    });
+  static async search(req, res, condition) {
+    const includedModels = [
+      {
+        model: Users,
+        as: 'author',
+        attributes: ['name', 'username', 'bio', 'imageUrl']
+      }
+    ];
+    const articles = await paginator(Articles, req, includedModels, condition);
     if (!articles.length) return res.status(404).json({ message: 'Couldn\'t find articles matching your search' });
     return res.status(200).json({ searchResults: articles });
   }

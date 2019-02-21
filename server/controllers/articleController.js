@@ -217,7 +217,7 @@ class ArticleController extends BaseHelper {
         && !Object.getOwnPropertySymbols(queryCondition).length
       ) return Response(res, 400, 'Invalid search parameter');
 
-      await ArticleController.search(res, queryCondition);
+      await ArticleController.search(req, res, queryCondition);
     } catch (error) {
       return next(error);
     }
