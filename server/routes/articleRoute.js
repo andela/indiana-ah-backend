@@ -13,11 +13,6 @@ const {
   getAllUserArticles,
   deleteArticle
 } = ArticleController;
-
-<<<<<<< HEAD
-=======
-const { articleComment, getArticleComments } = CommentController;
->>>>>>> feat: implement count reactions
 const {
   rateArticle, getOneArticleRating, getAllArticleRatings, cancelRating
 } = RatingsController;
@@ -35,7 +30,7 @@ router.get('/:articleId/ratings', getAllArticleRatings);
 router.get('/user/:username', getAllUserArticles);
 router.put('/:slug/update', authUser, updateArticle);
 router.get('/:slug', getOneArticle);
-router.get('/:slug/comments', getArticleComments);
+// router.get('/:slug/comments', getArticleComments);
 router.delete('/:slug/delete', authUser, deleteArticle);
 router.delete('/ratings/:ratingId/cancel', authUser, cancelRating);
 router.post('/:slug/comments', authUser, articleComment);

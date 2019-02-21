@@ -60,23 +60,22 @@ class CommentController extends BaseHelper {
    * @param {function} next function to pass control to the next item
    * @returns {object} a response object
    */
-  static async getArticleComments(req, res, next) {
+  static async deleteComment(req, res, next) {
+    const { commentId: id } = req.body;
+    const { userId } = req.user;
     try {
-      const { slug } = req.params;
-      const article = await Articles.findOne({
-        where: { slug },
-        returning: true
-      });
-      if (!article) return errorMessage(res, 404, 'Article not found');
-      const { id: articleId } = article.dataValues;
-      const articleComments = await Comments.findAll({
-        where: { articleId },
-        include: [{ model: CommentReactions }]
-      });
-      return res.status(200).json({
-        message: 'Comments retrieved successfully',
-        comments: articleComments
-      });
+      const comment = await Comments.findByPk(id);
+      if (!comment) return errorMessage(res, 404, 'Comment not found');
+
+      const { userId: dbUserId } = comment.dataValues;
+      if (userId === dbUserId) {
+        const deletedComment = await comment.destroy();
+        return res.status(200).json({
+          message: 'Comment deleted successfully',
+          comments: deletedComment
+        });
+      }
+      return res.status(403).json({ message: 'You can only delete your own comment' });
     } catch (error) {
       return next(error);
     }
