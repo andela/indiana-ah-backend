@@ -24,14 +24,14 @@ class CommentController extends BaseHelper {
   }
 
   /**
-   * @description controller method for commenting on an article
+   * @description controller method for fetching all comments of an article
    * @static
    * @param {object} req Request object
    * @param {object} res Response object
    * @param {Function} next passes control to the next middleware
    * @returns {Object} a response object
    */
-  static async getArticleComment(req, res, next) {
+  static async getArticleComments(req, res, next) {
     try {
       const { slug } = req.params;
       const article = await Articles.findOne({
@@ -53,7 +53,7 @@ class CommentController extends BaseHelper {
   }
 
   /**
-   * @description controller method for commenting on an article
+   * @description controller method for deleting a comment
    * @static
    * @param {object} req Request object
    * @param {object} res Response object
