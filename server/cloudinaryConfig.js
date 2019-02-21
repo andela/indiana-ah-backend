@@ -6,9 +6,9 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const configTestObj = {
-  cloud_name: process.env.CLOUD_NAME_TEST,
-  api_key: process.env.API_KEY_TEST,
-  api_secret: process.env.API_SECRET_TEST
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET
 };
 
 const configDevObj = {
