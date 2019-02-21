@@ -4,8 +4,13 @@ import models from '../db/models';
 import BaseHelper from '../helpers/baseHelper';
 import paginator from '../helpers/paginator';
 import NotificationServices from '../services/notificationServices';
+import ReadingStatistics from '../db/repositories/readingStats';
+import ArticleRepsoitory from '../db/repositories/article';
 
 const { notifyViaEmailAndPush } = NotificationServices;
+
+const ReadingStatRepo = new ReadingStatistics();
+const ArticleRepo = new ArticleRepsoitory();
 
 const { Articles, Users, Reactions } = models;
 
