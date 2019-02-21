@@ -30,7 +30,7 @@ router.get('/ratings/:ratingId', getOneArticleRating);
 router.get('/:articleId/ratings', getAllArticleRatings);
 router.get('/user/:username', getAllUserArticles);
 router.put('/:slug/update', authUser, updateArticle);
-router.get('/:slug', authUser, getOneArticle);
+router.get('/:slug', getOneArticle);
 router.delete('/:slug/delete', authUser, deleteArticle);
 router.delete('/ratings/:ratingId/cancel', authUser, cancelRating);
 router.post('/:slug/comments', authUser, articleComment);

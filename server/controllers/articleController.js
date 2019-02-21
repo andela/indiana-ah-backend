@@ -3,12 +3,15 @@ import models from '../db/models';
 import BaseHelper from '../helpers/baseHelper';
 import ReadingStatistics from '../db/repositories/readingStats';
 import ArticleRepsoitory from '../db/repositories/article';
+import JWTHelper from '../helpers/jwtHelper';
+
+const { verifyToken } = JWTHelper;
 
 const ReadingStatRepo = new ReadingStatistics();
 const ArticleRepo = new ArticleRepsoitory();
 
 const {
-  Articles, Users, Comments, Reactions, Sequelize
+  Articles, Users, Comments, Reactions
 } = models;
 
 /**
@@ -125,8 +128,27 @@ class ArticleController extends BaseHelper {
    */
   static async getOneArticle(req, res, next) {
     try {
-      const { id: userId } = req.user;
+      const token = req.header('x-auth-token');
+      const decodedToken = verifyToken(token);
+      const { id: userId } = decodedToken;
       const { slug } = req.params;
+      if (!decodedToken) {
+        const article = await Articles.findOne({
+          where: { slug },
+          include: [
+            {
+              model: Users,
+              as: 'author',
+              attributes: ['username', 'bio', 'imageUrl']
+            },
+            { model: Comments },
+            { model: Reactions }
+          ]
+        });
+        if (!article) return errorResponse(res, 404, 'Article not found');
+        const timeToRead = ArticleController.calculateTimeToRead(article.articleBody);
+        return res.status(200).json({ article, timeToRead });
+      }
       const article = await Articles.findOne({
         where: { slug },
         include: [
