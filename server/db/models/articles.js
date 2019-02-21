@@ -33,7 +33,7 @@ export default (sequelize, DataTypes) => {
       },
       tags: {
         allowNull: true,
-        type: DataTypes.ARRAY(DataTypes.STRING)
+        type: DataTypes.STRING
       },
       userId: {
         type: DataTypes.UUID

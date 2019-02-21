@@ -11,7 +11,8 @@ const {
   updateArticle,
   getOneArticle,
   getAllUserArticles,
-  deleteArticle
+  deleteArticle,
+  searchArticles
 } = ArticleController;
 
 const {
@@ -25,12 +26,13 @@ const router = Router();
 
 router.post('/', authUser, validateArticle, createArticle);
 router.post('/:articleId/ratings', authUser, validateRating, rateArticle);
-router.get('/', getAllArticles);
 router.get('/ratings/:ratingId', getOneArticleRating);
 router.get('/:articleId/ratings', getAllArticleRatings);
 router.get('/user/:username', getAllUserArticles);
-router.put('/:slug/update', authUser, updateArticle);
+router.get('/search', searchArticles);
 router.get('/:slug', getOneArticle);
+router.get('/', getAllArticles);
+router.put('/:slug/update', authUser, updateArticle);
 router.delete('/:slug/delete', authUser, deleteArticle);
 router.delete('/ratings/:ratingId/cancel', authUser, cancelRating);
 router.post('/:slug/comments', authUser, articleComment);
