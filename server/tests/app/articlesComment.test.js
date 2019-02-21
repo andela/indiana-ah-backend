@@ -5,7 +5,7 @@ import { user1, validArticle } from './mockData/articlesMockData';
 
 let verifiedToken;
 let articleSlug;
-let articleId;
+let articleId, commentId;
 const wrongArticleSlug = 'how-rthy-tyfghbuh';
 
 before(async () => request(app)
@@ -52,7 +52,16 @@ describe('User comments on an article', () => {
     .set('x-auth-token', verifiedToken)
     .send({ commentBody: 'This is making sense part 2', articleId })
     .then((res) => {
+      commentId = res.body.data.id;
       expect(res.status).to.equal(201);
       expect(res.body.message).to.equal('Comment posted successfully');
+    }));
+  it('Should allow a verified user delete his/her comment', () => request(app)
+    .delete(`/api/v1/comments/${commentId}`)
+    .set('x-auth-token', verifiedToken)
+    .send({ commentId })
+    .then((res) => {
+      expect(res.status).to.equal(200);
+      expect(res.body.message).to.equal('Comment deleted successfully');
     }));
 });

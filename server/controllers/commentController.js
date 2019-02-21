@@ -3,7 +3,7 @@ import commentReportLogic from '../helpers/commentReportHelper';
 import errorMessage from '../helpers/errorHelpers';
 import BaseHelper from '../helpers/baseHelper';
 
-const { Comments, Articles, CommentReactions } = models;
+const { Comments, Articles } = models;
 
 /**
  * @description  Handles Users comments on articles
@@ -62,7 +62,7 @@ class CommentController extends BaseHelper {
    */
   static async deleteComment(req, res, next) {
     const { commentId: id } = req.body;
-    const { userId } = req.user;
+    const { id: userId } = req.user;
     try {
       const comment = await Comments.findByPk(id);
       if (!comment) return errorMessage(res, 404, 'Comment not found');

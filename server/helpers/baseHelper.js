@@ -49,32 +49,6 @@ class BaseHelper {
   }
 
   /**
-   * @description commentReactions- controller method for getting reactions
-   * @static
-   * @param {object} res Response object
-   * @param {object} model Request object
-   * @param {object} modelColumnObj Request object
-   * @returns {object} a response object
-   */
-  static async countReactions(res, model, modelColumnObj) {
-    const reactionsObj = await model.findAll({
-      where: { ...modelColumnObj }
-    });
-    const reactions = reactionsObj;
-    const likes = reactions.filter(reaction => reaction.dataValues.reactionType === 'like').length;
-    const dislikes = reactions.filter(reaction => reaction.dataValues.reactionType === 'dislike').length;
-
-    const reactionsCount = {
-      likes,
-      dislikes
-    };
-    return res.status(200).json({
-      message: 'Reactions retrieved successfully',
-      reactionsCount
-    });
-  }
-
-  /**
    *
    * @static
    * @param {string} password

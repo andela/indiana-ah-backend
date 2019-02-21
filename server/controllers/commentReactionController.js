@@ -38,26 +38,6 @@ class CommentReactionController extends BaseHelper {
       return next(error);
     }
   }
-
-  /**
-   * @description getAllCommentReactions - controller method for liking and disliking a comment
-   * @static
-   * @param {object} req Request object
-   * @param {object} res Response object
-   * @param {function} next Function to pass control to the next item
-   * @returns {object} a response object
-   */
-  static async getAllCommentReactions(req, res, next) {
-    const { commentId } = req.body;
-    if (!commentId) {
-      return res.status(400).json({ error: 'Please supply a valid comment Id' });
-    }
-    try {
-      CommentReactionController.countReactions(req, res, CommentReactions, { commentId });
-    } catch (error) {
-      return next(error);
-    }
-  }
 }
 
 export default CommentReactionController;

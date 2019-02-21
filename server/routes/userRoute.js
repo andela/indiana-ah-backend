@@ -37,11 +37,8 @@ router.get('/', (req, res) => res.status(200).json({
 }));
 router.post('/users/begin-password-reset', sendPasswordResetLink);
 router.patch('/users/reset-password', resetPassword);
-<<<<<<< HEAD
 router.post('/profiles/:username/follow', jwtAuth.authUser, follow);
 router.get('/profiles/users/following', jwtAuth.authUser, fetchFollowing);
 router.get('/profiles/users/followers', jwtAuth.authUser, fetchFollowers);
-=======
 
->>>>>>> feat: implememt comment likes and dislikes
 export default router;

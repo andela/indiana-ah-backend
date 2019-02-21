@@ -12,7 +12,6 @@ import commentRoute from './commentRoute';
 const { authUser } = Auth;
 const { getAllReports } = ReportController;
 
-
 const router = Router();
 
 router.use('/articles', articleRoute);
