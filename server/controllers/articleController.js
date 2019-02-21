@@ -191,22 +191,22 @@ class ArticleController extends BaseHelper {
             { tags: { [Op.iLike]: `%${q}%` } }
           ]
         };
+      } else {
+        const conditions = {
+          author: {
+            [Op.or]: [
+              { '$author.username$': { [Op.iLike]: `%${author}%` } },
+              { '$author.name$': { [Op.iLike]: `%${author}%` } }
+            ]
+          },
+          title: { articleTitle: { [Op.iLike]: `%${title}%` } },
+          tag: { tags: { [Op.iLike]: `%${tag}%` } }
+        };
+
+        Object.entries(conditions).forEach(([key, value]) => {
+          if (req.query[key]) Object.assign(queryCondition, value);
+        });
       }
-
-      const conditions = {
-        author: {
-          [Op.or]: [
-            { '$author.username$': { [Op.iLike]: `%${author}%` } },
-            { '$author.name$': { [Op.iLike]: `%${author}%` } }
-          ]
-        },
-        title: { articleTitle: { [Op.iLike]: `%${title}%` } },
-        tag: { tags: { [Op.iLike]: `%${tag}%` } }
-      };
-
-      Object.entries(conditions).forEach(([key, value]) => {
-        if (req.query[key]) Object.assign(queryCondition, value);
-      });
 
       if (
         !Object.keys(queryCondition).length
