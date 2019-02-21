@@ -179,7 +179,19 @@ class ArticleController extends BaseHelper {
         author, title, tag, q
       } = req.query;
 
-      const queryCondition = {};
+      let queryCondition = {};
+
+      if (q) {
+        queryCondition = {
+          [Op.or]: [
+            { articleBody: { [Op.iLike]: `%${q}%` } },
+            { articleTitle: { [Op.iLike]: `%${q}%` } },
+            { '$author.username$': { [Op.iLike]: `%${q}%` } },
+            { '$author.name$': { [Op.iLike]: `%${q}%` } },
+            { tags: { [Op.iLike]: `%${q}%` } }
+          ]
+        };
+      }
 
       const conditions = {
         author: {
@@ -189,20 +201,11 @@ class ArticleController extends BaseHelper {
           ]
         },
         title: { articleTitle: { [Op.iLike]: `%${title}%` } },
-        tag: { tags: { [Op.iLike]: `%${tag}%` } },
-        q: {
-          [Op.or]: [
-            { articleBody: { [Op.iLike]: `%${q}%` } },
-            { articleTitle: { [Op.iLike]: `%${q}%` } },
-            { '$author.username$': { [Op.iLike]: `%${q}%` } },
-            { '$author.name$': { [Op.iLike]: `%${q}%` } },
-            { tags: { [Op.iLike]: `%${q}%` } }
-          ]
-        }
+        tag: { tags: { [Op.iLike]: `%${tag}%` } }
       };
 
-      Object.keys(conditions).forEach((item) => {
-        if (req.query[item]) Object.assign(queryCondition, conditions[item]);
+      Object.entries(conditions).forEach(([key, value]) => {
+        if (req.query[key]) Object.assign(queryCondition, value);
       });
 
       if (

@@ -277,8 +277,15 @@ describe('Search all articles', () => {
       expect(res.body.message).to.equal('Couldn\'t find articles matching your search');
     }));
 
-  it('should fetch all matching articles if the search parameter is valid and matching articles were found', () => request(app)
-    .get('/api/v1/articles/search?tag=yes')
+  it('should fetch all matching articles if found', () => request(app)
+    .get('/api/v1/articles/search?q=Andela')
+    .then((res) => {
+      expect(res.status).to.equal(200);
+      expect(res.body.searchResults).to.be.an('array');
+    }));
+
+  it('should fetch all matching articles if the search parameters are valid and matching articles were found', () => request(app)
+    .get('/api/v1/articles/search?tag=yes&articleTitle=Andela')
     .then((res) => {
       expect(res.status).to.equal(200);
       expect(res.body.searchResults).to.be.an('array');
