@@ -1,9 +1,14 @@
 import errorResponse from '../helpers/errorHelpers';
 import models from '../db/models';
 import BaseHelper from '../helpers/baseHelper';
+import ReadingStatistics from '../db/repositories/readingStats';
+import ArticleRepsoitory from '../db/repositories/article';
+
+const ReadingStatRepo = new ReadingStatistics();
+const ArticleRepo = new ArticleRepsoitory();
 
 const {
-  Articles, Users, Comments, Reactions
+  Articles, Users, Comments, Reactions, Sequelize
 } = models;
 
 /**
@@ -120,6 +125,7 @@ class ArticleController extends BaseHelper {
    */
   static async getOneArticle(req, res, next) {
     try {
+      const { id: userId } = req.user;
       const { slug } = req.params;
       const article = await Articles.findOne({
         where: { slug },
@@ -135,6 +141,14 @@ class ArticleController extends BaseHelper {
       });
       if (!article) return errorResponse(res, 404, 'Article not found');
       const timeToRead = ArticleController.calculateTimeToRead(article.articleBody);
+      const userHasReadBefore = await ReadingStatRepo.checkStatForArticle({
+        userId,
+        articleId: article.dataValues.id
+      });
+      if (!userHasReadBefore) {
+        await ArticleRepo.incremented({ id: article.dataValues.id }, 'numberOfReads');
+        return ReadingStatRepo.create({ userId, articleId: article.dataValues.id });
+      }
       return res.status(200).json({ article, timeToRead });
     } catch (error) {
       return next(error);
