@@ -17,23 +17,19 @@ class BaseRepository {
   /**
    *
    *
-   * @param {string} username
+   * @param {string} details
    * @param {Object} res
    * @returns {Object} returns the found user
    *
    * @memberOf BaseRepository
    */
-  async findOne(username, res) {
+  async findOne(details) {
     try {
       const model = await this.models.findOne({
-        where: {
-          username
-        }
+        where: details
       });
       if (model === null) {
-        return res.status(404).json({
-          message: 'this user was not found'
-        });
+        return null;
       }
       return model;
     } catch (error) {
@@ -44,28 +40,83 @@ class BaseRepository {
   /**
    *
    *
-   * @param {any} username
-   * @param {any} role
-   * @param {any} res
-   * @param {any} next
+   * @param {Object} whereClause
+   * @param {Object} colToUpdate
+   * @param {Object} res
+   * @param {Object} next
    * @return {Object} the updated user
    * @memberOf BaseRepository
    */
-  async update(username, role, res) {
+  async update(whereClause, colToUpdate) {
     try {
-      const updatedRole = await this.models.update(
-        { role },
-        {
-          where: { username },
-          returning: true
-        }
-      );
-      if (updatedRole) {
-        return res.status(200).json({
-          message: 'successfully updated user role',
-          updatedUser: updatedRole[1][0].dataValues
-        });
+      const updated = await this.models.update(colToUpdate, {
+        where: whereClause,
+        returning: true
+      });
+      if (!updated) {
+        return null;
       }
+      return updated;
+    } catch (error) {
+      return error;
+    }
+  }
+
+  /**
+   *
+   *
+   * @param {Object} whereClause
+   * @param {String} colToUpdate
+   * @returns {Object} the article with incremented reads
+   *
+   * @memberOf BaseRepository
+   */
+  async increment(whereClause, colToUpdate) {
+    try {
+      const incremented = await this.models.increment(colToUpdate, {
+        where: whereClause,
+        returning: true
+      });
+      if (!incremented) {
+        return null;
+      }
+      return incremented[0][0][0];
+    } catch (error) {
+      return error;
+    }
+  }
+
+  /**
+   *
+   *
+   * @param {any} details
+   * @returns {Object} the created object
+   *
+   * @memberOf BaseRepository
+   */
+  async create(details) {
+    try {
+      const created = await this.models.create(details);
+      return created;
+    } catch (error) {
+      return error;
+    }
+  }
+
+  /**
+   *
+   *
+   * @param {any} userId
+   * @returns {String} the count of the user in this model
+   *
+   * @memberOf BaseRepository
+   */
+  async findAndCountAll(userId) {
+    try {
+      const result = await this.models.findAndCountAll({
+        where: { userId }
+      });
+      return result;
     } catch (error) {
       return error;
     }

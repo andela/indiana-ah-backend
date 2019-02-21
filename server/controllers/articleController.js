@@ -185,6 +185,7 @@ class ArticleController extends BaseHelper {
    */
   static async getOneArticle(req, res, next) {
     try {
+      const { id: userId } = req.user;
       const { slug } = req.params;
       let article = await Articles.findOne({
         where: { slug },
@@ -201,6 +202,14 @@ class ArticleController extends BaseHelper {
       article = article.toJSON();
       ArticleController.getOneReactionsCount(article, 'Reactions');
       const timeToRead = ArticleController.calculateTimeToRead(article.articleBody);
+      const userHasReadBefore = await ReadingStatRepo.checkStatForArticle({
+        userId,
+        articleId: article.dataValues.id
+      });
+      if (!userHasReadBefore) {
+        await ArticleRepo.incremented({ id: article.dataValues.id }, 'numberOfReads');
+        return ReadingStatRepo.create({ userId, articleId: article.dataValues.id });
+      }
       return res.status(200).json({ article, timeToRead });
     } catch (error) {
       return next(error);
