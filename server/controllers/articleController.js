@@ -3,7 +3,7 @@ import models from '../db/models';
 import BaseHelper from '../helpers/baseHelper';
 
 const {
-  Articles, Users, Comments, Reactions
+  Articles, Users, Comments, Reactions, CommentReactions
 } = models;
 
 /**
@@ -129,9 +129,9 @@ class ArticleController extends BaseHelper {
             as: 'author',
             attributes: ['username', 'bio', 'imageUrl']
           },
-          { model: Comments },
-          { model: Reactions }
-        ]
+          { model: Comments, include: [CommentReactions] },
+          { model: Reactions },
+        ],
       });
       if (!article) return errorResponse(res, 404, 'Article not found');
       const timeToRead = ArticleController.calculateTimeToRead(article.articleBody);

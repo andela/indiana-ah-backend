@@ -51,13 +51,12 @@ class BaseHelper {
   /**
    * @description commentReactions- controller method for getting reactions
    * @static
-   * @param {object} req Response object
    * @param {object} res Response object
    * @param {object} model Request object
    * @param {object} modelColumnObj Request object
    * @returns {object} a response object
    */
-  static async countReactions(req, res, model, modelColumnObj) {
+  static async countReactions(res, model, modelColumnObj) {
     const reactionsObj = await model.findAll({
       where: { ...modelColumnObj }
     });
