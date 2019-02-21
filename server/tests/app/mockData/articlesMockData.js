@@ -6,7 +6,7 @@ export const invalidArticle = {
 
 export const validArticle = {
   articleTitle: 'How I got into Andela',
-  articleBody: 'djdjjdjdjjdjdjjdjdjdjjdjdjjjd'
+  articleBody: 'djdjjdjdjjdjdjjdjdjdjjdjdjjjd',
 };
 
 export const articleForUpdate = {

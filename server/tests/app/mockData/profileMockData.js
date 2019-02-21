@@ -1,8 +1,6 @@
 export const data = {
   bio: 'I am a boy',
   name: 'Emeka',
-  email: 'dozie.emeka@yahoo.com',
-  username: 'tiku',
   password: 'sammy12345'
 };
 

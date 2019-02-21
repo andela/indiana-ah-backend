@@ -87,7 +87,7 @@ describe('Edit user profile', () => {
   it('should return an error when invalid username is passed', () => request(app)
     .patch('/api/v1/profiles/king/update')
     .set('x-auth-token', secondToken)
-    .send(mockData)
+    .send(data)
     .then((res) => {
       expect(res.status).to.equal(401);
       expect(res.body.message).to.equal('You are not authorized to access this route');
@@ -97,7 +97,8 @@ describe('Edit user profile', () => {
 describe('Edit user picture', () => {
   it('should return an error if user is not authenticated', () => request(app)
     .patch('/api/v1/profiles/cim/image')
-    .send(data)
+    .type('form')
+    .attach('image', 'server/tests/testImage/feather.jpg')
     .then((res) => {
       expect(res.status).to.equal(401);
       expect(res.body.message).to.equal('Access denied. You are not authorized to access this route');
@@ -105,7 +106,7 @@ describe('Edit user picture', () => {
   it('should return updated user picture if user is authenticated and verified', () => request(app)
     .patch('/api/v1/profiles/cim/image')
     .set('x-auth-token', secondToken)
-    .field('Content-Type', 'multipart/form-data')
+    .type('form')
     .attach('image', 'server/tests/testImage/feather.jpg')
     .then((res) => {
       expect(res.status).to.equal(200);
@@ -114,7 +115,7 @@ describe('Edit user picture', () => {
   it('should return an error when an invalid ID type is passed', () => request(app)
     .patch('/api/v1/profiles/cim/image')
     .set('x-auth-token', badToken)
-    .field('Content-Type', 'multipart/form-data')
+    .type('form')
     .attach('image', 'server/tests/testImage/feather.jpg')
     .then((res) => {
       expect(res.status).to.equal(500);

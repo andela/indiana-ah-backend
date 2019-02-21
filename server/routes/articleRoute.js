@@ -26,7 +26,7 @@ const { authUser } = Auth;
 
 const router = Router();
 
-router.post('/', authUser, validateArticle, parser.single('image'), createArticle);
+router.post('/', authUser, parser.single('image'), validateArticle, createArticle);
 router.get('/', getAllArticles);
 router.get('/user/:username', getAllUserArticles);
 router.put('/:slug/update', authUser, parser.single('image'), updateArticle);
