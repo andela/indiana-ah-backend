@@ -8,7 +8,8 @@ import {
   articleForUpdate,
   user1,
   user2,
-  user3
+  user3,
+  userAgare
 } from './mockData/articlesMockData';
 
 const { Users } = models;
@@ -23,6 +24,7 @@ let ratingId;
 before(async () => {
   await Users.create(user1);
   await Users.create(user3);
+  await Users.create(userAgare);
   return request(app)
     .post('/api/v1/login')
     .set('content-type', 'application/json')
