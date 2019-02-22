@@ -3,9 +3,7 @@ import errorResponse from '../helpers/errorHelpers';
 import models from '../db/models';
 import BaseHelper from '../helpers/baseHelper';
 
-const {
-  Articles, Users, Comments, Reactions, CommentReactions, CommentEditHistories
-} = models;
+const { Articles, Users, Reactions } = models;
 
 /**
  * @description A collection of controller methods for article CRUD operations
