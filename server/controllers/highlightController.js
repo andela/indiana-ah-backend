@@ -13,7 +13,7 @@ class HighlightController {
    *
    * @param {object} req  Request object
    * @param {object} res  Response onject
-   * @param {function} next Function to pass control to the next item
+   * @param {function} next Function to pass control to the next middleware
    * @returns {object} a response object
    */
   static async articleTextHighlight(req, res, next) {
@@ -35,6 +35,7 @@ class HighlightController {
       }
       req.body.userId = article.dataValues.userId;
       req.body.articleId = article.dataValues.id;
+      // create highlights
       const articleHighlight = await Highlights.create(req.body);
       return res.status(201).json({
         message: 'Highlight successful',
@@ -50,12 +51,12 @@ class HighlightController {
    *
    * @param {object} req  Request object
    * @param {object} res  Response onject
-   * @param {function} next Function to pass control to the next item
+   * @param {function} next Function to pass control to the next middleware
    * @returns {object} a response object
    */
   static async deleteHighlight(req, res, next) {
     try {
-      const { slug } = req.params;
+      const { slug, id } = req.params;
       const article = await Articles.findOne({
         where: { slug },
         returning: true
@@ -66,13 +67,13 @@ class HighlightController {
       const { userId } = article.dataValues;
       const articleId = article.dataValues.id;
       const textHighlight = await Highlights.findOne({
-        where: { articleId, userId },
+        where: { id, articleId, userId },
         returning: true
       });
       if (!textHighlight) {
         return errorMessage(res, 404, 'No highlight on this Article');
       }
-      await Highlights.destroy({ where: { id: textHighlight.dataValues.id }, returning: true });
+      await Highlights.destroy({ where: { id }, returning: true });
       return res.status(200).json({
         message: 'Highlight removed successfully'
       });
@@ -86,7 +87,7 @@ class HighlightController {
    *
    * @param {object} req  Request object
    * @param {object} res  Response onject
-   * @param {function} next Function to pass control to the next item
+   * @param {function} next Function to pass control to the next middleware
    * @returns {object} a response object
    */
   static async editHighlight(req, res, next) {
@@ -132,7 +133,7 @@ class HighlightController {
    *
    * @param {object} req  Request object
    * @param {object} res  Response onject
-   * @param {function} next Function to pass control to the next item
+   * @param {function} next Function to pass control to the next middleware
    * @returns {object} a response object
    */
   static async getHighlight(req, res, next) {
