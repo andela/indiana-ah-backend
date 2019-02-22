@@ -130,17 +130,12 @@ class ArticleController extends BaseHelper {
             as: 'author',
             attributes: ['username', 'bio', 'imageUrl']
           },
-          {
-            model: Comments,
-            include: [{ model: CommentReactions }, { model: CommentEditHistories }]
-          },
           { model: Reactions }
         ]
       });
       if (!article) return errorResponse(res, 404, 'Article not found');
       article = article.toJSON();
       ArticleController.getReactions(article, 'Reactions');
-      article.Comments = ArticleController.getCommentReactions(article.Comments);
       const timeToRead = ArticleController.calculateTimeToRead(article.articleBody);
       return res.status(200).json({ article, timeToRead });
     } catch (error) {

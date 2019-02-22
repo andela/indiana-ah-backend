@@ -3,16 +3,20 @@ export default (sequelize, DataTypes) => {
     'CommentEditHistories',
     {
       id: {
-        type: DataTypes.UUID,
         allowNull: false,
-        defaultValue: DataTypes.UUIDV4,
-        primaryKey: true
+        autoIncrement: true,
+        primaryKey: true,
+        type: DataTypes.INTEGER
       },
       commentId: {
         type: DataTypes.UUID
       },
       commentBody: {
         type: DataTypes.STRING
+      },
+      createdAt: {
+        allowNull: false,
+        type: DataTypes.DATE
       }
     },
     { paranoid: true }

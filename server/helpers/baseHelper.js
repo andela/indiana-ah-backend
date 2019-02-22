@@ -129,7 +129,8 @@ class BaseHelper {
     return res.status(200).json({ message: 'Reaction successfully deleted' });
   }
 
-  /** @description helper method for searching articles
+  /**
+   * @description helper method for searching articles
    * @static
    * @param {Object} res response object
    * @param {Object} condition query condition
@@ -152,17 +153,33 @@ class BaseHelper {
     return res.status(200).json({ searchResults: articles });
   }
 
-  static getReactions(model, reactionObj) {
-    const reactions = model[reactionObj].map(reaction => reaction.reactionType);
+  /**
+   * @description helper method for extracting the number of reactions from any data
+   * @static
+   * @param {Array} data array of objects with reactions
+   * @param {Object} reactionObj reaction object
+   * @returns {Number} number of likes and dislikes
+   * @memberOf BaseHelper
+   */
+  static getReactions(data, reactionObj) {
+    const reactions = data[reactionObj].map(reaction => reaction.reactionType);
     const likes = reactions.filter(reaction => reaction === 'like').length;
     const dislikes = reactions.filter(reaction => reaction === 'dislike').length;
-    model.likes = likes;
-    model.dislikes = dislikes;
-    delete model[reactionObj];
+    data.likes = likes;
+    data.dislikes = dislikes;
+    delete data[reactionObj];
   }
 
-  static getCommentReactions(model) {
-    const comments = model.map((comment) => {
+  /**
+   * @description helper method for extracting the number of reactions from comments
+   * @static
+   * @param {Array} data array of objects with reactions
+   * @returns {Number} number of likes and dislikes
+   * @memberOf BaseHelper
+   */
+  static getCommentReactions(data) {
+    const comments = data.map((item) => {
+      const comment = item.toJSON();
       this.getReactions(comment, 'CommentReactions');
       return comment;
     });
