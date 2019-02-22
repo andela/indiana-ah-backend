@@ -10,10 +10,7 @@ import {
   userAgare
 } from './mockData/articlesMockData';
 
-let verifiedToken;
-let secondVerifiedToken;
-let articleSlug;
-let secondArticleSlug;
+let verifiedToken, secondVerifiedToken, articleSlug, secondArticleSlug, highlightId;
 const wrongArticleSlug = 'how-rthy-tyfghbuh';
 
 before(async () => request(app)
@@ -76,6 +73,7 @@ describe('Create an Highlight text for an Article', () => {
     .set('x-auth-token', verifiedToken)
     .send(validHighlight)
     .then((res) => {
+      highlightId = res.body.data.id;
       expect(res.status).to.equal(201);
       expect(res.body.message).to.equal('Highlight successful');
       expect(res.body.data).to.be.an('object');
@@ -158,7 +156,7 @@ describe('GET an Highlight text for an Article', () => {
 
 describe('DELETE an Highlight text for an Article', () => {
   it('Should not delete an highlighted text if Article doesn\'t exist', () => request(app)
-    .delete(`/api/v1/articles/${wrongArticleSlug}/highlights`)
+    .delete(`/api/v1/articles/${wrongArticleSlug}/highlights/${highlightId}`)
     .set('x-auth-token', verifiedToken)
     .then((res) => {
       expect(res.status).to.equal(404);
@@ -166,7 +164,7 @@ describe('DELETE an Highlight text for an Article', () => {
     }));
 
   it('Should not delete an highlight if Highlighted text doesn\'t exist in article', () => request(app)
-    .delete(`/api/v1/articles/${secondArticleSlug}/highlights`)
+    .delete(`/api/v1/articles/${secondArticleSlug}/highlights/${highlightId}`)
     .set('x-auth-token', verifiedToken)
     .then((res) => {
       expect(res.status).to.equal(404);
@@ -174,7 +172,7 @@ describe('DELETE an Highlight text for an Article', () => {
     }));
 
   it('Should delete an highlighted text if its the same User that created the Highlight text', () => request(app)
-    .delete(`/api/v1/articles/${articleSlug}/highlights`)
+    .delete(`/api/v1/articles/${articleSlug}/highlights/${highlightId}`)
     .set('x-auth-token', verifiedToken)
     .then((res) => {
       expect(res.status).to.equal(200);
