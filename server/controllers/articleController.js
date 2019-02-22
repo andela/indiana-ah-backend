@@ -43,18 +43,18 @@ class ArticleController extends BaseHelper {
    */
   static async getAllArticles(req, res, next) {
     try {
-      const articles = await Articles.findAll({
+      let articles = await Articles.findAll({
         include: [
           {
             model: Users,
             as: 'author',
-            attributes: ['username', 'bio', 'imageUrl']
+            attributes: ['name', 'username', 'bio', 'imageUrl']
           },
-          { model: Comments },
           { model: Reactions }
         ]
       });
       if (!articles.length) return errorResponse(res, 404, 'No articles found');
+      articles = ArticleController.getAllReactionsCount(articles, 'Reactions');
       return res.status(200).json({ articles });
     } catch (error) {
       return next(error);
@@ -75,11 +75,19 @@ class ArticleController extends BaseHelper {
       const user = await Users.findOne({ where: { username } });
       if (!user) return errorResponse(res, 404, 'User not found');
       const { id: userId } = user;
-      const articles = await Articles.findAll({
+      let articles = await Articles.findAll({
         where: { userId },
-        include: [{ model: Comments }, { model: Reactions }]
+        include: [
+          {
+            model: Users,
+            as: 'author',
+            attributes: ['name', 'username', 'bio', 'imageUrl']
+          },
+          { model: Reactions }
+        ]
       });
       if (!articles.length) return errorResponse(res, 404, 'No articles found for user');
+      articles = ArticleController.getAllReactionsCount(articles, 'Reactions');
       return res.status(200).json({ articles });
     } catch (error) {
       return next(error);
@@ -135,7 +143,7 @@ class ArticleController extends BaseHelper {
       });
       if (!article) return errorResponse(res, 404, 'Article not found');
       article = article.toJSON();
-      ArticleController.getReactions(article, 'Reactions');
+      ArticleController.getOneReactionsCount(article, 'Reactions');
       const timeToRead = ArticleController.calculateTimeToRead(article.articleBody);
       return res.status(200).json({ article, timeToRead });
     } catch (error) {

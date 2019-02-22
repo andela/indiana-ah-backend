@@ -156,12 +156,12 @@ class BaseHelper {
   /**
    * @description helper method for extracting the number of reactions from any data
    * @static
-   * @param {Array} data array of objects with reactions
+   * @param {Object} data object with reactions
    * @param {Object} reactionObj reaction object
    * @returns {Number} number of likes and dislikes
    * @memberOf BaseHelper
    */
-  static getReactions(data, reactionObj) {
+  static getOneReactionsCount(data, reactionObj) {
     const reactions = data[reactionObj].map(reaction => reaction.reactionType);
     const likes = reactions.filter(reaction => reaction === 'like').length;
     const dislikes = reactions.filter(reaction => reaction === 'dislike').length;
@@ -171,19 +171,19 @@ class BaseHelper {
   }
 
   /**
-   * @description helper method for extracting the number of reactions from comments
+   * @description helper method for extracting the number of reactions from a data collection
    * @static
-   * @param {Array} data array of objects with reactions
+   * @param {Array} dataCollection array of objects with reactions
+   * @param {Object} reactionObj reaction object
    * @returns {Number} number of likes and dislikes
    * @memberOf BaseHelper
    */
-  static getCommentReactions(data) {
-    const comments = data.map((item) => {
-      const comment = item.toJSON();
-      this.getReactions(comment, 'CommentReactions');
-      return comment;
+  static getAllReactionsCount(dataCollection, reactionObj) {
+    return dataCollection.map((item) => {
+      const data = item.toJSON();
+      this.getOneReactionsCount(data, reactionObj);
+      return data;
     });
-    return comments;
   }
 }
 
