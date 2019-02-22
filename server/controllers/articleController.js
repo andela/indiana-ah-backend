@@ -4,9 +4,7 @@ import models from '../db/models';
 import BaseHelper from '../helpers/baseHelper';
 import paginator from '../helpers/paginator';
 
-const {
-  Articles, Users, Comments, Reactions, CommentReactions, CommentEditHistories
-} = models;
+const { Articles, Users, Reactions } = models;
 
 /**
  * @description A collection of controller methods for article CRUD operations
