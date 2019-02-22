@@ -117,7 +117,7 @@ class RatingsController extends Basehelper {
       const { id: userId } = req.user;
       const rating = await Ratings.findOne({ where: { id, userId } });
       if (!RatingsController.checkIfDataExist(rating)) {
-        return res.status(200).json({
+        return res.status(404).json({
           message: 'Article rating not found'
         });
       }

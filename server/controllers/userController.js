@@ -296,8 +296,11 @@ class UserController extends BaseHelper {
         );
         const updatedRows = updatedUser[0];
         const updatedUserValues = updatedUser[1][0].dataValues;
-
-        UserController.checkIfDataExist(res, updatedRows, 'User not found');
+        if (!UserController.checkIfDataExist(updatedRows)) {
+          return res.status(404).json({
+            message: 'User not found'
+          });
+        }
         return res.status(200).json({
           profile: updatedUserValues
         });
