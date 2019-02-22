@@ -135,7 +135,11 @@ class UserController extends BaseHelper {
         where: { email },
         attributes: ['name', 'username', 'email', 'password', 'role', 'isVerified', 'id']
       });
-      UserController.checkIfDataExist(req, res, newUser, { message: 'error logging in' });
+      if (!UserController.checkIfDataExist(newUser)) {
+        return res.status(404).json({
+          message: 'error logging in'
+        });
+      }
       const {
         email: dbEmail, username, name, role, isVerified, id
       } = newUser;
@@ -182,7 +186,11 @@ class UserController extends BaseHelper {
         },
         attributes: ['name', 'username', 'email', 'bio', 'imageUrl', 'createdAt']
       });
-      UserController.checkIfDataExist(req, res, user, { message: 'User not found' });
+      if (!UserController.checkIfDataExist(user)) {
+        return res.status(404).json({
+          message: 'User not found'
+        });
+      }
       return res.status(200).json({
         profile: user.dataValues
       });
@@ -242,8 +250,11 @@ class UserController extends BaseHelper {
       if (userValues) {
         url = userValues.dataValues.imageUrl;
       }
-
-      UserController.checkIfDataExist(req, res, updatedRows, 'User not found');
+      if (!UserController.checkIfDataExist(updatedRows)) {
+        return res.status(404).json({
+          message: 'User not found'
+        });
+      }
       return res.status(200).json({
         avatar: url
       });
@@ -286,7 +297,7 @@ class UserController extends BaseHelper {
         const updatedRows = updatedUser[0];
         const updatedUserValues = updatedUser[1][0].dataValues;
 
-        UserController.checkIfDataExist(req, res, updatedRows, 'User not found');
+        UserController.checkIfDataExist(res, updatedRows, 'User not found');
         return res.status(200).json({
           profile: updatedUserValues
         });
@@ -347,9 +358,11 @@ class UserController extends BaseHelper {
         where: { email },
         returning: true
       });
-      UserController.checkIfDataExist(req, res, dbUser, {
-        message: 'This email is not registered in our system'
-      });
+      if (!UserController.checkIfDataExist(dbUser)) {
+        return res.status(404).json({
+          message: 'This email is not registered in our system'
+        });
+      }
       const { id, username } = dbUser;
       // define token payload and duration
       const jwtKey = process.env.JWT_SECRET_KEY;

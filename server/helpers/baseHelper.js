@@ -21,16 +21,11 @@ class BaseHelper {
 
   /**
    *
-   * @param { string } req
-   * @param {string} res
-   * @param { string } data
-   * @param { string } message
+   * @param { object } data
    * @returns {boolean} returns a boolean
    */
-  static checkIfDataExist(req, res, data, message) {
-    if (!data) {
-      return res.status(404).json(message);
-    }
+  static checkIfDataExist(data) {
+    return !!data;
   }
 
   /**
