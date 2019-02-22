@@ -44,7 +44,7 @@ class CommentController extends BaseHelper {
         where: { articleId: article.id },
         include: [{ model: CommentReactions }, { model: CommentEditHistories }]
       });
-      articleComments = ArticleController.getCommentReactions(articleComments);
+      articleComments = ArticleController.getAllReactionsCount(articleComments, 'CommentReactions');
       return res.status(200).json({
         message: 'Comment retrieved successfully',
         comments: articleComments
@@ -97,7 +97,7 @@ class CommentController extends BaseHelper {
       const { commentId } = req.params;
       const { commentBody: update } = req.body;
       const comment = await Comments.findOne({ where: { id: commentId, userId } });
-      if (!comment) errorMessage(res, 404, 'Comment not found');
+      if (!comment) return errorMessage(res, 404, 'Comment not found');
       const { updatedAt, commentBody } = comment;
       await CommentEditHistories.create({
         commentBody,

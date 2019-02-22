@@ -53,9 +53,10 @@ class ArticleController extends BaseHelper {
         { model: Comments },
         { model: Reactions }
       ];
-      const articles = await paginator(Articles, req, includedModels);
+      let articles = await paginator(Articles, req, includedModels);
       if (articles === undefined) return Response(res, 400, 'pagination error');
       if (!articles.length) return Response(res, 200, 'No articles found');
+      articles = ArticleController.getAllReactionsCount(articles, 'Reactions');
       return res.status(200).json({ articles });
     } catch (error) {
       return next(error);
@@ -77,11 +78,12 @@ class ArticleController extends BaseHelper {
       if (!user) return Response(res, 404, 'User not found');
       const { id: userId } = user;
       const includedModels = [{ model: Comments }, { model: Reactions }];
-      const articles = await paginator(Articles, req, includedModels, {
+      let articles = await paginator(Articles, req, includedModels, {
         userId
       });
       if (articles === undefined) return Response(res, 400, 'pagination error');
       if (!articles.length) return Response(res, 200, 'No articles found');
+      articles = ArticleController.getAllReactionsCount(articles, 'Reactions');
       return res.status(200).json({ articles });
     } catch (error) {
       return next(error);
@@ -137,7 +139,7 @@ class ArticleController extends BaseHelper {
       });
       if (!article) return errorResponse(res, 404, 'Article not found');
       article = article.toJSON();
-      ArticleController.getReactions(article, 'Reactions');
+      ArticleController.getOneReactionsCount(article, 'Reactions');
       const timeToRead = ArticleController.calculateTimeToRead(article.articleBody);
       return res.status(200).json({ article, timeToRead });
     } catch (error) {
