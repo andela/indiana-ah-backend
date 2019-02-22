@@ -65,3 +65,41 @@ describe('User comments on an article', () => {
       expect(res.body.message).to.equal('Comment deleted successfully');
     }));
 });
+
+describe('Get all article comments', () => {
+  it('should return all comments for an article', () => request(app)
+    .get(`/api/v1/articles/${articleSlug}/comments`)
+    .set('x-auth-token', verifiedToken)
+    .then((res) => {
+      expect(res.status).to.equal(200);
+      expect(res.body.comments).to.be.an('array');
+    }));
+});
+
+describe('Update a comment', () => {
+  it('should return a "not found" response if an the comment requested to be updated was not found', () => request(app)
+    .put(`/api/v1/articles/comments/${articleId}`)
+    .set('x-auth-token', verifiedToken)
+    .send({ commentBody: 'E no make sense again' })
+    .then((res) => {
+      expect(res.status).to.equal(404);
+      expect(res.body.message).to.equal('Comment not found');
+    }));
+
+  it('should return an error if an invalid UUID was entered', () => request(app)
+    .put('/api/v1/articles/comments/roriie93993')
+    .set('x-auth-token', verifiedToken)
+    .send({ commentBody: 'E no make sense again' })
+    .then((res) => {
+      expect(res.status).to.equal(500);
+    }));
+
+  it('should update a comment if it was found', () => request(app)
+    .put(`/api/v1/articles/comments/${commentId}`)
+    .set('x-auth-token', verifiedToken)
+    .send({ commentBody: 'E no make sense again' })
+    .then((res) => {
+      expect(res.status).to.equal(200);
+      expect(res.body.message).to.equal('Comment successfully updated');
+    }));
+});

@@ -2,9 +2,10 @@ import models from '../db/models';
 import commentReportLogic from '../helpers/commentReportHelper';
 import BaseHelper from '../helpers/baseHelper';
 import errorMessage from '../helpers/errorHelpers';
-import BaseHelper from '../helpers/baseHelper';
 
-const { Comments, Articles, CommentEditHistories } = models;
+const {
+  Comments, Articles, CommentEditHistories, CommentReactions
+} = models;
 
 /**
  * @description  Handles Users comments on articles
@@ -32,21 +33,21 @@ class CommentController extends BaseHelper {
    * @param {Function} next passes control to the next middleware
    * @returns {Object} a response object
    */
-  static async getArticleComments(req, res, next) {
+  static async getAllArticleComments(req, res, next) {
     try {
       const { slug } = req.params;
       const article = await Articles.findOne({
-        where: { slug },
-        returning: true
+        where: { slug }
       });
       if (!article) return errorMessage(res, 404, 'Article not found');
-      const articleComments = await Comments.findAll({
-        where: { id: article.dataValues.id },
-        returning: true
+      let articleComments = await Comments.findAll({
+        where: { articleId: article.id },
+        include: [{ model: CommentReactions }, { model: CommentEditHistories }]
       });
+      articleComments = ArticleController.getCommentReactions(articleComments);
       return res.status(200).json({
         message: 'Comment retrieved successfully',
-        data: articleComments
+        comments: articleComments
       });
     } catch (error) {
       return next(error);
@@ -80,30 +81,43 @@ class CommentController extends BaseHelper {
     } catch (error) {
       return next(error);
     }
-  
+  }
+
+  /**
+   * @description controller method for updating a comment
+   * @static
+   * @param {object} req Request object
+   * @param {object} res Response object
+   * @param {Function} next passes control to the next middleware
+   * @returns {Object} a response object
+   */
   static async updateComment(req, res, next) {
     try {
-      const { userId } = req.query;
+      const { id: userId } = req.user;
       const { commentId } = req.params;
-      const comment = await Comments.findOne({ where: { commentId } });
-      CommentController.checkIfDataExist(req, res, comment, 'Comment not found');
-      const { createdAt, commentBody } = comment;
-      await CommentEditHistories.create({ commentBody, commentId, createdAt });
-      const updatedComment = await Comments.update({
-        where: { userId, commentId },
-        returning: true
+      const { commentBody: update } = req.body;
+      const comment = await Comments.findOne({ where: { id: commentId, userId } });
+      if (!comment) errorMessage(res, 404, 'Comment not found');
+      const { updatedAt, commentBody } = comment;
+      await CommentEditHistories.create({
+        commentBody,
+        commentId,
+        createdAt: updatedAt
       });
+      const updatedComment = await Comments.update(
+        { commentBody: update },
+        {
+          where: { userId, id: commentId },
+          returning: true
+        }
+      );
       return res
         .status(200)
-        .json({ message: 'Comment successfully updated', comment: updatedComment });
+        .json({ message: 'Comment successfully updated', comment: updatedComment[1][0] });
     } catch (error) {
       next(error);
     }
   }
-
-  // static async getOneComment(req, res, next) {
-  //   const
-  // }
 }
 
 export default CommentController;
