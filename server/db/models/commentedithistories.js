@@ -8,11 +8,17 @@ export default (sequelize, DataTypes) => {
         primaryKey: true,
         type: DataTypes.INTEGER
       },
+      userId: {
+        type: DataTypes.UUID,
+        allowNull: false
+      },
       commentId: {
-        type: DataTypes.UUID
+        type: DataTypes.UUID,
+        allowNull: false
       },
       commentBody: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

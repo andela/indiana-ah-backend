@@ -149,7 +149,6 @@ class BaseHelper {
       ],
       where: condition
     });
-    if (!articles.length) return res.status(404).json({ message: 'Couldn\'t find articles matching your search' });
     return res.status(200).json({ searchResults: articles });
   }
 
@@ -178,7 +177,7 @@ class BaseHelper {
    * @returns {Number} number of likes and dislikes
    * @memberOf BaseHelper
    */
-  static getAllReactionsCount(dataCollection, reactionObj) {
+  static extractAllReactionsCount(dataCollection, reactionObj) {
     return dataCollection.map((item) => {
       const data = item.toJSON();
       this.getOneReactionsCount(data, reactionObj);

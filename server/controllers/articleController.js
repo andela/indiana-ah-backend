@@ -51,8 +51,8 @@ class ArticleController extends BaseHelper {
           { model: Reactions }
         ]
       });
-      if (!articles.length) return errorResponse(res, 404, 'No articles found');
-      articles = ArticleController.getAllReactionsCount(articles, 'Reactions');
+
+      articles = ArticleController.extractAllReactionsCount(articles, 'Reactions');
       return res.status(200).json({ articles });
     } catch (error) {
       return next(error);
@@ -84,8 +84,7 @@ class ArticleController extends BaseHelper {
           { model: Reactions }
         ]
       });
-      if (!articles.length) return errorResponse(res, 404, 'No articles found for user');
-      articles = ArticleController.getAllReactionsCount(articles, 'Reactions');
+      articles = ArticleController.extractAllReactionsCount(articles, 'Reactions');
       return res.status(200).json({ articles });
     } catch (error) {
       return next(error);

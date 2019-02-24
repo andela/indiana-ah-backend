@@ -62,7 +62,6 @@ describe('User comments on an article', () => {
 describe('Get all article comments', () => {
   it('should return all comments for an article', () => request(app)
     .get(`/api/v1/articles/${articleSlug}/comments`)
-    .set('x-auth-token', verifiedToken)
     .then((res) => {
       expect(res.status).to.equal(200);
       expect(res.body.comments).to.be.an('array');
@@ -94,5 +93,15 @@ describe('Update a comment', () => {
     .then((res) => {
       expect(res.status).to.equal(200);
       expect(res.body.message).to.equal('Comment successfully updated');
+    }));
+});
+
+describe('Get comment edit history', () => {
+  it('should fetch the edit history of a particular comment', () => request(app)
+    .get(`/api/v1/articles/comments/${commentId}/history`)
+    .set('x-auth-token', verifiedToken)
+    .then((res) => {
+      expect(res.status).to.equal(200);
+      expect(res.body.commentEditHistory).to.be.an('array');
     }));
 });
