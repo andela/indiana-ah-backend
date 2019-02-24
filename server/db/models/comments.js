@@ -24,7 +24,8 @@ export default (sequelize, DataTypes) => {
   Comments.associate = (models) => {
     Comments.belongsTo(models.Users, {
       foreignKey: 'userId',
-      onDelete: 'CASCADE'
+      onDelete: 'CASCADE',
+      as: 'commenter'
     });
     Comments.belongsTo(models.Articles, {
       foreignKey: 'articleId',

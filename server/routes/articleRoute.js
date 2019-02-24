@@ -20,9 +20,8 @@ const { createOrRemoveBookmark } = BookmarkController;
 const { articleComment, getArticleComments } = CommentController;
 
 const {
-  rateArticle, getOneArticleRating, getAllArticleRatings, cancelRating
-} = RatingsController;
-const { articleComment, getAllArticleComments, updateComment } = CommentController;
+  articleReaction,
+} = ReactionController;
 
 const { authUser } = Auth;
 

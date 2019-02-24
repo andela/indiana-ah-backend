@@ -137,16 +137,17 @@ class BaseHelper {
    *
    * @memberOf BaseHelper
    */
-  static async search(req, res, condition) {
-    const includedModels = [
-      {
-        model: Users,
-        as: 'author',
-        attributes: ['name', 'username', 'bio', 'imageUrl']
-      }
-    ];
-    const articles = await paginator(Articles, req, includedModels, condition);
-    if (!articles.length) return res.status(404).json({ message: 'Couldn\'t find articles matching your search' });
+  static async search(res, condition) {
+    const articles = await Articles.findAll({
+      include: [
+        {
+          model: Users,
+          as: 'author',
+          attributes: ['name', 'username', 'bio', 'imageUrl']
+        }
+      ],
+      where: condition
+    });
     return res.status(200).json({ searchResults: articles });
   }
 
@@ -175,7 +176,7 @@ class BaseHelper {
    * @returns {Number} number of likes and dislikes
    * @memberOf BaseHelper
    */
-  static getAllReactionsCount(dataCollection, reactionObj) {
+  static extractAllReactionsCount(dataCollection, reactionObj) {
     return dataCollection.map((item) => {
       const data = item.toJSON();
       this.getOneReactionsCount(data, reactionObj);

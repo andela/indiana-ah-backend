@@ -6,11 +6,17 @@ export default {
       primaryKey: true,
       type: Sequelize.INTEGER
     },
+    userId: {
+      type: Sequelize.UUID,
+      allowNull: false
+    },
     commentId: {
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
+      allowNull: false
     },
     commentBody: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
+      allowNull: false
     },
     createdAt: {
       allowNull: false,

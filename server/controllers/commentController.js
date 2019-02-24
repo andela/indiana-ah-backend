@@ -4,7 +4,7 @@ import BaseHelper from '../helpers/baseHelper';
 import errorMessage from '../helpers/errorHelpers';
 
 const {
-  Comments, Articles, CommentEditHistories, CommentReactions
+  Comments, Articles, CommentEditHistories, CommentReactions, Users
 } = models;
 
 /**
@@ -20,7 +20,7 @@ class CommentController extends BaseHelper {
    * @param {Function} next passes control to the next middleware
    * @returns {Object} a response object
    */
-  static async articleComment(req, res, next) {
+  static async createComment(req, res, next) {
     const message = 'Comment posted successfully';
     commentReportLogic(req, res, next, Articles, Comments, message);
   }
@@ -42,11 +42,21 @@ class CommentController extends BaseHelper {
       if (!article) return errorMessage(res, 404, 'Article not found');
       let articleComments = await Comments.findAll({
         where: { articleId: article.id },
-        include: [{ model: CommentReactions }, { model: CommentEditHistories }]
+        include: [
+          { model: CommentReactions },
+          { model: Users, as: 'commenter', attributes: ['name', 'username', 'imageUrl'] }
+        ]
       });
-      articleComments = ArticleController.getAllReactionsCount(articleComments, 'CommentReactions');
+
+      articleComments = CommentController.extractAllReactionsCount(
+        articleComments,
+        'CommentReactions'
+      ).map((comment) => {
+        comment.edited = comment.updatedAt.toString() !== comment.createdAt.toString();
+        return comment;
+      });
       return res.status(200).json({
-        message: 'Comment retrieved successfully',
+        message: 'Comments retrieved successfully',
         comments: articleComments
       });
     } catch (error) {
@@ -84,6 +94,27 @@ class CommentController extends BaseHelper {
   }
 
   /**
+   * @description controller method for fetching the edit history of a comment
+   * @static
+   * @param {object} req Request object
+   * @param {object} res Response object
+   * @param {Function} next passes control to the next middleware
+   * @returns {Object} a response object
+   */
+  static async getCommentEditHistory(req, res, next) {
+    try {
+      const { commentId } = req.params;
+      const { id: userId } = req.user;
+      const commentEditHistory = await CommentEditHistories.findAll({
+        where: { commentId, userId }
+      });
+      return res.status(200).json({ commentEditHistory });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  /**
    * @description controller method for updating a comment
    * @static
    * @param {object} req Request object
@@ -95,17 +126,18 @@ class CommentController extends BaseHelper {
     try {
       const { id: userId } = req.user;
       const { commentId } = req.params;
-      const { commentBody: update } = req.body;
+      const { commentBody: commentUpdate } = req.body;
       const comment = await Comments.findOne({ where: { id: commentId, userId } });
       if (!comment) return errorMessage(res, 404, 'Comment not found');
       const { updatedAt, commentBody } = comment;
       await CommentEditHistories.create({
         commentBody,
+        userId,
         commentId,
         createdAt: updatedAt
       });
       const updatedComment = await Comments.update(
-        { commentBody: update },
+        { commentBody: commentUpdate },
         {
           where: { userId, id: commentId },
           returning: true
