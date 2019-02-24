@@ -206,7 +206,7 @@ class UserController extends BaseHelper {
       const includedModels = [{ model: Articles }];
       const profiles = await paginator(Users, req, includedModels);
       if (!profiles) {
-        return res.status(200).json('There are no profiles for any user');
+        return res.status(200).json('There are no users to display');
       }
       return res.status(200).json({ profiles });
     } catch (error) {

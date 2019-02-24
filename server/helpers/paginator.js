@@ -10,7 +10,12 @@ const paginator = async (
   }
   const modifiedPage = page - 1;
   const offset = parseInt(modifiedPage, 10) * limit;
-  if (page <= 0 || Number.isInteger(Number(modifiedPage) === false)) {
+  if (
+    page <= 0
+    || limit <= 0
+    || Number.isInteger(Number(modifiedPage) === false)
+    || Number.isInteger(Number(limit) === false)
+  ) {
     return undefined;
   }
   try {
