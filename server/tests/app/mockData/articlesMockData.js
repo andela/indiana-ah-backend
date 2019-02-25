@@ -42,3 +42,10 @@ export const user4 = {
   password: 'baleesecret48',
   isVerified: true
 };
+
+export const userWithoutBookmarks = {
+  username: 'divinelove23',
+  email: 'divine@now.com',
+  password: 'baleesecre34t48',
+  isVerified: true
+};

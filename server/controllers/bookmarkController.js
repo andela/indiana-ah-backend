@@ -39,6 +39,31 @@ class BookmarkController {
       return next(error);
     }
   }
+
+  /**
+   * @static
+   * @description Method to fetch a user's bookmarked article
+   * @param {object} req HTTP request object
+   * @param {object} res HTTP response object
+   * @param {Function} next passes control to the next middleware
+   * @returns {object} a response object
+   */
+  static async getUserBookmarkedArticles(req, res, next) {
+    try {
+      const { id: userId } = req.user;
+      const userBookmarks = await Bookmarks.findAll({
+        where: { userId }
+      });
+      if (userBookmarks.length === 0) return res.status(200).json({ message: 'You do not have any bookmarked article' });
+      return res.status(200).json({
+        message: 'Bookmarked articles successfully found',
+        userBookmarks,
+        bookmarkCount: userBookmarks.length
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
 }
 
 export default BookmarkController;

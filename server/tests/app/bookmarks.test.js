@@ -2,10 +2,11 @@ import request from 'supertest';
 import { expect } from 'chai';
 import app from '../../index';
 import models from '../../db/models';
-import { user4, validArticle } from './mockData/articlesMockData';
+import { user4, validArticle, userWithoutBookmarks } from './mockData/articlesMockData';
 
 const { Users } = models;
 let verifiedToken;
+let userWithoutBookmarksToken;
 let articleId;
 
 before(async () => {
@@ -58,5 +59,33 @@ describe('Create Or Remove Bookmarks', () => {
       .set('x-auth-token', verifiedToken);
     expect(response.status).to.equal(200);
     expect(response.body).to.have.all.keys('message', 'bookmark');
+  });
+});
+
+describe('Get a user bookmarked articles', () => {
+  before(async () => {
+    await Users.create(userWithoutBookmarks);
+    await request(app)
+      .post('/api/v1/login')
+      .send({ email: userWithoutBookmarks.email, password: userWithoutBookmarks.password })
+      .then((res) => {
+        userWithoutBookmarksToken = res.body.token;
+      });
+  });
+
+  it('Should return message if user has no bookmarked articles', async () => {
+    const response = await request(app)
+      .get('/api/v1/users/bookmarks')
+      .set('x-auth-token', userWithoutBookmarksToken);
+    expect(response.status).to.equal(200);
+    expect(response.body.message).to.deep.equal('You do not have any bookmarked article');
+  });
+
+  it('Should return a user\'s bookmarked articles', async () => {
+    const response = await request(app)
+      .get('/api/v1/users/bookmarks')
+      .set('x-auth-token', verifiedToken);
+    expect(response.status).to.equal(200);
+    expect(response.body).to.have.all.keys('message', 'userBookmarks', 'bookmarkCount');
   });
 });
