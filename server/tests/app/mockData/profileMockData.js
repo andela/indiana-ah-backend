@@ -49,6 +49,7 @@ export const payload = {
   role: 'user',
   isVerified: true
 };
+
 export const badPayload = {
   id: 23,
   username: 'cim',
@@ -56,8 +57,18 @@ export const badPayload = {
   role: 'user',
   isVerified: true
 };
+
 export const user1 = {
   username: 'cim',
   email: 'cim@gmail.com',
   password: 'baleesecret23'
+};
+
+export const unregisteredEmail = {
+  email: 'okukwe@gmail.com'
+};
+
+export const registeredEmail = {
+  email: 'balee@gmail.com',
+  password: 'Arukwe1234'
 };
