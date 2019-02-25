@@ -15,7 +15,7 @@ before(async () => {
 });
 
 describe('Delete a profile', () => {
-  it('create an article if the user passes authentication', () => request(app)
+  it('creates an article if the user passes authentication', () => request(app)
     .post('/api/v1/articles')
     .set('x-auth-token', userToken)
     .send(validArticle)
@@ -28,7 +28,7 @@ describe('Delete a profile', () => {
       expect(res.body.timeToRead).to.be.a('string');
     }));
 
-  it('Should allow a verified user comment on an article', () => request(app)
+  it('should allow a verified user comment on an article', () => request(app)
     .post(`/api/v1/articles/${articleSlug}/comments`)
     .set('x-auth-token', userToken)
     .send({ commentBody: 'This is making sense part 2', articleId })
