@@ -22,6 +22,16 @@ class BaseHelper {
 
   /**
    *
+   * @param { string } passwordInput
+   * @param { string } dbPassword
+   * @return {boolean} returns a boolean
+   */
+  static validatePassword(passwordInput, dbPassword) {
+    return bcrypt.compare(passwordInput, dbPassword);
+  }
+
+  /**
+   *
    * @param {string} res
    * @param { string } data
    * @param { string } message
@@ -31,6 +41,22 @@ class BaseHelper {
     if (!data) {
       return res.status(404).json(message);
     }
+  }
+
+  /**
+   *
+   * @param { string } username
+   * @returns {boolean} returns a boolean
+   */
+  static async checkIfExists(username) {
+    const user = await Users.findOne({
+      where: { username },
+    });
+
+    if (user) {
+      return user;
+    }
+    return false;
   }
 
   /**

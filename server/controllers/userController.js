@@ -1,6 +1,7 @@
 /* eslint-disable valid-jsdoc */
 import { Op } from 'sequelize';
 import dotenv from 'dotenv';
+import bcrypt from 'bcrypt';
 import models from '../db/models';
 import assignToken from '../helpers/assignJwtToken';
 import errorMessage from '../helpers/errorHelpers';
@@ -140,7 +141,10 @@ class UserController extends BaseHelper {
       const {
         email: dbEmail, username, name, role, isVerified, id
       } = newUser;
-      const decodedPassword = await newUser.validatePassword(password);
+
+      const { password: dbPassword } = newUser.dataValues;
+      const decodedPassword = UserController.validatePassword(password, dbPassword);
+
       if (dbEmail && decodedPassword) {
         const payload = {
           email: dbEmail,
@@ -241,49 +245,48 @@ class UserController extends BaseHelper {
    *
    * @memberOf UserController class
    */
-  static async editUserProfile(req, res) {
-    const { name, bio, password } = req.body;
+  static async editUserProfile(req, res, next) {
+    const {
+      name, bio, password, username
+    } = req.body;
     const user = req.params.username;
-    const { username } = req.user;
+    const foundUsername = await UserController.checkIfExists(username);
 
-    const profile = await Users.findOne({
-      where: { username: user }
-    });
-    if (profile) {
-      try {
-        const updatedUser = await Users.update(
-          {
-            name: name || profile.dataValues.name,
-            username: username || profile.dataValues.username,
-            bio: bio || profile.dataValues.bio,
-            password: password || profile.dataValues.password
-          },
-          {
-            where: { username },
-            returning: true
-          }
-        );
-        const updatedRows = updatedUser[0];
-        const updatedUserValues = updatedUser[1][0].dataValues;
-        delete updatedUserValues.password;
-        delete updatedUserValues.role;
+    if (!foundUsername) {
+      const profile = await UserController.checkIfExists(user);
+      if (profile) {
+        try {
+          const updatedUser = await Users.update(
+            {
+              name: name || profile.dataValues.name,
+              username: username || profile.dataValues.username,
+              bio: bio || profile.dataValues.bio,
+              password: password || profile.dataValues.password
+            },
+            {
+              where: { username: user },
+              returning: true
+            }
+          );
+          const updatedRows = updatedUser[0];
+          const updatedUserValues = updatedUser[1][0].dataValues;
 
-        UserController.checkIfDataExist(res, updatedRows, 'User not found');
-        return res.status(200).json({
-          profile: {
-            name: updatedUserValues.name,
-            username: updatedUserValues.username,
-            email: updatedUserValues.email,
-            bio: updatedUserValues.bio,
-            imageUrl: updatedUserValues.imageUrl,
-            createdAt: updatedUserValues.createdAt
-          }
-        });
-      } catch (error) {
-        return errorMessage(res, 500, 'Internal server error');
+          UserController.checkIfDataExist(res, updatedRows, 'User not found');
+          return res.status(200).json({
+            profile: {
+              name: updatedUserValues.name,
+              username: updatedUserValues.username,
+              bio: updatedUserValues.bio,
+              createdAt: updatedUserValues.createdAt
+            }
+          });
+        } catch (error) {
+          return next(error);
+        }
       }
+      return errorMessage(res, 404, 'User not found');
     }
-    return errorMessage(res, 404, 'User not found');
+    return errorMessage(res, 409, 'This username already exists');
   }
 
   /**

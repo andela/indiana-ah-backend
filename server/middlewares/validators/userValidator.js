@@ -7,7 +7,6 @@ export default (req, res, next) => {
     name,
     bio,
     username,
-    email,
     password
   } = req.body;
 
@@ -24,12 +23,10 @@ export default (req, res, next) => {
     password: Joi.string()
       .alphanum()
       .min(8),
-    email: Joi.string()
-      .email({ minDomainAtoms: 2 })
   };
 
   const { error } = Joi.validate({
-    username, password, email, bio, name
+    username, password, bio, name
   }, schema);
   if (!error) return next();
 
@@ -53,9 +50,6 @@ export default (req, res, next) => {
       break;
     case '"password" length must be at least 8 characters long':
       errorMessage(res, 400, 'Password length must be at least 8 characters long');
-      break;
-    case '"email" must be a valid email':
-      errorMessage(res, 400, 'Email is not valid');
       break;
     default:
       errorMessage(res, 400, errorMessageFromJoi);
