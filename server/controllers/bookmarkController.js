@@ -1,4 +1,5 @@
 import models from '../db/models';
+import errorMessage from '../helpers/errorHelpers';
 
 const { Bookmarks, Articles } = models;
 
@@ -21,7 +22,7 @@ class BookmarkController {
       const { articleId } = req.params;
 
       const foundArticle = await Articles.findByPk(articleId);
-      if (!foundArticle) return res.status(404).json({ message: 'Article not found' });
+      if (!foundArticle) errorMessage(res, 404, 'Article not found');
 
       const [bookmark, created] = await Bookmarks.findOrCreate({
         where: { articleId },
