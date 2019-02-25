@@ -1,5 +1,4 @@
 import bcrypt from 'bcrypt';
-import logger from '../winstonConfig';
 /**
  * @class BaseHelper
  */
