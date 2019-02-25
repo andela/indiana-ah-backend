@@ -94,17 +94,7 @@ describe('Admin Should get all report on an article', () => {
     }));
 });
 
-describe('Welcome to Authors Haven', () => {
-  it('Should welcome users to Authors Haven', () => request(app)
-    .get('/')
-    .set('x-auth-token', verifiedToken)
-    .then((res) => {
-      expect(res.status).to.equal(200);
-      expect(res.body.message).to.equal('welcome to authors haven platform');
-    }));
-});
-
-describe('Welcome to Authors Haven', () => {
+describe('Invalid Routes', () => {
   it('Should throw an error if hitting wrong routes', () => request(app)
     .get('/ai')
     .set('x-auth-token', verifiedToken)
