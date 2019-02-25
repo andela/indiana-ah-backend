@@ -2,10 +2,13 @@ import request from 'supertest';
 import { expect } from 'chai';
 import app from '../../index';
 import assignToken from '../../helpers/assignJwtToken';
-
 import {
-  data, mockData, payload, badPayload
-} from './mockData/userMockData';
+  data,
+  mockData,
+  payload,
+  badPayload,
+  user1
+} from './mockData/profileMockData';
 
 const falseToken = assignToken(payload);
 const badToken = assignToken(badPayload);
@@ -13,18 +16,11 @@ const badToken = assignToken(badPayload);
 let firstToken = '';
 let secondToken = '';
 
-before(() => {
-  const user1 = {
-    username: 'cim',
-    email: 'cim@gmail.com',
-    password: 'baleesecret23'
-  };
-  return request(app)
+before(async () => {
+  const res = await request(app)
     .post('/api/v1/register')
-    .send(user1)
-    .then((res) => {
-      firstToken = res.body.token;
-    });
+    .send(user1);
+  firstToken = res.body.token;
 });
 describe('user verification', () => {
   it('should verify a user\'s account', () => request(app)
@@ -66,7 +62,7 @@ describe('get all users profile', () => {
 
 describe('Edit user profile', () => {
   it('should return an error if user is not authenticated', () => request(app)
-    .patch('/api/v1/profiles/balee/update')
+    .patch('/api/v1/profiles/cim/update')
     .send(data)
     .then((res) => {
       expect(res.status).to.equal(401);
@@ -93,21 +89,21 @@ describe('Edit user profile', () => {
     .set('x-auth-token', secondToken)
     .send(mockData)
     .then((res) => {
-      expect(res.status).to.equal(404);
-      expect(res.body.message).to.equal('User not found');
+      expect(res.status).to.equal(403);
+      expect(res.body.message).to.equal('User not authorized');
     }));
 });
 
 describe('Edit user picture', () => {
   it('should return an error if user is not authenticated', () => request(app)
-    .patch('/api/v1/profiles/image')
+    .patch('/api/v1/profiles/cim/image')
     .send(data)
     .then((res) => {
       expect(res.status).to.equal(401);
       expect(res.body.message).to.equal('Access denied. You are not authorized to access this route');
     }));
   it('should return updated user picture if user is authenticated and verified', () => request(app)
-    .patch('/api/v1/profiles/image')
+    .patch('/api/v1/profiles/cim/image')
     .set('x-auth-token', secondToken)
     .field('Content-Type', 'multipart/form-data')
     .attach('image', 'server/tests/testImage/feather.jpg')
@@ -115,8 +111,8 @@ describe('Edit user picture', () => {
       expect(res.status).to.equal(200);
       expect(res.body.avatar).to.match(/^http/);
     }));
-  it('should return an error when invalid ID type passed', () => request(app)
-    .patch('/api/v1/profiles/image')
+  it('should return an error when an invalid ID type is passed', () => request(app)
+    .patch('/api/v1/profiles/cim/image')
     .set('x-auth-token', badToken)
     .field('Content-Type', 'multipart/form-data')
     .attach('image', 'server/tests/testImage/feather.jpg')

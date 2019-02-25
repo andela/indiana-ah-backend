@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import userRoute from './userRoute';
 import articleRoute from './articleRoute';
+import ratingRoute from './ratingRoute';
 import adminRoute from './adminRoute';
 import commentReactionRoute from './commentReactionRoute';
 import reportRoute from './reportRoute';
@@ -13,8 +14,7 @@ const { getAllReports } = ReportController;
 
 const router = Router();
 
-router.use('/articles', articleRoute);
-router.use('/articles', reportRoute);
+router.use('/articles', articleRoute, ratingRoute, reportRoute);
 router.get('/reports', authUser, verifyAdmin, getAllReports);
 router.use('/', userRoute);
 router.use('/admin', adminRoute);
