@@ -383,7 +383,7 @@ class UserController extends BaseHelper {
       const subject = 'Authors\' Haven password reset';
       const message = `<h1 style='color: Goldenrod' > Password Reset </h1><hr/>
       <p>Please reset your Author's Haven password with this 
-      <a href=http://${link}>link</a>. This link will expire after <b>one hour</b></p>`;
+      <a href=${link}>link</a>. This link will expire after <b>one hour</b></p>`;
       sendEmail(email, subject, message);
       return res.status(200).send({
         message: `password reset link sent to ${email}, please check your email`,
