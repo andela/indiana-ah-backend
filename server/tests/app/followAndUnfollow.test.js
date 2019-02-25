@@ -2,18 +2,12 @@ import request from 'supertest';
 import { expect } from 'chai';
 import app from '../../index';
 import models from '../../db/models';
-import {
-  userBiola,
-  userBalogun,
-  userAkeem
-} from './mockData/userMockData';
+import { userBiola, userBalogun, userAkeem } from './mockData/userMockData';
 
 const { Users } = models;
 
 let tokenForBalogun;
 let tokenForBiola;
-// eslint-disable-next-line no-unused-vars
-let tokenForAkeem;
 
 before(async () => {
   await Users.create(userBalogun);
@@ -39,12 +33,8 @@ before(async () => {
   await Users.create(userAkeem);
   return request(app)
     .post('/api/v1/login')
-    .send({ email: userAkeem.email, password: userAkeem.password })
-    .then((res) => {
-      tokenForAkeem = res.body.token;
-    });
+    .send({ email: userAkeem.email, password: userAkeem.password });
 });
-
 
 describe('Follow  and Unfollow Feature', () => {
   it('should not allow a user to follow him/her self ', () => request(app)

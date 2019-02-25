@@ -1,7 +1,8 @@
 import { Op } from 'sequelize';
-import errorResponse from '../helpers/errorHelpers';
+import Response from '../helpers/errorHelpers';
 import models from '../db/models';
 import BaseHelper from '../helpers/baseHelper';
+import paginator from '../helpers/paginator';
 
 const {
   Articles, Users, Comments, Reactions
@@ -43,18 +44,18 @@ class ArticleController extends BaseHelper {
    */
   static async getAllArticles(req, res, next) {
     try {
-      const articles = await Articles.findAll({
-        include: [
-          {
-            model: Users,
-            as: 'author',
-            attributes: ['username', 'bio', 'imageUrl']
-          },
-          { model: Comments },
-          { model: Reactions }
-        ]
-      });
-      if (!articles.length) return errorResponse(res, 404, 'No articles found');
+      const includedModels = [
+        {
+          model: Users,
+          as: 'author',
+          attributes: ['username', 'bio', 'imageUrl']
+        },
+        { model: Comments },
+        { model: Reactions }
+      ];
+      const articles = await paginator(Articles, req, includedModels);
+      if (articles === undefined) return Response(res, 400, 'pagination error');
+      if (!articles.length) return Response(res, 200, 'No articles found');
       return res.status(200).json({ articles });
     } catch (error) {
       return next(error);
@@ -73,13 +74,14 @@ class ArticleController extends BaseHelper {
     try {
       const { username } = req.params;
       const user = await Users.findOne({ where: { username } });
-      if (!user) return errorResponse(res, 404, 'User not found');
+      if (!user) return Response(res, 404, 'User not found');
       const { id: userId } = user;
-      const articles = await Articles.findAll({
-        where: { userId },
-        include: [{ model: Comments }, { model: Reactions }]
+      const includedModels = [{ model: Comments }, { model: Reactions }];
+      const articles = await paginator(Articles, req, includedModels, {
+        userId
       });
-      if (!articles.length) return errorResponse(res, 404, 'No articles found for user');
+      if (articles === undefined) return Response(res, 400, 'pagination error');
+      if (!articles.length) return Response(res, 200, 'No articles found');
       return res.status(200).json({ articles });
     } catch (error) {
       return next(error);
@@ -103,7 +105,7 @@ class ArticleController extends BaseHelper {
         returning: true
       });
 
-      if (response[0] === 0) return errorResponse(res, 404, 'Article requested for update not found');
+      if (response[0] === 0) return Response(res, 404, 'Article requested for update not found');
       const article = response[1][0];
       return res.status(200).json({ message: 'Article successfully updated', article });
     } catch (error) {
@@ -133,7 +135,7 @@ class ArticleController extends BaseHelper {
           { model: Reactions }
         ]
       });
-      if (!article) return errorResponse(res, 404, 'Article not found');
+      if (!article) return Response(res, 404, 'Article not found');
       const timeToRead = ArticleController.calculateTimeToRead(article.articleBody);
       return res.status(200).json({ article, timeToRead });
     } catch (error) {
@@ -155,7 +157,7 @@ class ArticleController extends BaseHelper {
       const response = await Articles.findOne({
         where: { slug }
       });
-      if (!response) return errorResponse(res, 404, 'Article not found');
+      if (!response) return Response(res, 404, 'Article not found');
       await Articles.destroy({
         where: { slug }
       });
@@ -211,9 +213,9 @@ class ArticleController extends BaseHelper {
       if (
         !Object.keys(queryCondition).length
         && !Object.getOwnPropertySymbols(queryCondition).length
-      ) return errorResponse(res, 400, 'Invalid search parameter');
+      ) return Response(res, 400, 'Invalid search parameter');
 
-      await ArticleController.search(res, queryCondition);
+      await ArticleController.search(req, res, queryCondition);
     } catch (error) {
       return next(error);
     }
