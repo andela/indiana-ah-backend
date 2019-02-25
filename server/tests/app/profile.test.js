@@ -89,8 +89,8 @@ describe('Edit user profile', () => {
     .set('x-auth-token', secondToken)
     .send(mockData)
     .then((res) => {
-      expect(res.status).to.equal(401);
-      expect(res.body.message).to.equal('You are not authorized to access this route');
+      expect(res.status).to.equal(403);
+      expect(res.body.message).to.equal('User not authorized');
     }));
 });
 

@@ -292,8 +292,6 @@ class UserController extends BaseHelper {
         );
         const updatedRows = updatedUser[0];
         const updatedUserValues = updatedUser[1][0].dataValues;
-        delete updatedUserValues.password;
-        delete updatedUserValues.role;
 
         UserController.checkIfDataExist(res, updatedRows, 'User not found');
         return res.status(200).json({
