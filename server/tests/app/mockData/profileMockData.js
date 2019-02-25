@@ -1,7 +1,6 @@
 export const data = {
   bio: 'I am a boy',
   name: 'Emeka',
-  password: 'sammy12345'
 };
 
 export const badName = {
@@ -28,18 +27,19 @@ export const shortPassword = {
   password: 'sammy1'
 };
 
-export const badEmail = {
-  email: 'tiku.yahoo'
+export const incorrectPasswordData = {
+  currentPassword: 'tiku1234',
+  newPassword: 'sammy1234'
+};
+
+export const badPasswordData = {
+  currentPassword: 'cim23000',
+  newPassword: 'sammyiiiii'
 };
 
 export const badBio = {
   bio: 34
 };
-
-//   email: 'dozie.emeka@yahoo.com',
-//   username: 'tiku',
-//   password: 'sammy12345'
-// };
 
 export const mockData = {
   bio: 'I am a boy',
@@ -65,8 +65,13 @@ export const badPayload = {
 
 export const user1 = {
   username: 'cim',
-  email: 'cim@gmail.com',
-  password: 'baleesecret23'
+  email: 'primuse@gmail.com',
+  password: 'baleesecret123'
+};
+
+export const correctPasswordData = {
+  currentPassword: 'baleesecret123',
+  newPassword: 'sammy1234'
 };
 
 export const unregisteredEmail = {

@@ -3,8 +3,9 @@ import { expect } from 'chai';
 import app from '../../index';
 import assignToken from '../../helpers/assignJwtToken';
 import {
-  data, payload, badPayload, user1, badBio, badEmail, badName,
-  badPassword, badUsername, shortPassword, invalidUsername, invalidName
+  data, payload, badPayload, user1, badBio, badName,
+  badUsername, invalidUsername, invalidName,
+  incorrectPasswordData, badPasswordData
 } from './mockData/profileMockData';
 
 const falseToken = assignToken(payload);
@@ -19,6 +20,7 @@ before(async () => {
     .send(user1);
   firstToken = res.body.token;
 });
+
 describe('User verification', () => {
   it('should verify a user\'s account', () => request(app)
     .patch(`/api/v1/users/verify?query=${firstToken}`)
@@ -121,30 +123,6 @@ describe('Edit user profile', () => {
       expect(res.status).to.equal(400);
       expect(res.body.message).to.equal('Bio must be a string');
     }));
-  it('should return an error when invalid password is passed', () => request(app)
-    .patch('/api/v1/profiles/cim/update')
-    .set('x-auth-token', secondToken)
-    .send(badPassword)
-    .then((res) => {
-      expect(res.status).to.equal(400);
-      expect(res.body.message).to.equal('Password should be Alphanumeric');
-    }));
-  it('should return an error when password isn\'t long enough', () => request(app)
-    .patch('/api/v1/profiles/cim/update')
-    .set('x-auth-token', secondToken)
-    .send(shortPassword)
-    .then((res) => {
-      expect(res.status).to.equal(400);
-      expect(res.body.message).to.equal('Password length must be at least 8 characters long');
-    }));
-  it('should return an error when invalid email passed', () => request(app)
-    .patch('/api/v1/profiles/cim/update')
-    .set('x-auth-token', secondToken)
-    .send(badEmail)
-    .then((res) => {
-      expect(res.status).to.equal(400);
-      expect(res.body.message).to.equal('Email is not valid');
-    }));
   it('should return updated user profile if user is authenticated and verified', () => request(app)
     .patch('/api/v1/profiles/cim/update')
     .set('x-auth-token', secondToken)
@@ -152,6 +130,36 @@ describe('Edit user profile', () => {
     .then((res) => {
       expect(res.status).to.equal(200);
       expect(res.body.profile).to.be.an('object');
+    }));
+});
+
+describe('Edit user password', () => {
+  it('should return an error when an incorrect old password is passed', () => request(app)
+    .patch('/api/v1/profiles/cim/password')
+    .set('x-auth-token', secondToken)
+    .send(incorrectPasswordData)
+    .then((res) => {
+      expect(res.status).to.equal(401);
+      expect(res.body.message).to.equal('Error updating password');
+    }));
+  it('should return an error when an invalid new password is passed', () => request(app)
+    .patch('/api/v1/profiles/cim/password')
+    .set('x-auth-token', secondToken)
+    .send(badPasswordData)
+    .then((res) => {
+      expect(res.status).to.equal(400);
+      expect(res.body.message).to.equal('Password should be Alphanumeric');
+    }));
+  it('should update a user\'s password if correct information is passed and user is authenticated', () => request(app)
+    .patch('/api/v1/profiles/cim/password')
+    .set('x-auth-token', secondToken)
+    .send({
+      currentPassword: 'baleesecret123',
+      newPassword: 'sammy1234'
+    })
+    .then((res) => {
+      expect(res.status).to.equal(200);
+      expect(res.body.message).to.equal('Password successfully updated');
     }));
 });
 

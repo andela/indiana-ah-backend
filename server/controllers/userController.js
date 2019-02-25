@@ -1,7 +1,6 @@
 /* eslint-disable valid-jsdoc */
 import { Op } from 'sequelize';
 import dotenv from 'dotenv';
-import bcrypt from 'bcrypt';
 import models from '../db/models';
 import assignToken from '../helpers/assignJwtToken';
 import errorMessage from '../helpers/errorHelpers';
@@ -234,6 +233,52 @@ class UserController extends BaseHelper {
   static async uploadUserPicture(req, res, next) {
     const { id } = req.user;
     UserController.uploadPicture(req, res, Users, { id }, next);
+  }
+
+  /**
+   *
+   *
+   * @static updatePassword - the method that handles updating user password
+   * @param {object} req - the request object
+   * @param {object} res - the response object
+   *
+   * @memberOf UserController class
+   */
+  static async updatePassword(req, res, next) {
+    const { username } = req.params;
+    const { currentPassword, newPassword } = req.body;
+
+    const user = await UserController.checkIfExists(username);
+
+    if (user) {
+      const { password: dbPassword } = user.dataValues;
+      const samePassword = await UserController.validatePassword(currentPassword, dbPassword);
+
+      try {
+        if (samePassword) {
+          const updatedUser = await Users.update(
+            {
+              password: newPassword
+            },
+            {
+              where: { username },
+              returning: true
+            }
+          );
+          const updatedRows = updatedUser[0];
+
+          if (updatedRows) {
+            return res.status(200).json({
+              message: 'Password successfully updated'
+            });
+          }
+        }
+        return errorMessage(res, 401, 'Error updating password');
+      } catch (error) {
+        next(error);
+      }
+    }
+    return errorMessage(res, 404, 'User not found');
   }
 
   /**
