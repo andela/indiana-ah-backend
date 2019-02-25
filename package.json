@@ -20,6 +20,8 @@
   "author": "Andela Simulations Programme",
   "license": "MIT",
   "dependencies": {
+    "@babel/polyfill": "^7.2.5",
+    "@babel/register": "^7.0.0",
     "@sendgrid/mail": "^6.3.1",
     "bcrypt": "^3.0.3",
     "body-parser": "^1.18.3",
@@ -57,9 +59,7 @@
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.2.2",
     "@babel/node": "^7.2.2",
-    "@babel/polyfill": "^7.2.5",
     "@babel/preset-env": "^7.3.1",
-    "@babel/register": "^7.0.0",
     "coveralls": "^3.0.2",
     "eslint": "^5.12.1",
     "eslint-config-airbnb-base": "^13.1.0",

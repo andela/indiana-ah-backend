@@ -21,7 +21,7 @@ before(async () => {
 });
 describe('User verification', () => {
   it('should verify a user\'s account', () => request(app)
-    .patch(`/api/v1/users/verify?token=${firstToken}`)
+    .patch(`/api/v1/users/verify?query=${firstToken}`)
     .then((res) => {
       secondToken = res.body.token;
       expect(res.status).to.equal(200);
@@ -49,11 +49,11 @@ describe('User profile', () => {
 
 describe('Get all users profile', () => {
   it('should return the profiles of all users', () => request(app)
-    .get('/api/v1/profiles')
+    .get('/api/v1/profiles?page=1')
     .set('x-auth-token', secondToken)
     .then((res) => {
       expect(res.status).to.equal(200);
-      expect(res.body).to.be.an('array');
+      expect(res.body.profiles).to.be.an('array');
     }));
 });
 
@@ -78,8 +78,8 @@ describe('Edit user profile', () => {
     .set('x-auth-token', secondToken)
     .send(data)
     .then((res) => {
-      expect(res.status).to.equal(401);
-      expect(res.body.message).to.equal('You are not authorized to access this route');
+      expect(res.status).to.equal(403);
+      expect(res.body.message).to.equal('User not authorized');
     }));
   it('should return an error when short username is passed', () => request(app)
     .patch('/api/v1/profiles/cim/update')

@@ -1,4 +1,5 @@
 import models from '../db/models';
+import commentReportLogic from '../helpers/commentReportHelper';
 import errorMessage from '../helpers/errorHelpers';
 
 const { Comments, Articles } = models;
@@ -13,28 +14,40 @@ class CommentController {
    * @static
    * @param {object} req Request object
    * @param {object} res Response object
+   * @param {Function} next passes control to the next middleware
    * @returns {Object} a response object
    */
-  static async articleComment(req, res) {
+  static async articleComment(req, res, next) {
+    const message = 'Comment posted successfully';
+    commentReportLogic(req, res, next, Articles, Comments, message);
+  }
+
+  /**
+   * @description controller method for commenting on an article
+   * @static
+   * @param {object} req Request object
+   * @param {object} res Response object
+   * @param {Function} next passes control to the next middleware
+   * @returns {Object} a response object
+   */
+  static async getArticleComment(req, res, next) {
     try {
       const { slug } = req.params;
       const article = await Articles.findOne({
         where: { slug },
         returning: true
       });
-      if (!article) {
-        return res.status(404).json({
-          message: 'Article not found'
-        });
-      }
-      req.body.articleId = article.dataValues.id;
-      const articleComments = await Comments.create(req.body);
-      return res.status(201).json({
-        message: 'Comment has been posted successfully',
+      if (!article) return errorMessage(res, 404, 'Article not found');
+      const articleComments = await Comments.findAll({
+        where: { id: article.dataValues.id },
+        returning: true
+      });
+      return res.status(200).json({
+        message: 'Comment retrieved successfully',
         data: articleComments
       });
     } catch (error) {
-      return errorMessage(res, 500, 'internal server error');
+      return next(error);
     }
   }
 }

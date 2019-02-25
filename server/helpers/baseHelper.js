@@ -1,4 +1,9 @@
 import bcrypt from 'bcrypt';
+import models from '../db/models';
+import paginator from './paginator';
+
+const { Articles, Users } = models;
+
 /**
  * @class BaseHelper
  */
@@ -27,7 +32,6 @@ class BaseHelper {
       return res.status(404).json(message);
     }
   }
-
 
   /**
    * @description helper method for calculating time to read an article
@@ -122,6 +126,7 @@ class BaseHelper {
     await model.destroy({
       where: { ...columnObj, userId }
     });
+
     return res.status(200).json({ message: 'Reaction successfully deleted' });
   }
 
@@ -164,6 +169,28 @@ class BaseHelper {
     } catch (error) {
       next(error);
     }
+  }
+
+  /** @description helper method for searching articles
+   * @static
+   * @param {Object} req response object
+   * @param {Object} res response object
+   * @param {Object} condition query condition
+   * @returns {Object} response object
+   *
+   * @memberOf BaseHelper
+   */
+  static async search(req, res, condition) {
+    const includedModels = [
+      {
+        model: Users,
+        as: 'author',
+        attributes: ['name', 'username', 'bio', 'imageUrl']
+      }
+    ];
+    const articles = await paginator(Articles, req, includedModels, condition);
+    if (!articles.length) return res.status(404).json({ message: 'Couldn\'t find articles matching your search' });
+    return res.status(200).json({ searchResults: articles });
   }
 }
 
