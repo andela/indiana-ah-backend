@@ -53,6 +53,6 @@ describe('User comments on an article', () => {
     .send({ commentBody: 'This is making sense part 2', articleId })
     .then((res) => {
       expect(res.status).to.equal(201);
-      expect(res.body.message).to.equal('Comment has been posted successfully');
+      expect(res.body.message).to.equal('Comment posted successfully');
     }));
 });

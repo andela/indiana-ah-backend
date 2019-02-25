@@ -12,7 +12,7 @@ export const validArticle = {
 export const articleForUpdate = {
   articleTitle: 'How I got into Andela',
   articleBody: 'djdjjdjdjjdjdjjdjdjdjjdjdjjjd',
-  tags: ['yes', 'no', 'true']
+  tags: 'yes, no, true'
 };
 
 export const user1 = {

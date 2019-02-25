@@ -1,4 +1,9 @@
 import bcrypt from 'bcrypt';
+import models from '../db/models';
+import paginator from './paginator';
+
+const { Articles, Users } = models;
+
 /**
  * @class BaseHelper
  */
@@ -17,18 +22,16 @@ class BaseHelper {
 
   /**
    *
-   * @param { string } req
    * @param {string} res
    * @param { string } data
    * @param { string } message
    * @returns {boolean} returns a boolean
    */
-  static checkIfDataExist(req, res, data, message) {
+  static checkIfDataExist(res, data, message) {
     if (!data) {
       return res.status(404).json(message);
     }
   }
-
 
   /**
    * @description helper method for calculating time to read an article
@@ -76,7 +79,8 @@ class BaseHelper {
    * @returns {object} a response object
    */
   static async reaction(req, res, model, modelColumnObj) {
-    const { reactionType } = req.body;
+    let { reactionType } = req.body;
+    reactionType = reactionType.toLowerCase();
     const { id: userId } = req.user;
     let deleted = false;
     let id;
@@ -122,7 +126,30 @@ class BaseHelper {
     await model.destroy({
       where: { ...columnObj, userId }
     });
+
     return res.status(200).json({ message: 'Reaction successfully deleted' });
+  }
+
+  /** @description helper method for searching articles
+   * @static
+   * @param {Object} req response object
+   * @param {Object} res response object
+   * @param {Object} condition query condition
+   * @returns {Object} response object
+   *
+   * @memberOf BaseHelper
+   */
+  static async search(req, res, condition) {
+    const includedModels = [
+      {
+        model: Users,
+        as: 'author',
+        attributes: ['name', 'username', 'bio', 'imageUrl']
+      }
+    ];
+    const articles = await paginator(Articles, req, includedModels, condition);
+    if (!articles.length) return res.status(404).json({ message: 'Couldn\'t find articles matching your search' });
+    return res.status(200).json({ searchResults: articles });
   }
 }
 

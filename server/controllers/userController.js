@@ -7,9 +7,10 @@ import errorMessage from '../helpers/errorHelpers';
 import sendEmail from '../services/email';
 import JWTHelper from '../helpers/jwtHelper';
 import BaseHelper from '../helpers/baseHelper';
+import paginator from '../helpers/paginator';
 
 dotenv.config();
-const { Users } = models;
+const { Users, Articles } = models;
 const { verifyToken } = JWTHelper;
 /**
  *
@@ -89,7 +90,7 @@ class UserController extends BaseHelper {
    * @memberOf UserController class
    */
   static async verifyUser(req, res) {
-    const { token } = req.query;
+    const { query: token } = req.query;
     const decodedToken = verifyToken(token);
     if (decodedToken.name === 'JsonWebTokenError' || decodedToken.name === 'TokenExpiredError') {
       return errorMessage(res, 401, 'Access denied. You are not authorized to acceess this route');
@@ -135,7 +136,7 @@ class UserController extends BaseHelper {
         where: { email },
         attributes: ['name', 'username', 'email', 'password', 'role', 'isVerified', 'id']
       });
-      UserController.checkIfDataExist(req, res, newUser, { message: 'error logging in' });
+      UserController.checkIfDataExist(res, newUser, { message: 'error logging in' });
       const {
         email: dbEmail, username, name, role, isVerified, id
       } = newUser;
@@ -182,9 +183,13 @@ class UserController extends BaseHelper {
         },
         attributes: ['name', 'username', 'email', 'bio', 'imageUrl', 'createdAt']
       });
-      UserController.checkIfDataExist(req, res, user, { message: 'User not found' });
-      return res.status(200).json({
-        profile: user.dataValues
+      if (user) {
+        return res.status(200).json({
+          profile: user.dataValues
+        });
+      }
+      return res.status(404).json({
+        message: 'User not found'
       });
     } catch (error) {
       return next(error);
@@ -202,10 +207,12 @@ class UserController extends BaseHelper {
    */
   static async getAllUsersProfile(req, res, next) {
     try {
-      const users = await Users.findAll({
-        attributes: ['name', 'username', 'email', 'bio', 'imageUrl', 'createdAt']
-      });
-      return res.status(200).json(users);
+      const includedModels = [{ model: Articles }];
+      const profiles = await paginator(Users, req, includedModels);
+      if (!profiles) {
+        return res.status(200).json('There are no users to display');
+      }
+      return res.status(200).json({ profiles });
     } catch (error) {
       return next(error);
     }
@@ -243,7 +250,7 @@ class UserController extends BaseHelper {
         url = userValues.dataValues.imageUrl;
       }
 
-      UserController.checkIfDataExist(req, res, updatedRows, 'User not found');
+      UserController.checkIfDataExist(res, updatedRows, 'User not found');
       return res.status(200).json({
         avatar: url
       });
@@ -264,10 +271,10 @@ class UserController extends BaseHelper {
   static async editUserProfile(req, res) {
     const { name, bio, password } = req.body;
     const user = req.params.username;
-    const { id, username } = req.user;
+    const { username } = req.user;
 
     const profile = await Users.findOne({
-      where: { id, username: user }
+      where: { username: user }
     });
     if (profile) {
       try {
@@ -279,16 +286,23 @@ class UserController extends BaseHelper {
             password: password || profile.dataValues.password
           },
           {
-            where: { id },
+            where: { username },
             returning: true
           }
         );
         const updatedRows = updatedUser[0];
         const updatedUserValues = updatedUser[1][0].dataValues;
 
-        UserController.checkIfDataExist(req, res, updatedRows, 'User not found');
+        UserController.checkIfDataExist(res, updatedRows, 'User not found');
         return res.status(200).json({
-          profile: updatedUserValues
+          profile: {
+            name: updatedUserValues.name,
+            username: updatedUserValues.username,
+            email: updatedUserValues.email,
+            bio: updatedUserValues.bio,
+            imageUrl: updatedUserValues.imageUrl,
+            createdAt: updatedUserValues.createdAt
+          }
         });
       } catch (error) {
         return errorMessage(res, 500, 'Internal server error');
@@ -296,6 +310,33 @@ class UserController extends BaseHelper {
     }
     return errorMessage(res, 404, 'User not found');
   }
+
+  /**
+   *
+   *
+   * @static deleteUserProfile - the method that handles deleting a user profile
+   * @param {object} req - the request object
+   * @param {object} res - the response object
+   *
+   * @memberOf UserController class
+   */
+  static async deleteUserProfile(req, res, next) {
+    const user = req.params.username;
+
+    try {
+      const response = await Users.findOne({
+        where: { username: user }
+      });
+      if (!response) return errorMessage(res, 404, 'User not found');
+      await Users.destroy({
+        where: { username: user },
+      });
+      return res.status(200).json({ message: 'Profile successfully deleted' });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
 
   /**
    *
@@ -347,7 +388,7 @@ class UserController extends BaseHelper {
         where: { email },
         returning: true
       });
-      UserController.checkIfDataExist(req, res, dbUser, {
+      UserController.checkIfDataExist(res, dbUser, {
         message: 'This email is not registered in our system'
       });
       const { id, username } = dbUser;

@@ -5,6 +5,7 @@ import jwtAuth from '../middlewares/jwtAuthentication';
 import parser from '../cloudinaryConfig';
 import followAndUnfollow from '../controllers/followController';
 import BookmarkController from '../controllers/bookmarkController';
+import validateUser from '../middlewares/verifyUser';
 
 const { follow, fetchFollowing, fetchFollowers } = followAndUnfollow;
 
@@ -18,26 +19,29 @@ const {
   uploadUserPicture,
   verifyUser,
   sendPasswordResetLink,
-  resetPassword
+  resetPassword,
+  deleteUserProfile
 } = UserController;
 
 const { getUserBookmarkedArticles } = BookmarkController;
 
 router.post('/register', signUpValidator, registerUser);
+router.patch('/users/verify', verifyUser);
 router.post('/login', loginUser);
 router.get('/profiles/:username', jwtAuth.authUser, getUserProfile);
 router.get('/profiles', jwtAuth.authUser, getAllUsersProfile);
-router.patch('/profiles/:username/update', jwtAuth.authUser, editUserProfile);
-router.patch('/users/verify', verifyUser);
-router.patch('/profiles/image', jwtAuth.authUser, parser.single('image'), uploadUserPicture);
-
-router.get('/', (req, res) => res.status(200).json({
-  message: 'welcome to authors haven platform'
-}));
+router.patch('/profiles/:username/update', jwtAuth.authUser, validateUser, editUserProfile);
+router.patch('/profiles/:username/image', jwtAuth.authUser, validateUser, parser.single('image'), uploadUserPicture);
+router.delete('/profiles/:username/delete', jwtAuth.authUser, validateUser, deleteUserProfile);
 router.post('/users/begin-password-reset', sendPasswordResetLink);
 router.patch('/users/reset-password', resetPassword);
 router.post('/profiles/:username/follow', jwtAuth.authUser, follow);
 router.get('/profiles/users/following', jwtAuth.authUser, fetchFollowing);
 router.get('/profiles/users/followers', jwtAuth.authUser, fetchFollowers);
 router.get('/users/bookmarks', jwtAuth.authUser, getUserBookmarkedArticles);
+
+router.get('/', (req, res) => res.status(200).json({
+  message: 'welcome to authors haven platform'
+}));
+
 export default router;
