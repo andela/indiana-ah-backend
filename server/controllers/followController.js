@@ -1,5 +1,8 @@
 import models from '../db/models';
+import sendEmail from '../services/email';
+import { newFollowerTemplate } from '../services/emailTemplates';
 import followhelper from '../helpers/followAndUnFollow';
+import pusher from '../services/pusherConfig';
 
 const { Users, Follows } = models;
 
@@ -23,12 +26,24 @@ class FollowController {
     try {
       const helperResult = await followhelper(req, res);
       const { user, followerId } = helperResult;
-      const { id: authorId, username } = user;
+      const {
+        id: authorId, username, email, subscribed, inAppNotification
+      } = user;
+
       await Follows.findOrCreate({
         where: { authorId, followerId },
         attributes: ['id', 'followerId', 'authorId']
       }).spread(async (follow, created) => {
-        if (created) return res.status(200).json({ status: '200', message: `You are now following ${username}` });
+        if (created) {
+          const emailTemplate = newFollowerTemplate(req.user.username);
+          const message = `Hi ${username}, ${req.user.username} started following you on Authors Haven`;
+
+          if (subscribed) sendEmail(email, `${message}`, emailTemplate);
+
+          if (inAppNotification) pusher.trigger('notification', authorId, { message });
+
+          return res.status(200).json({ status: '200', message: `You are now following ${username}` });
+        }
 
         const result = await follow.destroy();
         const { _changed: { deletedAt } } = result;
@@ -106,6 +121,7 @@ class FollowController {
           {
             model: Users,
             attributes: [
+              'email',
               'username',
               'bio',
               'imageUrl'
@@ -119,6 +135,7 @@ class FollowController {
       }
       const response = myFollowers.map(item => (
         {
+          email: item.followerDetails.email,
           username: item.followerDetails.username,
           bio: item.followerDetails.bio,
           imageUrl: item.followerDetails.imageUrl

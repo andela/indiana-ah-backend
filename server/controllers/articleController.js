@@ -3,6 +3,9 @@ import Response from '../helpers/errorHelpers';
 import models from '../db/models';
 import BaseHelper from '../helpers/baseHelper';
 import paginator from '../helpers/paginator';
+import NotificationServices from '../services/notificationServices';
+
+const { notifyViaEmailAndPush } = NotificationServices;
 
 const { Articles, Users, Reactions } = models;
 
@@ -27,6 +30,7 @@ class ArticleController extends BaseHelper {
       const userArticle = req.body.articleBody;
       const timeToRead = ArticleController.calculateTimeToRead(userArticle);
       const article = await Articles.create(req.body);
+      await notifyViaEmailAndPush(req, res);
       return res.status(201).json({ article, timeToRead });
     } catch (error) {
       return next(error);

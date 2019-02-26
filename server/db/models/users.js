@@ -49,6 +49,10 @@ export default (sequelize, DataTypes) => {
       subscribed: {
         defaultValue: false,
         type: DataTypes.BOOLEAN
+      },
+      inAppNotification: {
+        defaultValue: false,
+        type: DataTypes.BOOLEAN
       }
     },
     {

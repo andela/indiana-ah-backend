@@ -18,6 +18,46 @@ export default {
         role: 'superAdmin',
         createdAt: '2019-02-11 14:35:51.434+01',
         updatedAt: '2019-02-11 14:35:51.434+01'
+      },
+      {
+        id: uuid(),
+        username: 'biola Balogun',
+        email: 'balogunbiola101@gmail.com',
+        password: baseHelpers.hashPassword('customer24'),
+        isVerified: true,
+        role: 'superAdmin',
+        createdAt: '2019-02-11 14:35:51.434+01',
+        updatedAt: '2019-02-11 14:35:51.434+01'
+      },
+      {
+        id: uuid(),
+        username: 'biola',
+        email: 'balogun.akeem.abiola@gmail.com',
+        password: baseHelpers.hashPassword('customer24'),
+        isVerified: true,
+        role: 'superAdmin',
+        createdAt: '2019-02-11 17:35:51.434+01',
+        updatedAt: '2019-02-11 19:35:51.434+01'
+      },
+      {
+        id: uuid(),
+        username: 'akeem',
+        email: 'biola@gmail.com',
+        password: baseHelpers.hashPassword('customer24'),
+        isVerified: true,
+        role: 'superAdmin',
+        createdAt: '2019-02-11 17:35:51.434+01',
+        updatedAt: '2019-02-11 19:35:51.434+01'
+      },
+      {
+        id: uuid(),
+        username: 'balogun',
+        email: 'balogun@gmail.com',
+        password: baseHelpers.hashPassword('customer24'),
+        isVerified: true,
+        role: 'superAdmin',
+        createdAt: '2019-02-11 17:35:51.434+01',
+        updatedAt: '2019-02-11 19:35:51.434+01'
       }
     ],
     {}
