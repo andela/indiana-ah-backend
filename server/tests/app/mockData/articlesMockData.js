@@ -34,3 +34,18 @@ export const user3 = {
   password: 'baleesecret48',
   isVerified: true
 };
+
+// Bookmark feature mock data
+export const user4 = {
+  username: 'divinelove',
+  email: 'divine@gmail.com',
+  password: 'baleesecret48',
+  isVerified: true
+};
+
+export const userWithoutBookmarks = {
+  username: 'divinelove23',
+  email: 'divine@now.com',
+  password: 'baleesecre34t48',
+  isVerified: true
+};

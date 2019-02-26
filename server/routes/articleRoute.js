@@ -3,6 +3,7 @@ import Auth from '../middlewares/jwtAuthentication';
 import { validateArticle } from '../middlewares/validators/articleValidators';
 import ArticleController from '../controllers/articleController';
 import CommentController from '../controllers/commentController';
+import BookmarkController from '../controllers/bookmarkController';
 import ReactionController from '../controllers/reactionController';
 
 const {
@@ -15,6 +16,7 @@ const {
   searchArticles
 } = ArticleController;
 
+const { createOrRemoveBookmark } = BookmarkController;
 const { articleComment, getArticleComment } = CommentController;
 
 const {
@@ -26,6 +28,7 @@ const { authUser } = Auth;
 const router = Router();
 
 router.post('/', authUser, validateArticle, createArticle);
+router.post('/:articleId/bookmark', authUser, createOrRemoveBookmark);
 router.get('/', getAllArticles);
 router.get('/user/:username', getAllUserArticles);
 router.get('/search', searchArticles);
