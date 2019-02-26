@@ -17,7 +17,7 @@ const {
 } = ArticleController;
 
 const { createOrRemoveBookmark } = BookmarkController;
-const { articleComment, getArticleComment } = CommentController;
+const { articleComment, getArticleComments } = CommentController;
 
 const {
   articleReaction,
@@ -38,6 +38,6 @@ router.put('/:slug/update', authUser, updateArticle);
 router.delete('/:slug/delete', authUser, deleteArticle);
 router.post('/:slug/reaction', authUser, articleReaction);
 router.post('/:slug/comments', authUser, articleComment);
-router.get('/:slug/comments', authUser, getArticleComment);
+router.get('/:slug/comments', authUser, getArticleComments);
 
 export default router;

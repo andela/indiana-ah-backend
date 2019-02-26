@@ -1,6 +1,7 @@
 import request from 'supertest';
 import { expect } from 'chai';
 import app from '../../index';
+import invalidToken from './mockData/articlesMockData';
 
 let token;
 const user = {
@@ -32,15 +33,15 @@ describe('Send reset password link to user', () => {
 
 describe('Password reset funcionality for users', () => {
   it('should return status code 200 on successful password reset', () => request(app)
-    .patch('/api/v1/users/reset-password')
+    .patch(`/api/v1/users/reset-password?query=${token.token}`)
     .set('x-auth-token', token.token)
     .send(user1)
     .then((res) => {
       expect(res.statusCode).to.equal(200);
       expect(res.body.message).to.equal('Password reset successfully');
     }));
-  it('should return status code 200 on successful password reset', () => request(app)
-    .patch('/api/v1/users/reset-password')
+  it('should return status code 401 if link has either expired or is invalid', () => request(app)
+    .patch(`/api/v1/users/reset-password?query=${invalidToken}`)
     .send(user1)
     .then((res) => {
       expect(res.statusCode).to.equal(401);

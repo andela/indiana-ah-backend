@@ -136,7 +136,11 @@ class UserController extends BaseHelper {
         where: { email },
         attributes: ['name', 'username', 'email', 'password', 'role', 'isVerified', 'id']
       });
-      UserController.checkIfDataExist(res, newUser, { message: 'error logging in' });
+      if (!UserController.checkIfDataExist(newUser)) {
+        return res.status(404).json({
+          message: 'error logging in'
+        });
+      }
       const {
         email: dbEmail, username, name, role, isVerified, id
       } = newUser;
@@ -183,13 +187,13 @@ class UserController extends BaseHelper {
         },
         attributes: ['name', 'username', 'email', 'bio', 'imageUrl', 'createdAt']
       });
-      if (user) {
-        return res.status(200).json({
-          profile: user.dataValues
+      if (!UserController.checkIfDataExist(user)) {
+        return res.status(404).json({
+          message: 'User not found'
         });
       }
-      return res.status(404).json({
-        message: 'User not found'
+      return res.status(200).json({
+        profile: user.dataValues
       });
     } catch (error) {
       return next(error);
@@ -249,8 +253,11 @@ class UserController extends BaseHelper {
       if (userValues) {
         url = userValues.dataValues.imageUrl;
       }
-
-      UserController.checkIfDataExist(res, updatedRows, 'User not found');
+      if (!UserController.checkIfDataExist(updatedRows)) {
+        return res.status(404).json({
+          message: 'User not found'
+        });
+      }
       return res.status(200).json({
         avatar: url
       });
@@ -292,8 +299,11 @@ class UserController extends BaseHelper {
         );
         const updatedRows = updatedUser[0];
         const updatedUserValues = updatedUser[1][0].dataValues;
-
-        UserController.checkIfDataExist(res, updatedRows, 'User not found');
+        if (!UserController.checkIfDataExist(updatedRows)) {
+          return res.status(404).json({
+            message: 'User not found'
+          });
+        }
         return res.status(200).json({
           profile: {
             name: updatedUserValues.name,
@@ -388,9 +398,11 @@ class UserController extends BaseHelper {
         where: { email },
         returning: true
       });
-      UserController.checkIfDataExist(res, dbUser, {
-        message: 'This email is not registered in our system'
-      });
+      if (!UserController.checkIfDataExist(dbUser)) {
+        return res.status(404).json({
+          message: 'This email is not registered in our system'
+        });
+      }
       const { id, username } = dbUser;
       // define token payload and duration
       const jwtKey = process.env.JWT_SECRET_KEY;
@@ -402,7 +414,7 @@ class UserController extends BaseHelper {
       };
       const token = assignToken(payload, jwtKey, jwtDuration);
       const location = req.get('host');
-      const url = '/api/v1/user/resetpassword';
+      const url = '/api/v1/user/reset-password';
       // define sendEmail parameter list
       const link = UserController.generateEmailLink(location, url, token);
       const subject = 'Authors\' Haven password reset';
@@ -454,7 +466,7 @@ class UserController extends BaseHelper {
    * @memberOf UserController class
    */
   static async resetPassword(req, res, next) {
-    const token = req.header('x-auth-token');
+    const { query: token } = req.query;
     const decodedToken = JWTHelper.verifyToken(token);
     if (!decodedToken) {
       return errorMessage(res, 401, 'This link is invalid or expired!!');

@@ -22,15 +22,11 @@ class BaseHelper {
 
   /**
    *
-   * @param {string} res
-   * @param { string } data
-   * @param { string } message
+   * @param { object } data
    * @returns {boolean} returns a boolean
    */
-  static checkIfDataExist(res, data, message) {
-    if (!data) {
-      return res.status(404).json(message);
-    }
+  static checkIfDataExist(data) {
+    return !!data;
   }
 
   /**
@@ -87,6 +83,7 @@ class BaseHelper {
     const response = await model.findOne({
       where: { ...modelColumnObj, userId }
     });
+
     if (response) {
       const dbReaction = response.dataValues;
       const { reactionType: dbReactionType, id: reactionId } = dbReaction;
