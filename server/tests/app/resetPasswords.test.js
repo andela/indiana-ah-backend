@@ -2,7 +2,10 @@ import request from 'supertest';
 import { expect } from 'chai';
 import app from '../../index';
 import {
-  unregisteredEmail, registeredEmail, badPassword, shortPassword
+  unregisteredEmail,
+  registeredEmail,
+  badPassword,
+  shortPassword
 } from './mockData/profileMockData';
 
 let token;
