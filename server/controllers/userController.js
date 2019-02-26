@@ -227,12 +227,44 @@ class UserController extends BaseHelper {
    * @static uploadUserPicture - the method that handles editing user picture
    * @param {object} req - the request object
    * @param {object} res - the response object
-   *
+   * @param {function} next
    * @memberOf UserController class
    */
   static async uploadUserPicture(req, res, next) {
-    const { id } = req.user;
-    UserController.uploadPicture(req, res, Users, { id }, next);
+    const { username } = req.params;
+    try {
+      await UserController.uploadPicture(req, res, Users, { username });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   *
+   *
+   * @static removeUserPicture - the method that handles editing user picture
+   * @param {object} req - the request object
+   * @param {object} res - the response object
+   * @param {function} next
+   * @memberOf UserController class
+   */
+  static async removeUserPicture(req, res, next) {
+    const { username } = req.params;
+
+    const user = await UserController.checkIfExists(username);
+    if (user) {
+      try {
+        user.update({
+          imageUrl: 'http://s3.amazonaws.com/37assets/svn/765-default-avatar.png'
+        });
+        return res.status(200).json({
+          message: 'Profile Pic deleted successfully'
+        });
+      } catch (error) {
+        next(error);
+      }
+    }
+    return errorMessage(res, 404, 'User not found');
   }
 
   /**
@@ -318,10 +350,7 @@ class UserController extends BaseHelper {
             returning: true
           }
         );
-        // const updatedRows = updatedUser[0];
         const updatedUserValues = updatedUser[1][0].dataValues;
-
-        // UserController.checkIfDataExist(res, updatedRows, 'User not found');
         return res.status(200).json({
           profile: {
             name: updatedUserValues.name,

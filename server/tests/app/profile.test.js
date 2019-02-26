@@ -249,13 +249,21 @@ describe('Edit user picture', () => {
       expect(res.status).to.equal(200);
       expect(res.body.picture).to.match(/^http/);
     }));
-  it('should return an error when an invalid ID type is passed', () => request(app)
-    .patch('/api/v1/profiles/cim/image')
-    .set('x-auth-token', badToken)
-    .type('form')
-    .attach('image', 'server/tests/testImage/feather.jpg')
+});
+
+describe('Delete user picture', () => {
+  it('should return an error if user is not authorized', () => request(app)
+    .patch('/api/v1/profiles/king/remove-image')
+    .set('x-auth-token', secondToken)
     .then((res) => {
-      expect(res.status).to.equal(500);
-      expect(res.body.message).to.equal('Internal server error');
+      expect(res.status).to.equal(403);
+      expect(res.body.message).to.equal('User not authorized');
+    }));
+  it('should delete a user\'s profile picture if the user is authorized', () => request(app)
+    .patch('/api/v1/profiles/cim/remove-image')
+    .set('x-auth-token', secondToken)
+    .then((res) => {
+      expect(res.status).to.equal(200);
+      expect(res.body.message).to.equal('Profile Pic deleted successfully');
     }));
 });

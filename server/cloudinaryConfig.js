@@ -12,9 +12,9 @@ const configTestObj = {
 };
 
 const configDevObj = {
-  cloud_name: process.env.CLOUD_NAME_DEV,
-  api_key: process.env.API_KEY_DEV,
-  api_secret: process.env.API_SECRET_DEV
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET
 };
 
 cloudinary.config(process.env.NODE_ENV === 'development' ? configDevObj : configTestObj);

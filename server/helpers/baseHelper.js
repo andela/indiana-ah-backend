@@ -167,7 +167,7 @@ class BaseHelper {
    * @param {function} next Function to pass control to the next function
    * @returns {object} a response object
    */
-  static async uploadPicture(req, res, model, modelColumnObj, next) {
+  static async uploadPicture(req, res, model, modelColumnObj) {
     const image = {};
     image.url = req.file.url;
     image.id = req.file.public_id;
@@ -194,7 +194,7 @@ class BaseHelper {
         picture: url
       });
     } catch (error) {
-      next(error);
+      return error;
     }
   }
 

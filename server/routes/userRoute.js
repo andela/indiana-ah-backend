@@ -19,7 +19,7 @@ const router = express.Router();
 const {
   registerUser, loginUser, getUserProfile, getAllUsersProfile, editUserProfile,
   uploadUserPicture, verifyUser, sendPasswordResetLink, resetPassword, deleteUserProfile,
-  updatePassword
+  updatePassword, removeUserPicture
 } = UserController;
 
 router.post('/register', signUpValidator, registerUser);
@@ -29,6 +29,7 @@ router.get('/profiles/:username', jwtAuth.authUser, getUserProfile);
 router.get('/profiles', jwtAuth.authUser, getAllUsersProfile);
 router.patch('/profiles/:username/update', jwtAuth.authUser, validateUser, userValidator, editUserProfile);
 router.patch('/profiles/:username/image', jwtAuth.authUser, validateUser, parser.single('image'), uploadUserPicture);
+router.patch('/profiles/:username/remove-image', jwtAuth.authUser, validateUser, removeUserPicture);
 router.put('/profiles/:username/delete', jwtAuth.authUser, validateUser, deleteUserProfile);
 router.post('/users/begin-password-reset', sendPasswordResetLink);
 router.patch('/users/reset-password', resetPasswordValidator, resetPassword);
