@@ -252,9 +252,19 @@ Accepted fields: `name`, `username`, `bio`
 
 ### Delete User Profile
 
-`DELETE api/v1/profiles/:username/delete`
+`PUT api/v1/profiles/:username/delete`
+
+Example request body:
+
+```source-json
+{	
+  "password": "cim23000"
+}	
+```
 
 Authentication required, deletes a user's profile/account
+
+Required field: `password`
 
 ### Get Profile
 
@@ -262,13 +272,31 @@ Authentication required, deletes a user's profile/account
 
  Authentication required, returns a Profile
 
- ### Update Picture
+### Update Picture
 
  `PATCH api/v1/profiles/image`
 
 Authentication required, returns an updated Picture
 
 No additional parameters required
+
+### Update Password
+
+ `PATCH api/v1/profiles/:username/password`
+
+ Example request body:
+
+```source-json
+{	
+  "currentPassword": "cim23000",
+  "newPassword": "indi23000",
+  "confirmPassword": "indi23000"
+}	
+```
+
+Authentication required, returns an updated Picture
+
+Required fields: `currentPassword`, `newPassword`, `confirmPassword`
 
 ### Unfollow user
 
