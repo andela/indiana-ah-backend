@@ -8,7 +8,7 @@
     "clean": "rm -rf build",
     "build": "babel ./server/src -d ../server/dist",
     "start": "NODE_ENV=production && NODE_ENV=production npm run migrate:refresh && NODE_ENV=production babel-node ./server/index.js",
-    "dev": "nodemon bin/dev",
+    "dev": "NODE_ENV=development nodemon bin/dev",
     "coverage": "nyc report --reporter=text-lcov --reporter=html | coveralls && nyc report --reporter=lcov",
     "migrate": "sequelize db:migrate && sequelize db:seed:all",
     "clean:db": "sequelize db:migrate:undo:all",
