@@ -6,13 +6,10 @@ import userValidator from '../middlewares/validators/userValidator';
 import jwtAuth from '../middlewares/jwtAuthentication';
 import parser from '../cloudinaryConfig';
 import followAndUnfollow from '../controllers/followController';
+import BookmarkController from '../controllers/bookmarkController';
 import validateUser from '../middlewares/verifyUser';
 
-const {
-  follow,
-  fetchFollowing,
-  fetchFollowers
-} = followAndUnfollow;
+const { follow, fetchFollowing, fetchFollowers } = followAndUnfollow;
 
 const router = express.Router();
 const {
@@ -28,6 +25,8 @@ const {
   deleteUserProfile
 } = UserController;
 
+const { getUserBookmarkedArticles } = BookmarkController;
+
 router.post('/register', signUpValidator, registerUser);
 router.patch('/users/verify', verifyUser);
 router.post('/login', loginUser);
@@ -41,5 +40,6 @@ router.patch('/users/reset-password', resetPasswordValidator, resetPassword);
 router.post('/profiles/:username/follow', jwtAuth.authUser, follow);
 router.get('/profiles/users/following', jwtAuth.authUser, fetchFollowing);
 router.get('/profiles/users/followers', jwtAuth.authUser, fetchFollowers);
+router.get('/users/bookmarks', jwtAuth.authUser, getUserBookmarkedArticles);
 
 export default router;

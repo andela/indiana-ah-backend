@@ -260,10 +260,10 @@ describe('Get one article rating', () => {
 });
 
 describe('Get all article ratings', () => {
-  it('should return a "not found" error if no ratings was found for an article', () => request(app)
+  it('should return a status code 200 and "No ratings found for this article" message if no ratings was found for an article', () => request(app)
     .get('/api/v1/articles/69feb295-9030-4ef4-b7d7-91198a35b276/ratings')
     .then((res) => {
-      expect(res.status).to.equal(404);
+      expect(res.status).to.equal(200);
       expect(res.body.message).to.equal('No ratings found for this article');
     }));
 

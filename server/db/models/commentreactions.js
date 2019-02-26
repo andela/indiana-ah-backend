@@ -32,6 +32,10 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'commentId',
       onDelete: 'CASCADE'
     });
+    CommentReactions.belongsTo(models.Comments, {
+      foreignKey: 'commentId',
+      onDelete: 'CASCADE'
+    });
   };
   return CommentReactions;
 };

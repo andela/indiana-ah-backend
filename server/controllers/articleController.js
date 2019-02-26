@@ -5,7 +5,7 @@ import BaseHelper from '../helpers/baseHelper';
 import paginator from '../helpers/paginator';
 
 const {
-  Articles, Users, Comments, Reactions
+  Articles, Users, Comments, Reactions, CommentReactions
 } = models;
 
 /**
@@ -148,8 +148,9 @@ class ArticleController extends BaseHelper {
             as: 'author',
             attributes: ['username', 'bio', 'imageUrl']
           },
-          { model: Reactions }
-        ]
+          { model: Comments, include: [CommentReactions] },
+          { model: Reactions },
+        ],
       });
       if (!article) return Response(res, 404, 'Article not found');
       const timeToRead = ArticleController.calculateTimeToRead(article.articleBody);
