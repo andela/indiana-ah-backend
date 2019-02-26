@@ -466,7 +466,6 @@ class UserController extends BaseHelper {
    * @memberOf UserController class
    */
   static async resetPassword(req, res, next) {
-    // const token = req.header('x-auth-token');
     const { query: token } = req.query;
     const decodedToken = JWTHelper.verifyToken(token);
     if (!decodedToken) {
