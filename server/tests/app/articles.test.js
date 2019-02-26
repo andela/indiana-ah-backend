@@ -129,7 +129,7 @@ describe('Get one article', () => {
 
 describe('Update an article', () => {
   it('should return a not found error if an article requested for update was not found', () => request(app)
-    .put('/api/v1/articles/yeah-yeah-yea/update')
+    .put('/api/v1/articles/yeah-yeah-yea')
     .set('x-auth-token', verifiedToken)
     .send(articleForUpdate)
     .then((res) => {
@@ -138,7 +138,7 @@ describe('Update an article', () => {
     }));
 
   it('should update an article requested for update if found', () => request(app)
-    .put(`/api/v1/articles/${articleSlug}/update`)
+    .put(`/api/v1/articles/${articleSlug}`)
     .set('x-auth-token', verifiedToken)
     .type('form')
     .field('articleTitle', articleForUpdate.articleTitle)
@@ -324,7 +324,7 @@ describe('Search all articles', () => {
 
 describe('Delete an article', () => {
   it('should return a "not found" response if an article requested for delete was not found', () => request(app)
-    .delete('/api/v1/articles/yeah-yeah-yeah/delete')
+    .delete('/api/v1/articles/yeah-yeah-yeah')
     .set('x-auth-token', verifiedToken)
     .then((res) => {
       expect(res.status).to.equal(404);
@@ -332,7 +332,7 @@ describe('Delete an article', () => {
     }));
 
   it('should delete an article requested to be deleted if found', () => request(app)
-    .delete(`/api/v1/articles/${articleSlug}/delete`)
+    .delete(`/api/v1/articles/${articleSlug}`)
     .set('x-auth-token', verifiedToken)
     .then((res) => {
       expect(res.status).to.equal(200);

@@ -36,11 +36,6 @@ export const badBio = {
   bio: 34
 };
 
-//   email: 'dozie.emeka@yahoo.com',
-//   username: 'tiku',
-//   password: 'sammy12345'
-// };
-
 export const mockData = {
   bio: 'I am a boy',
   name: 'Emeka',
