@@ -135,7 +135,15 @@ describe('Edit user profile', () => {
     }));
 });
 
-describe('Edit user password', () => {
+describe('Update user password', () => {
+  it('should return an error when the user is not authorized', () => request(app)
+    .patch('/api/v1/profiles/king/password')
+    .set('x-auth-token', secondToken)
+    .send(incorrectPasswordData)
+    .then((res) => {
+      expect(res.status).to.equal(403);
+      expect(res.body.message).to.equal('User not authorized');
+    }));
   it('should return an error when an incorrect old password is passed', () => request(app)
     .patch('/api/v1/profiles/cim/password')
     .set('x-auth-token', secondToken)
