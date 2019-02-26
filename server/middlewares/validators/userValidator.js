@@ -1,5 +1,4 @@
 import Joi from 'joi';
-import isAlphaNumeric from './isAplhaNumeric';
 import errorMessage from '../../helpers/errorHelpers';
 
 export default (req, res, next) => {
@@ -7,12 +6,7 @@ export default (req, res, next) => {
     name,
     bio,
     username,
-    password
   } = req.body;
-
-  if (password && !isAlphaNumeric(password)) {
-    return errorMessage(res, 400, 'Password should be Alphanumeric');
-  }
 
   const schema = {
     name: Joi.string()
@@ -26,7 +20,7 @@ export default (req, res, next) => {
   };
 
   const { error } = Joi.validate({
-    username, password, bio, name
+    username, bio, name
   }, schema);
   if (!error) return next();
 
@@ -47,9 +41,6 @@ export default (req, res, next) => {
       break;
     case '"bio" must be a string':
       errorMessage(res, 400, 'Bio must be a string');
-      break;
-    case '"password" length must be at least 8 characters long':
-      errorMessage(res, 400, 'Password length must be at least 8 characters long');
       break;
     default:
       errorMessage(res, 400, errorMessageFromJoi);

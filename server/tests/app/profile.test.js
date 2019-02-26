@@ -5,7 +5,9 @@ import assignToken from '../../helpers/assignJwtToken';
 import {
   data, payload, badPayload, user1, badBio, badName,
   badUsername, invalidUsername, invalidName,
-  incorrectPasswordData, badPasswordData
+  incorrectPasswordData, badPasswordData1, badPasswordData2, badPasswordData3,
+  badPasswordData4, badPasswordData5, badPasswordData6, badPasswordData7,
+  correctPasswordData
 } from './mockData/profileMockData';
 
 const falseToken = assignToken(payload);
@@ -145,18 +147,68 @@ describe('Edit user password', () => {
   it('should return an error when an invalid new password is passed', () => request(app)
     .patch('/api/v1/profiles/cim/password')
     .set('x-auth-token', secondToken)
-    .send(badPasswordData)
+    .send(badPasswordData1)
     .then((res) => {
       expect(res.status).to.equal(400);
-      expect(res.body.message).to.equal('Password should be Alphanumeric');
+      expect(res.body.message).to.equal('Passwords should be Alphanumeric');
+    }));
+  it('should return an error when passwords do not match', () => request(app)
+    .patch('/api/v1/profiles/cim/password')
+    .set('x-auth-token', secondToken)
+    .send(badPasswordData2)
+    .then((res) => {
+      expect(res.status).to.equal(400);
+      expect(res.body.message).to.equal('Passwords must be the same');
+    }));
+
+  it('should return an error when password is not long enough', () => request(app)
+    .patch('/api/v1/profiles/cim/password')
+    .set('x-auth-token', secondToken)
+    .send(badPasswordData3)
+    .then((res) => {
+      expect(res.status).to.equal(400);
+      expect(res.body.message).to.equal('New password length must be at least 8 characters long');
+    }));
+
+  it('should return an error when password is not long enough', () => request(app)
+    .patch('/api/v1/profiles/cim/password')
+    .set('x-auth-token', secondToken)
+    .send(badPasswordData4)
+    .then((res) => {
+      expect(res.status).to.equal(400);
+      expect(res.body.message).to.equal('Password length must be at least 8 characters long');
+    }));
+
+  it('should return an error when new password is not entered', () => request(app)
+    .patch('/api/v1/profiles/cim/password')
+    .set('x-auth-token', secondToken)
+    .send(badPasswordData5)
+    .then((res) => {
+      expect(res.status).to.equal(400);
+      expect(res.body.message).to.equal('Enter your new password');
+    }));
+
+  it('should return an error when current password is not entered', () => request(app)
+    .patch('/api/v1/profiles/cim/password')
+    .set('x-auth-token', secondToken)
+    .send(badPasswordData6)
+    .then((res) => {
+      expect(res.status).to.equal(400);
+      expect(res.body.message).to.equal('Enter your current password');
+    }));
+
+  it('should return an error when the user has not confirmed new password', () => request(app)
+    .patch('/api/v1/profiles/cim/password')
+    .set('x-auth-token', secondToken)
+    .send(badPasswordData7)
+    .then((res) => {
+      expect(res.status).to.equal(400);
+      expect(res.body.message).to.equal('Confirm your new password');
     }));
   it('should update a user\'s password if correct information is passed and user is authenticated', () => request(app)
     .patch('/api/v1/profiles/cim/password')
     .set('x-auth-token', secondToken)
-    .send({
-      currentPassword: 'baleesecret123',
-      newPassword: 'sammy1234'
-    })
+    .send(correctPasswordData)
     .then((res) => {
       expect(res.status).to.equal(200);
       expect(res.body.message).to.equal('Password successfully updated');
