@@ -4,7 +4,7 @@ import app from '../../index';
 import assignToken from '../../helpers/assignJwtToken';
 import {
   data, payload, badPayload, user1, badBio, badName,
-  badUsername, invalidUsername, invalidName,
+  badUsername, invalidUsername, invalidName, data1,
   incorrectPasswordData, badPasswordData1, badPasswordData2, badPasswordData3,
   badPasswordData4, badPasswordData5, badPasswordData6, badPasswordData7,
   correctPasswordData
@@ -124,6 +124,14 @@ describe('Edit user profile', () => {
     .then((res) => {
       expect(res.status).to.equal(400);
       expect(res.body.message).to.equal('Bio must be a string');
+    }));
+  it('should return an error if a username in use is entered', () => request(app)
+    .patch('/api/v1/profiles/cim/update')
+    .set('x-auth-token', secondToken)
+    .send(data1)
+    .then((res) => {
+      expect(res.status).to.equal(409);
+      expect(res.body.message).to.equal('This username already exists');
     }));
   it('should return updated user profile if user is authenticated and verified', () => request(app)
     .patch('/api/v1/profiles/cim/update')

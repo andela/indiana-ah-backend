@@ -295,42 +295,46 @@ class UserController extends BaseHelper {
       name, bio, username
     } = req.body;
     const user = req.params.username;
-    const foundUsername = await UserController.checkIfExists(username);
+    let foundUsername;
 
-    if (!foundUsername) {
-      const profile = await UserController.checkIfExists(user);
-      if (profile) {
-        try {
-          const updatedUser = await Users.update(
-            {
-              name: name || profile.dataValues.name,
-              username: username || profile.dataValues.username,
-              bio: bio || profile.dataValues.bio,
-            },
-            {
-              where: { username: user },
-              returning: true
-            }
-          );
-          const updatedRows = updatedUser[0];
-          const updatedUserValues = updatedUser[1][0].dataValues;
-
-          UserController.checkIfDataExist(res, updatedRows, 'User not found');
-          return res.status(200).json({
-            profile: {
-              name: updatedUserValues.name,
-              username: updatedUserValues.username,
-              bio: updatedUserValues.bio,
-              createdAt: updatedUserValues.createdAt
-            }
-          });
-        } catch (error) {
-          return next(error);
-        }
-      }
-      return errorMessage(res, 404, 'User not found');
+    if (username) {
+      foundUsername = await UserController.checkIfExists(username);
     }
-    return errorMessage(res, 409, 'This username already exists');
+
+    if (foundUsername) {
+      return errorMessage(res, 409, 'This username already exists');
+    }
+    const profile = await UserController.checkIfExists(user);
+    if (profile) {
+      try {
+        const updatedUser = await Users.update(
+          {
+            name: name || profile.dataValues.name,
+            username: username || profile.dataValues.username,
+            bio: bio || profile.dataValues.bio,
+          },
+          {
+            where: { username: user },
+            returning: true
+          }
+        );
+        // const updatedRows = updatedUser[0];
+        const updatedUserValues = updatedUser[1][0].dataValues;
+
+        // UserController.checkIfDataExist(res, updatedRows, 'User not found');
+        return res.status(200).json({
+          profile: {
+            name: updatedUserValues.name,
+            username: updatedUserValues.username,
+            bio: updatedUserValues.bio,
+            createdAt: updatedUserValues.createdAt
+          }
+        });
+      } catch (error) {
+        return next(error);
+      }
+    }
+    return errorMessage(res, 404, 'User not found');
   }
 
   /**
@@ -339,24 +343,31 @@ class UserController extends BaseHelper {
    * @static deleteUserProfile - the method that handles deleting a user profile
    * @param {object} req - the request object
    * @param {object} res - the response object
-   *
+   * @param {function} next
    * @memberOf UserController class
    */
   static async deleteUserProfile(req, res, next) {
-    const user = req.params.username;
+    const { username } = req.params;
+    const { password } = req.body;
 
-    try {
-      const response = await Users.findOne({
-        where: { username: user }
-      });
-      if (!response) return errorMessage(res, 404, 'User not found');
-      await Users.destroy({
-        where: { username: user },
-      });
-      return res.status(200).json({ message: 'Profile successfully deleted' });
-    } catch (error) {
-      return next(error);
+    const user = await UserController.checkIfExists(username);
+    if (user) {
+      const { password: dbPassword } = user.dataValues;
+      const samePassword = await UserController.validatePassword(password, dbPassword);
+
+      try {
+        if (samePassword) {
+          await Users.destroy({
+            where: { username },
+          });
+          return res.status(200).json({ message: 'Profile successfully deleted' });
+        }
+        return errorMessage(res, 401, 'Error deleting user');
+      } catch (error) {
+        next(error);
+      }
     }
+    return errorMessage(res, 404, 'User not found');
   }
 
 

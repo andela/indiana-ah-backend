@@ -45,12 +45,13 @@ class BaseHelper {
 
   /**
    *
-   * @param { string } username
+   * @param { string } data
    * @returns {boolean} returns a boolean
    */
-  static async checkIfExists(username) {
+  static async checkIfExists(data) {
+    console.log(data);
     const user = await Users.findOne({
-      where: { username },
+      where: { username: data },
     });
 
     if (user) {

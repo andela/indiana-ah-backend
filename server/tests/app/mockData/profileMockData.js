@@ -1,6 +1,12 @@
 export const data = {
   bio: 'I am a boy',
+  name: 'Emeka'
+};
+
+export const data1 = {
+  bio: 'I am a boy',
   name: 'Emeka',
+  username: 'cim'
 };
 
 export const badName = {
