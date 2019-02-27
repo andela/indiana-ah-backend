@@ -136,6 +136,9 @@ export default (sequelize, DataTypes) => {
     Users.hasMany(Highlights, {
       foreignKey: 'userId'
     });
+    Users.hasMany(Highlights, {
+      foreignKey: 'userId'
+    });
   };
   return Users;
 };
