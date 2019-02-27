@@ -272,11 +272,19 @@ Required field: `password`
 
  Authentication required, returns a Profile
 
-### Update Picture
+### Update User Picture
 
- `PATCH api/v1/profiles/image`
+ `PATCH api/v1/profiles/:username/image`
 
-Authentication required, returns an updated Picture
+Authentication required, returns an updated User with user picture
+
+No additional parameters required
+
+### Remove User Picture
+
+ `PATCH api/v1/profiles/:username/remove-image`
+
+Authentication required, returns an updated user with default user picture
 
 No additional parameters required
 
@@ -392,6 +400,14 @@ Authentication required, returns the updated Article
 Optional fields: `title`, `description`, `body`
 
 The `slug` also gets updated when the `title` is changed
+
+### Remove Article Cover Picture
+
+ `PATCH api/v1/articles/:slug/remove-image`
+
+Authentication required, returns an updated article with no article picture
+
+No additional parameters required
 
 
 ### Like, Unlike, Dislike an Article

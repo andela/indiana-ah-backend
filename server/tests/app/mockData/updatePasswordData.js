@@ -45,7 +45,6 @@ export const badPasswordData7 = {
 };
 
 export const user = {
-  // username: 'cim',
   email: 'primuse@gmail.com',
   password: 'baleesecret123'
 };

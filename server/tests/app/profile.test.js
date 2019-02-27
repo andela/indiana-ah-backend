@@ -250,16 +250,6 @@ describe('Edit user picture', () => {
       expect(res.body.data.imageUrl).to.match(/^http/);
       expect(res.body.message).to.be.equal('Picture updated successfully');
     }));
-  // it('should return updated user picture if user is authenticated and verified', () => request(app)
-  //   .patch('/api/v1/profiles/\'\'/image')
-  //   .set('x-auth-token', secondToken)
-  //   .type('form')
-  //   .attach('image', 'server/tests/testImage/feather.jpg')
-  //   .then((res) => {
-  //     expect(res.status).to.equal(200);
-  //     expect(res.body.data.imageUrl).to.match(/^http/);
-  //     expect(res.body.message).to.be.equal('Picture updated successfully');
-  //   }));
 });
 
 describe('Delete user picture', () => {
