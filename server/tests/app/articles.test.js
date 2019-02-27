@@ -169,7 +169,25 @@ describe('Update an article picture', () => {
     .then((res) => {
       expect(res.status).to.equal(200);
       expect(res.body).to.be.an('object');
-      expect(res.body.picture).to.match(/^http/);
+      expect(res.body.data.imageUrl).to.match(/^http/);
+      expect(res.body.message).to.be.equal('Picture updated successfully');
+    }));
+});
+describe('Remove an article picture', () => {
+  it('should return a not found error if an article requested for update was not found', () => request(app)
+    .patch('/api/v1/articles/yeah-yeah-yea/remove-image')
+    .set('x-auth-token', verifiedToken)
+    .then((res) => {
+      expect(res.status).to.equal(404);
+      expect(res.body.message).to.be.equal('Article not found');
+    }));
+  it('should remove an article picture if article is found', () => request(app)
+    .patch(`/api/v1/articles/${articleSlug}/remove-image`)
+    .set('x-auth-token', verifiedToken)
+    .then((res) => {
+      expect(res.status).to.equal(200);
+      expect(res.body).to.be.an('object');
+      expect(res.body.article.imageUrl).to.be.equal(null);
     }));
 });
 

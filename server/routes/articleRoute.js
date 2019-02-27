@@ -7,14 +7,8 @@ import ReactionController from '../controllers/reactionController';
 import parser from '../cloudinaryConfig';
 
 const {
-  createArticle,
-  getAllArticles,
-  updateArticle,
-  getOneArticle,
-  getAllUserArticles,
-  deleteArticle,
-  updateArticlePicture,
-  searchArticles
+  createArticle, getAllArticles, updateArticle, getOneArticle, getAllUserArticles,
+  deleteArticle, updateArticlePicture, searchArticles, removeArticlePicture
 } = ArticleController;
 
 
@@ -38,6 +32,7 @@ router.delete('/:slug/delete', authUser, deleteArticle);
 router.post('/:slug/reaction', authUser, articleReaction);
 router.post('/:slug/comments', authUser, articleComment);
 router.patch('/:slug/image', authUser, parser.single('image'), updateArticlePicture);
+router.patch('/:slug/remove-image', authUser, removeArticlePicture);
 router.get('/:slug/comments', authUser, getArticleComment);
 
 export default router;

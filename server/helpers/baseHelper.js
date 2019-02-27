@@ -49,7 +49,6 @@ class BaseHelper {
    * @returns {boolean} returns a boolean
    */
   static async checkIfExists(data) {
-    console.log(data);
     const user = await Users.findOne({
       where: { username: data },
     });
@@ -184,14 +183,11 @@ class BaseHelper {
 
       const updatedRows = updatedModel[0];
       const updatedValues = updatedModel[1][0];
-      let url = '';
-      if (updatedValues) {
-        url = updatedValues.dataValues.imageUrl;
-      }
 
       if (!updatedRows) return res.status(404).json({ message: `${model === 'Users' ? 'User' : 'Article'} not found` });
       return res.status(200).json({
-        picture: url
+        message: 'Picture updated successfully',
+        data: updatedValues
       });
     } catch (error) {
       return error;

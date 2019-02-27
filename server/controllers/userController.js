@@ -231,8 +231,8 @@ class UserController extends BaseHelper {
    * @memberOf UserController class
    */
   static async uploadUserPicture(req, res, next) {
-    const { username } = req.params;
     try {
+      const { username } = req.params;
       await UserController.uploadPicture(req, res, Users, { username });
     } catch (error) {
       next(error);
