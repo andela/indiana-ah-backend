@@ -137,17 +137,15 @@ class BaseHelper {
    *
    * @memberOf BaseHelper
    */
-  static async search(res, condition) {
-    const articles = await Articles.findAll({
-      include: [
-        {
-          model: Users,
-          as: 'author',
-          attributes: ['name', 'username', 'bio', 'imageUrl']
-        }
-      ],
-      where: condition
-    });
+  static async search(req, res, condition) {
+    const includedModels = [
+      {
+        model: Users,
+        as: 'author',
+        attributes: ['name', 'username', 'bio', 'imageUrl']
+      }
+    ];
+    const articles = await paginator(Articles, req, includedModels, condition);
     return res.status(200).json({ searchResults: articles });
   }
 
@@ -178,9 +176,8 @@ class BaseHelper {
    */
   static extractAllReactionsCount(dataCollection, reactionObj) {
     return dataCollection.map((item) => {
-      const data = item.toJSON();
-      this.getOneReactionsCount(data, reactionObj);
-      return data;
+      this.getOneReactionsCount(item, reactionObj);
+      return item;
     });
   }
 }

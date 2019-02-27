@@ -46,15 +46,15 @@ class ArticleController extends BaseHelper {
         {
           model: Users,
           as: 'author',
-          attributes: ['username', 'bio', 'imageUrl']
+          attributes: ['name', 'username', 'bio', 'imageUrl']
         },
-        { model: Comments },
         { model: Reactions }
       ];
       let articles = await paginator(Articles, req, includedModels);
+      console.log(articles);
       if (articles === undefined) return Response(res, 400, 'pagination error');
       if (!articles.length) return Response(res, 200, 'No articles found');
-      articles = ArticleController.getAllReactionsCount(articles, 'Reactions');
+      articles = ArticleController.extractAllReactionsCount(articles, 'Reactions');
       return res.status(200).json({ articles });
     } catch (error) {
       return next(error);
@@ -75,7 +75,14 @@ class ArticleController extends BaseHelper {
       const user = await Users.findOne({ where: { username } });
       if (!user) return Response(res, 404, 'User not found');
       const { id: userId } = user;
-      const includedModels = [{ model: Comments }, { model: Reactions }];
+      const includedModels = [
+        {
+          model: Users,
+          as: 'author',
+          attributes: ['name', 'username', 'bio', 'imageUrl']
+        },
+        { model: Reactions }
+      ];
       let articles = await paginator(Articles, req, includedModels, {
         userId
       });
@@ -135,7 +142,7 @@ class ArticleController extends BaseHelper {
           { model: Reactions }
         ]
       });
-      if (!article) return errorResponse(res, 404, 'Article not found');
+      if (!article) return Response(res, 404, 'Article not found');
       article = article.toJSON();
       ArticleController.getOneReactionsCount(article, 'Reactions');
       const timeToRead = ArticleController.calculateTimeToRead(article.articleBody);

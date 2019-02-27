@@ -5,7 +5,8 @@ import { user1, validArticle } from './mockData/articlesMockData';
 
 let verifiedToken;
 let articleSlug;
-let articleId, commentId;
+let articleId;
+let commentId;
 const wrongArticleSlug = 'how-rthy-tyfghbuh';
 
 before(async () => request(app)
@@ -56,14 +57,6 @@ describe('User comments on an article', () => {
       expect(res.status).to.equal(201);
       expect(res.body.message).to.equal('Comment posted successfully');
     }));
-  it('Should allow a verified user delete his/her comment', () => request(app)
-    .delete(`/api/v1/comments/${commentId}`)
-    .set('x-auth-token', verifiedToken)
-    .send({ commentId })
-    .then((res) => {
-      expect(res.status).to.equal(200);
-      expect(res.body.message).to.equal('Comment deleted successfully');
-    }));
 });
 
 describe('Get all article comments', () => {
@@ -110,5 +103,25 @@ describe('Get comment edit history', () => {
     .then((res) => {
       expect(res.status).to.equal(200);
       expect(res.body.commentEditHistory).to.be.an('array');
+    }));
+});
+
+describe('Get all article comments', () => {
+  it('should return all comments for an article', () => request(app)
+    .get(`/api/v1/articles/${articleSlug}/comments`)
+    .then((res) => {
+      expect(res.status).to.equal(200);
+      expect(res.body.comments).to.be.an('array');
+    }));
+});
+
+describe('delete a comment', () => {
+  it('Should allow a verified user delete his/her comment', () => request(app)
+    .delete(`/api/v1/comments/${commentId}`)
+    .set('x-auth-token', verifiedToken)
+    .send({ commentId })
+    .then((res) => {
+      expect(res.status).to.equal(200);
+      expect(res.body.message).to.equal('Comment deleted successfully');
     }));
 });
