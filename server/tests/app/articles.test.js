@@ -144,13 +144,6 @@ describe('Update an article', () => {
 });
 
 describe('Get all articles for a particular user', () => {
-  it('should return a not found response if the user was not found', () => request(app)
-    .get('/api/v1/articles/user/piriri?page=1')
-    .then((res) => {
-      expect(res.status).to.equal(404);
-      expect(res.body.message).to.equal('User not found');
-    }));
-
   it('should get all the articles written by a particular user', () => request(app)
     .get('/api/v1/articles/user/ozone4real?page=1')
     .then((res) => {
@@ -268,13 +261,6 @@ describe('Search all articles', () => {
     .then((res) => {
       expect(res.status).to.equal(400);
       expect(res.body.message).to.equal('Invalid search parameter');
-    }));
-
-  it('should return a "not found" response if no articles were found matching the search value', () => request(app)
-    .get('/api/v1/articles/search?author=chizoba')
-    .then((res) => {
-      expect(res.status).to.equal(404);
-      expect(res.body.message).to.equal('Couldn\'t find articles matching your search');
     }));
 
   it('should fetch all matching articles if found', () => request(app)

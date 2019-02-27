@@ -17,11 +17,15 @@ const {
 } = ArticleController;
 
 const { createOrRemoveBookmark } = BookmarkController;
-const { articleComment, getArticleComments } = CommentController;
+
+const { articleReaction } = ReactionController;
 
 const {
-  articleReaction,
-} = ReactionController;
+  createComment,
+  getAllArticleComments,
+  updateComment,
+  getCommentEditHistory
+} = CommentController;
 
 const { authUser } = Auth;
 
@@ -30,14 +34,17 @@ const router = Router();
 router.post('/', authUser, validateArticle, createArticle);
 router.post('/:articleId/bookmark', authUser, createOrRemoveBookmark);
 router.get('/', getAllArticles);
+router.get('/comments/:commentId/history', authUser, getCommentEditHistory);
 router.get('/user/:username', getAllUserArticles);
 router.get('/search', searchArticles);
+router.get('/:slug/comments', getAllArticleComments);
 router.get('/:slug', getOneArticle);
 router.get('/', getAllArticles);
 router.put('/:slug/update', authUser, updateArticle);
 router.delete('/:slug/delete', authUser, deleteArticle);
 router.post('/:slug/reaction', authUser, articleReaction);
-router.post('/:slug/comments', authUser, articleComment);
-router.get('/:slug/comments', authUser, getArticleComments);
+router.get('/:slug/comments', getAllArticleComments);
+router.post('/:slug/comments', authUser, createComment);
+router.put('/comments/:commentId', authUser, updateComment);
 
 export default router;

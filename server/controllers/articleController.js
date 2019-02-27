@@ -4,9 +4,7 @@ import models from '../db/models';
 import BaseHelper from '../helpers/baseHelper';
 import paginator from '../helpers/paginator';
 
-const {
-  Articles, Users, Comments, Reactions, CommentReactions
-} = models;
+const { Articles, Users, Reactions } = models;
 
 /**
  * @description A collection of controller methods for article CRUD operations
@@ -48,14 +46,14 @@ class ArticleController extends BaseHelper {
         {
           model: Users,
           as: 'author',
-          attributes: ['username', 'bio', 'imageUrl']
+          attributes: ['name', 'username', 'bio', 'imageUrl']
         },
-        { model: Comments },
         { model: Reactions }
       ];
-      const articles = await paginator(Articles, req, includedModels);
+      let articles = await paginator(Articles, req, includedModels);
       if (articles === undefined) return Response(res, 400, 'pagination error');
       if (!articles.length) return Response(res, 200, 'No articles found');
+      articles = ArticleController.extractAllReactionsCount(articles, 'Reactions');
       return res.status(200).json({ articles });
     } catch (error) {
       return next(error);
@@ -76,12 +74,20 @@ class ArticleController extends BaseHelper {
       const user = await Users.findOne({ where: { username } });
       if (!user) return Response(res, 404, 'User not found');
       const { id: userId } = user;
-      const includedModels = [{ model: Comments }, { model: Reactions }];
-      const articles = await paginator(Articles, req, includedModels, {
+      const includedModels = [
+        {
+          model: Users,
+          as: 'author',
+          attributes: ['name', 'username', 'bio', 'imageUrl']
+        },
+        { model: Reactions }
+      ];
+      let articles = await paginator(Articles, req, includedModels, {
         userId
       });
       if (articles === undefined) return Response(res, 400, 'pagination error');
       if (!articles.length) return Response(res, 200, 'No articles found');
+      articles = ArticleController.extractAllReactionsCount(articles, 'Reactions');
       return res.status(200).json({ articles });
     } catch (error) {
       return next(error);
@@ -124,7 +130,7 @@ class ArticleController extends BaseHelper {
   static async getOneArticle(req, res, next) {
     try {
       const { slug } = req.params;
-      const article = await Articles.findOne({
+      let article = await Articles.findOne({
         where: { slug },
         include: [
           {
@@ -132,11 +138,12 @@ class ArticleController extends BaseHelper {
             as: 'author',
             attributes: ['username', 'bio', 'imageUrl']
           },
-          { model: Comments, include: [CommentReactions] },
-          { model: Reactions },
-        ],
+          { model: Reactions }
+        ]
       });
       if (!article) return Response(res, 404, 'Article not found');
+      article = article.toJSON();
+      ArticleController.getOneReactionsCount(article, 'Reactions');
       const timeToRead = ArticleController.calculateTimeToRead(article.articleBody);
       return res.status(200).json({ article, timeToRead });
     } catch (error) {
