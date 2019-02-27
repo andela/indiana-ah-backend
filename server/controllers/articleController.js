@@ -51,7 +51,6 @@ class ArticleController extends BaseHelper {
         { model: Reactions }
       ];
       let articles = await paginator(Articles, req, includedModels);
-      console.log(articles);
       if (articles === undefined) return Response(res, 400, 'pagination error');
       if (!articles.length) return Response(res, 200, 'No articles found');
       articles = ArticleController.extractAllReactionsCount(articles, 'Reactions');
