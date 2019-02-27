@@ -7,20 +7,28 @@ import userValidator from '../middlewares/validators/userValidator';
 import jwtAuth from '../middlewares/jwtAuthentication';
 import parser from '../cloudinaryConfig';
 import followAndUnfollow from '../controllers/followController';
+import BookmarkController from '../controllers/bookmarkController';
 import validateUser from '../middlewares/verifyUser';
 
-const {
-  follow,
-  fetchFollowing,
-  fetchFollowers
-} = followAndUnfollow;
+const { follow, fetchFollowing, fetchFollowers } = followAndUnfollow;
 
 const router = express.Router();
 const {
-  registerUser, loginUser, getUserProfile, getAllUsersProfile, editUserProfile,
-  uploadUserPicture, verifyUser, sendPasswordResetLink, resetPassword, deleteUserProfile,
-  updatePassword, removeUserPicture
+  registerUser,
+  loginUser,
+  getUserProfile,
+  getAllUsersProfile,
+  editUserProfile,
+  uploadUserPicture,
+  verifyUser,
+  sendPasswordResetLink,
+  resetPassword,
+  deleteUserProfile,
+  updatePassword,
+  removeUserPicture
 } = UserController;
+
+const { getUserBookmarkedArticles } = BookmarkController;
 
 router.post('/register', signUpValidator, registerUser);
 router.patch('/users/verify', verifyUser);
@@ -37,5 +45,6 @@ router.patch('/profiles/:username/password', jwtAuth.authUser, validateUser, upd
 router.post('/profiles/:username/follow', jwtAuth.authUser, follow);
 router.get('/profiles/users/following', jwtAuth.authUser, fetchFollowing);
 router.get('/profiles/users/followers', jwtAuth.authUser, fetchFollowers);
+router.get('/users/bookmarks', jwtAuth.authUser, getUserBookmarkedArticles);
 
 export default router;

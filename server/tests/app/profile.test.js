@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import app from '../../index';
 import assignToken from '../../helpers/assignJwtToken';
 import {
-  data, payload, badPayload, user1, badBio, badName,
+  data, payload, user1, badBio, badName,
   badUsername, invalidUsername, invalidName, data1,
   incorrectPasswordData, badPasswordData1, badPasswordData2, badPasswordData3,
   badPasswordData4, badPasswordData5, badPasswordData6, badPasswordData7,
@@ -11,7 +11,6 @@ import {
 } from './mockData/profileMockData';
 
 const falseToken = assignToken(payload);
-const badToken = assignToken(badPayload);
 
 let firstToken = '';
 let secondToken = '';

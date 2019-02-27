@@ -110,6 +110,9 @@ export const user1 = {
   email: 'primuse@gmail.com',
   password: 'baleesecret123'
 };
+export const password = {
+  password: 'baleesecret123'
+};
 
 export const correctPasswordData = {
   currentPassword: 'baleesecret123',

@@ -32,15 +32,11 @@ class BaseHelper {
 
   /**
    *
-   * @param {string} res
-   * @param { string } data
-   * @param { string } message
+   * @param { object } data
    * @returns {boolean} returns a boolean
    */
-  static checkIfDataExist(res, data, message) {
-    if (!data) {
-      return res.status(404).json(message);
-    }
+  static checkIfDataExist(data) {
+    return !!data;
   }
 
   /**
@@ -113,6 +109,7 @@ class BaseHelper {
     const response = await model.findOne({
       where: { ...modelColumnObj, userId }
     });
+
     if (response) {
       const dbReaction = response.dataValues;
       const { reactionType: dbReactionType, id: reactionId } = dbReaction;
@@ -194,7 +191,8 @@ class BaseHelper {
     }
   }
 
-  /** @description helper method for searching articles
+  /**
+   * @description helper method for searching articles
    * @static
    * @param {Object} req response object
    * @param {Object} res response object
@@ -212,8 +210,39 @@ class BaseHelper {
       }
     ];
     const articles = await paginator(Articles, req, includedModels, condition);
-    if (!articles.length) return res.status(404).json({ message: 'Couldn\'t find articles matching your search' });
     return res.status(200).json({ searchResults: articles });
+  }
+
+  /**
+   * @description helper method for extracting the number of reactions from any data
+   * @static
+   * @param {Object} data object with reactions
+   * @param {Object} reactionObj reaction object
+   * @returns {Number} number of likes and dislikes
+   * @memberOf BaseHelper
+   */
+  static getOneReactionsCount(data, reactionObj) {
+    const reactions = data[reactionObj].map(reaction => reaction.reactionType);
+    const likes = reactions.filter(reaction => reaction === 'like').length;
+    const dislikes = reactions.filter(reaction => reaction === 'dislike').length;
+    data.likes = likes;
+    data.dislikes = dislikes;
+    delete data[reactionObj];
+  }
+
+  /**
+   * @description helper method for extracting the number of reactions from a data collection
+   * @static
+   * @param {Array} dataCollection array of objects with reactions
+   * @param {Object} reactionObj reaction object
+   * @returns {Number} number of likes and dislikes
+   * @memberOf BaseHelper
+   */
+  static extractAllReactionsCount(dataCollection, reactionObj) {
+    return dataCollection.map((item) => {
+      this.getOneReactionsCount(item, reactionObj);
+      return item;
+    });
   }
 }
 

@@ -2,8 +2,9 @@ import request from 'supertest';
 import { expect } from 'chai';
 import app from '../../index';
 import {
-  unregisteredEmail, registeredEmail, badPassword, shortPassword
+  unregisteredEmail, registeredEmail, badPassword, shortPassword, password
 } from './mockData/profileMockData';
+import invalidToken from './mockData/articlesMockData';
 
 let token;
 
@@ -29,7 +30,7 @@ describe('Send reset password link to user', () => {
 
 describe('Password reset funcionality for users', () => {
   it('should return status code 200 on successful password reset', () => request(app)
-    .patch('/api/v1/users/reset-password')
+    .patch(`/api/v1/users/reset-password?query=${token.token}`)
     .set('x-auth-token', token.token)
     .send(registeredEmail)
     .then((res) => {
@@ -52,11 +53,21 @@ describe('Password reset funcionality for users', () => {
       expect(res.statusCode).to.equal(400);
       expect(res.body.message).to.equal('Password length must be at least 8 characters long');
     }));
-  it('should return an error if no token is provided', () => request(app)
-    .patch('/api/v1/users/reset-password')
-    .send(registeredEmail)
-    .then((res) => {
-      expect(res.statusCode).to.equal(401);
-      expect(res.body.message).to.equal('This link is invalid or expired!!');
-    }));
+  describe('Password reset funcionality for users', () => {
+    it('should return status code 200 on successful password reset', () => request(app)
+      .patch(`/api/v1/users/reset-password?query=${token.token}`)
+      .set('x-auth-token', token.token)
+      .send(password)
+      .then((res) => {
+        expect(res.statusCode).to.equal(200);
+        expect(res.body.message).to.equal('Password reset successfully');
+      }));
+    it('should return status code 401 if link has either expired or is invalid', () => request(app)
+      .patch(`/api/v1/users/reset-password?query=${invalidToken}`)
+      .send(password)
+      .then((res) => {
+        expect(res.statusCode).to.equal(401);
+        expect(res.body.message).to.equal('This link is invalid or expired!!');
+      }));
+  });
 });
