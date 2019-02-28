@@ -7,7 +7,7 @@ export default {
       defaultValue: Sequelize.UUIDV4
     },
     userId: {
-      required: true,
+      allowNull: false,
       type: Sequelize.UUID,
       onDelete: 'CASCADE',
       references: {
@@ -16,7 +16,7 @@ export default {
       }
     },
     articleId: {
-      required: true,
+      allowNull: false,
       type: Sequelize.Sequelize.UUID,
       onDelete: 'CASCADE',
       references: {
