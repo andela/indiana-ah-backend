@@ -11,7 +11,7 @@ import {
 } from './mockData/articlesMockData';
 
 let verifiedToken, secondVerifiedToken, articleSlug, secondArticleSlug, highlightId;
-const wrongArticleSlug = 'how-rthy-tyfghbuh';
+const wrongArticleSlug = 'how-rthy-tyfghbuh-fccghhgvgv';
 
 before(async () => request(app)
   .post('/api/v1/login')
@@ -82,7 +82,7 @@ describe('Create an Highlight text for an Article', () => {
 
 describe('Update an Highlight text for an Article', () => {
   it('Should not create an highlight if Article doesn\'t exist', () => request(app)
-    .patch(`/api/v1/articles/${wrongArticleSlug}/highlights`)
+    .patch(`/api/v1/articles/${wrongArticleSlug}/highlights/${highlightId}`)
     .set('x-auth-token', verifiedToken)
     .send(upDateValidHighlight)
     .then((res) => {
@@ -91,7 +91,7 @@ describe('Update an Highlight text for an Article', () => {
     }));
 
   it('Should not create an highlight if Highlighted text doesn\'t exist in article', () => request(app)
-    .patch(`/api/v1/articles/${secondArticleSlug}/highlights`)
+    .patch(`/api/v1/articles/${secondArticleSlug}/highlights/${highlightId}`)
     .set('x-auth-token', verifiedToken)
     .send(upDateValidHighlight)
     .then((res) => {
@@ -100,7 +100,7 @@ describe('Update an Highlight text for an Article', () => {
     }));
 
   it('Should not create an highlight if Highlighted text doesn\'t exist in article', () => request(app)
-    .patch(`/api/v1/articles/${articleSlug}/highlights`)
+    .patch(`/api/v1/articles/${articleSlug}/highlights/${highlightId}`)
     .set('x-auth-token', verifiedToken)
     .send(inValidHighlight)
     .then((res) => {
@@ -108,7 +108,7 @@ describe('Update an Highlight text for an Article', () => {
       expect(res.body.message).to.equal('Highlighted text doesn\'t exist');
     }));
   it('Should not create an highlight if Highlighted text doesn\'t exist in article', () => request(app)
-    .patch(`/api/v1/articles/${articleSlug}/highlights`)
+    .patch(`/api/v1/articles/${articleSlug}/highlights/${highlightId}`)
     .set('x-auth-token', verifiedToken)
     .send(inValidHighlight)
     .then((res) => {
@@ -117,7 +117,7 @@ describe('Update an Highlight text for an Article', () => {
     }));
 
   it('Should edit an highlight text if its the same User that created the Highlight text', () => request(app)
-    .patch(`/api/v1/articles/${articleSlug}/highlights`)
+    .patch(`/api/v1/articles/${articleSlug}/highlights/${highlightId}`)
     .set('x-auth-token', verifiedToken)
     .send(upDateValidHighlight)
     .then((res) => {

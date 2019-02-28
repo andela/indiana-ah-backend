@@ -457,7 +457,7 @@ Example request body:
 
 ### Edit Highlight and Comment on an Article
 
-`PATCH /api/v1/articles/:slug/highlights`
+`PATCH /api/v1/articles/:slug/highlights/:id`
 
 Example request body:
 

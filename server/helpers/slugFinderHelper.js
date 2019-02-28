@@ -1,13 +1,8 @@
-import errorMessage from './errorHelpers';
-
-export default async (req, res, Articles) => {
+export default (req, Articles) => {
   const { slug } = req.params;
-  const article = await Articles.findOne({
+  const article = Articles.findOne({
     where: { slug },
     returning: true
   });
-  if (!article) {
-    return errorMessage(res, 404, 'Article not found');
-  }
   return article;
 };

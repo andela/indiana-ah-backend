@@ -19,7 +19,10 @@ class HighlightController {
    */
   static async articleTextHighlight(req, res, next) {
     try {
-      const article = await slugHelper(req, res, Articles);
+      const article = await slugHelper(req, Articles);
+      if (!article) {
+        return errorMessage(res, 404, 'Article not found');
+      }
       const { highlight } = req.body;
       // check if the highlighted text exist  in the article
       const findHighlight = article.dataValues.articleBody.includes(highlight);
@@ -50,7 +53,10 @@ class HighlightController {
   static async deleteHighlight(req, res, next) {
     try {
       const { id } = req.params;
-      const article = await slugHelper(req, res, Articles);
+      const article = await slugHelper(req, Articles);
+      if (!article) {
+        return errorMessage(res, 404, 'Article not found');
+      }
       const { id: userId } = req.user;
       const articleId = article.dataValues.id;
       const textHighlight = await Highlights.findOne({
@@ -79,11 +85,15 @@ class HighlightController {
    */
   static async editHighlight(req, res, next) {
     try {
-      const article = await slugHelper(req, res, Articles);
+      const { id } = req.params;
+      const article = await slugHelper(req, Articles);
+      if (!article) {
+        return errorMessage(res, 404, 'Article not found');
+      }
       const { id: userId } = req.user;
       const articleId = article.dataValues.id;
       const textHighlight = await Highlights.findOne({
-        where: { articleId, userId },
+        where: { id, articleId, userId },
         returning: true
       });
       if (!textHighlight) {
@@ -118,7 +128,10 @@ class HighlightController {
    */
   static async getHighlight(req, res, next) {
     try {
-      const article = await slugHelper(req, res, Articles);
+      const article = await slugHelper(req, Articles);
+      if (!article) {
+        return errorMessage(res, 404, 'Article not found');
+      }
       const { id: userId } = req.user;
       const articleId = article.dataValues.id;
       const textHighlight = await Highlights.findAll({

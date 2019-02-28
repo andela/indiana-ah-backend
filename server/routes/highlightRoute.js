@@ -8,7 +8,7 @@ const {
 } = HighlightController;
 const router = express.Router();
 router.post('/:slug/highlights', authUser, articleTextHighlight);
-router.patch('/:slug/highlights', authUser, editHighlight);
+router.patch('/:slug/highlights/:id', authUser, editHighlight);
 router.delete('/:slug/highlights/:id', authUser, deleteHighlight);
 router.get('/:slug/highlights', authUser, getHighlight);
 

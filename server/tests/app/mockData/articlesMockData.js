@@ -61,7 +61,7 @@ export const validHighlight = {
 };
 
 export const inValidHighlight = {
-  highlight: 'This is clear to understand',
+  highlight: 'This is clear to understand abi',
   comment: 'its working'
 };
 
