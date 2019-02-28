@@ -65,7 +65,7 @@ describe('Create an Highlight text for an Article', () => {
     .send(inValidHighlight)
     .then((res) => {
       expect(res.status).to.equal(404);
-      expect(res.body.message).to.equal('Article Highlighted text doesn\'t exist');
+      expect(res.body.message).to.equal('Highlighted text doesn\'t exist');
     }));
 
   it('Should create an highlight if Article exist', () => request(app)
@@ -105,7 +105,7 @@ describe('Update an Highlight text for an Article', () => {
     .send(inValidHighlight)
     .then((res) => {
       expect(res.status).to.equal(404);
-      expect(res.body.message).to.equal('Article Highlighted text doesn\'t exist');
+      expect(res.body.message).to.equal('Highlighted text doesn\'t exist');
     }));
   it('Should not create an highlight if Highlighted text doesn\'t exist in article', () => request(app)
     .patch(`/api/v1/articles/${articleSlug}/highlights`)
@@ -113,7 +113,7 @@ describe('Update an Highlight text for an Article', () => {
     .send(inValidHighlight)
     .then((res) => {
       expect(res.status).to.equal(404);
-      expect(res.body.message).to.equal('Article Highlighted text doesn\'t exist');
+      expect(res.body.message).to.equal('Highlighted text doesn\'t exist');
     }));
 
   it('Should edit an highlight text if its the same User that created the Highlight text', () => request(app)

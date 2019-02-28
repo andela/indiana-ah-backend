@@ -1,5 +1,6 @@
 import models from '../db/models';
 import errorMessage from '../helpers/errorHelpers';
+import slugHelper from '../helpers/slugFinderHelper';
 
 const { Articles, Highlights } = models;
 
@@ -18,22 +19,14 @@ class HighlightController {
    */
   static async articleTextHighlight(req, res, next) {
     try {
-      const { slug } = req.params;
-      const article = await Articles.findOne({
-        where: { slug },
-        returning: true
-      });
-      if (!article) {
-        return errorMessage(res, 404, 'Article not found');
-      }
-
+      const article = await slugHelper(req, res, Articles);
       const { highlight } = req.body;
       // check if the highlighted text exist  in the article
       const findHighlight = article.dataValues.articleBody.includes(highlight);
       if (!findHighlight) {
-        return errorMessage(res, 404, 'Article Highlighted text doesn\'t exist');
+        return errorMessage(res, 404, 'Highlighted text doesn\'t exist');
       }
-      req.body.userId = article.dataValues.userId;
+      req.body.userId = req.user.id;
       req.body.articleId = article.dataValues.id;
       // create highlights
       const articleHighlight = await Highlights.create(req.body);
@@ -47,7 +40,7 @@ class HighlightController {
   }
 
   /**
-   * @description deleteHighlight - controller method for deleting an highlighted text
+   * @description deleteHighlight - controller method for deleting a highlighted text
    *
    * @param {object} req  Request object
    * @param {object} res  Response onject
@@ -56,15 +49,9 @@ class HighlightController {
    */
   static async deleteHighlight(req, res, next) {
     try {
-      const { slug, id } = req.params;
-      const article = await Articles.findOne({
-        where: { slug },
-        returning: true
-      });
-      if (!article) {
-        return errorMessage(res, 404, 'Article not found');
-      }
-      const { userId } = article.dataValues;
+      const { id } = req.params;
+      const article = await slugHelper(req, res, Articles);
+      const { id: userId } = req.user;
       const articleId = article.dataValues.id;
       const textHighlight = await Highlights.findOne({
         where: { id, articleId, userId },
@@ -83,7 +70,7 @@ class HighlightController {
   }
 
   /**
-   * @description editHighlight - controller method for editing an highlighted text
+   * @description editHighlight - controller method for editing a highlighted text
    *
    * @param {object} req  Request object
    * @param {object} res  Response onject
@@ -92,15 +79,8 @@ class HighlightController {
    */
   static async editHighlight(req, res, next) {
     try {
-      const { slug } = req.params;
-      const article = await Articles.findOne({
-        where: { slug },
-        returning: true
-      });
-      if (!article) {
-        return errorMessage(res, 404, 'Article not found');
-      }
-      const { userId } = article.dataValues;
+      const article = await slugHelper(req, res, Articles);
+      const { id: userId } = req.user;
       const articleId = article.dataValues.id;
       const textHighlight = await Highlights.findOne({
         where: { articleId, userId },
@@ -113,7 +93,7 @@ class HighlightController {
       // check if the highlighted text exist  in the article
       const findHighlight = article.dataValues.articleBody.includes(highlight);
       if (!findHighlight) {
-        return errorMessage(res, 404, 'Article Highlighted text doesn\'t exist');
+        return errorMessage(res, 404, 'Highlighted text doesn\'t exist');
       }
       const updatedHighlight = await Highlights.update(req.body, {
         returning: true,
@@ -129,7 +109,7 @@ class HighlightController {
   }
 
   /**
-   * *@description getHighlight - controller method for getting an highlighted text
+   * *@description getHighlight - controller method for getting a highlighted text
    *
    * @param {object} req  Request object
    * @param {object} res  Response onject
@@ -138,15 +118,8 @@ class HighlightController {
    */
   static async getHighlight(req, res, next) {
     try {
-      const { slug } = req.params;
-      const article = await Articles.findOne({
-        where: { slug },
-        returning: true
-      });
-      if (!article) {
-        return errorMessage(res, 404, 'Article not found');
-      }
-      const { userId } = article.dataValues;
+      const article = await slugHelper(req, res, Articles);
+      const { id: userId } = req.user;
       const articleId = article.dataValues.id;
       const textHighlight = await Highlights.findAll({
         where: { articleId, userId },
