@@ -30,7 +30,8 @@ class ArticleController extends BaseHelper {
       const userArticle = req.body.articleBody;
       const timeToRead = ArticleController.calculateTimeToRead(userArticle);
       const article = await Articles.create(req.body);
-      await notifyViaEmailAndPush(req, res);
+      const { slug } = article.dataValues;
+      await notifyViaEmailAndPush(req, res, slug);
       return res.status(201).json({ article, timeToRead });
     } catch (error) {
       return next(error);

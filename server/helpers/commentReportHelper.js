@@ -1,3 +1,7 @@
+import NotificationServices from '../services/notificationServices';
+
+const { notifyUsersWhoBookmarked } = NotificationServices;
+
 const commentReportLogic = async (req, res, next, articles, data, message) => {
   try {
     const { slug } = req.params;
@@ -10,6 +14,7 @@ const commentReportLogic = async (req, res, next, articles, data, message) => {
         message: 'Article not found'
       });
     }
+    notifyUsersWhoBookmarked(req, res, article.dataValues.id);
     req.body.userId = article.dataValues.userId;
     req.body.articleId = article.dataValues.id;
     const articleComments = await data.create(req.body);

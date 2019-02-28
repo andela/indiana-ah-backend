@@ -3,9 +3,9 @@ import jwtAuth from '../middlewares/jwtAuthentication';
 import NotificationController from '../controllers/notificationController';
 
 const router = express.Router();
-const { emailNotification, InAppNotification } = NotificationController;
+const { notification } = NotificationController;
 
-router.patch('/:notificationStatus/email', jwtAuth.authUser, emailNotification);
-router.patch('/:notificationStatus/in-app', jwtAuth.authUser, InAppNotification);
+// req.params can only be 'email' or 'inApp''
+router.patch('/:emailOrInApp', jwtAuth.authUser, notification);
 
 export default router;

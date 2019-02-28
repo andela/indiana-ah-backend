@@ -47,3 +47,24 @@ export const userAkeem = {
   password: 'customer24',
   isVerified: true
 };
+
+export const userkorede = {
+  username: 'korede',
+  email: 'korede@gmail.com',
+  password: 'customer24',
+  isVerified: true
+};
+
+export const userDozie = {
+  username: 'Dozie',
+  email: 'Dozie@gmail.com',
+  password: 'customer24',
+  isVerified: true
+};
+
+export const userBuhari = {
+  username: 'Buhari',
+  email: 'Buhari@gmail.com',
+  password: 'customer24',
+  isVerified: true
+};
