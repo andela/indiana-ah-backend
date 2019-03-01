@@ -464,6 +464,59 @@ No additional parameters required
 
 `GET /api/tags`
 
+Highlight and comment on an article POST /api/v1/articles/:slug/highlights
+Edit highlight and comment on an article PATCH /api/v1/articles/:slug/highlights
+Delete highlight and comment on an article DELETE /api/v1/articles/:slug/highlights/:id
+Get highlight and comment on an article GET /api/v1/articles/:slug/highlights
+### Highlight and Comment on an Article
+
+`POST /api/v1/articles/:slug/highlights`
+
+Example request body:
+
+```source-json
+{	
+   "highlight": "chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words",
+   "comment": "This is working fine for me is this really for"
+}	
+```
+
+### Edit Highlight and Comment on an Article
+
+`PATCH /api/v1/articles/:slug/highlights/:id`
+
+Example request body:
+
+```source-json
+{	
+   "highlight": "chunks as necessary, making this the first true generator on the Internet",
+   "comment": "This is working fine for me is this really for"
+}	
+```
+
+### Delete Highlight and Comment on an Article
+
+`DELETE /api/v1/articles/:slug/highlights/:id`
+
+
+### Get Highlight and Comment on an Article
+
+`GET /api/v1/articles/:slug/highlights`
+
+Example request body:
+
+```
+[
+{	
+   "highlight": "chunks as necessary, making this the first true generator on the Internet",
+   "comment": "This is working fine for me is this really for"
+},
+{	
+   "highlight": "chunks as necessary, making this the first true generator on the Internet",
+   "comment": "This is working fine for me is this really for"
+}	
+]
+```
 
 <hr>
 
