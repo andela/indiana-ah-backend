@@ -94,7 +94,7 @@ class NotificationServices {
       const arrayOfUserIDs = await Bookmarks.findAll({ where: { articleId } })
         .map(bookmarkColumn => bookmarkColumn.dataValues.userId);
 
-      // An array of user who have subcribed to Email notification
+      // An array of users who have subcribed to Email notification
       const arrayOfAllUsersEmailWithEmailSub = await Users.findAll({ where: { subscribed: true }, attributes: ['id', 'email', 'subscribed'] })
         .map(eachUserObject => (
           {
@@ -103,7 +103,7 @@ class NotificationServices {
           }
         ));
 
-      // An array of user who have boomarked the article AND also subcribed to Email notification
+      // An array of users who have boomarked the article AND also subcribed to Email notification
       const usersWhoBookmarkedWithEmailSub = arrayOfAllUsersEmailWithEmailSub
         .filter((_eachUser, index) => arrayOfUserIDs
           .includes(arrayOfAllUsersEmailWithEmailSub[index].id));
@@ -125,7 +125,7 @@ class NotificationServices {
 
       // notify via In app
       if (usersWhoBookmarkedAndHaveInAppNot.length !== 0) {
-        usersWhoBookmarkedAndHaveInAppNot.forEach(userID => pusher.trigger('notification', userID, { message: 'Akeem just commented on an article you bookmarked' }));
+        usersWhoBookmarkedAndHaveInAppNot.forEach(userID => pusher.trigger('notification', userID, { message: `${req.user.username} just commented on an article you bookmarked` }));
       }
     } catch (error) {
       return errorMessage(res, 400, `${error}`);

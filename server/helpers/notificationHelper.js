@@ -8,7 +8,7 @@ export default async (req, res, next, userColumn) => {
   try {
     const user = await Users.findOne({ where: { id }, attributes: ['id', 'email', userColumn] });
 
-    // This toggle the bolean value
+    // This toggles the bolean value
     const newNotificationStatus = !user.dataValues[userColumn];
 
     const updatedUser = await Users.update(
