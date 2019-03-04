@@ -5,6 +5,7 @@ import ArticleController from '../controllers/articleController';
 import CommentController from '../controllers/commentController';
 import BookmarkController from '../controllers/bookmarkController';
 import ReactionController from '../controllers/reactionController';
+import parser from '../cloudinaryConfig';
 
 const {
   createArticle,
@@ -13,6 +14,7 @@ const {
   getOneArticle,
   getAllUserArticles,
   deleteArticle,
+  updateArticlePicture,
   searchArticles
 } = ArticleController;
 
@@ -31,18 +33,18 @@ const { authUser } = Auth;
 
 const router = Router();
 
-router.post('/', authUser, validateArticle, createArticle);
+router.post('/', authUser, parser.single('image'), validateArticle, createArticle);
 router.post('/:articleId/bookmark', authUser, createOrRemoveBookmark);
 router.get('/', getAllArticles);
 router.get('/comments/:commentId/history', authUser, getCommentEditHistory);
 router.get('/user/:username', getAllUserArticles);
+router.put('/:slug', authUser, parser.single('image'), updateArticle);
 router.get('/search', searchArticles);
 router.get('/:slug/comments', getAllArticleComments);
 router.get('/:slug', getOneArticle);
-router.get('/', getAllArticles);
-router.put('/:slug/update', authUser, updateArticle);
-router.delete('/:slug/delete', authUser, deleteArticle);
+router.delete('/:slug', authUser, deleteArticle);
 router.post('/:slug/reaction', authUser, articleReaction);
+router.patch('/:slug/image', authUser, parser.single('image'), updateArticlePicture);
 router.get('/:slug/comments', getAllArticleComments);
 router.post('/:slug/comments', authUser, createComment);
 router.put('/comments/:commentId', authUser, updateComment);

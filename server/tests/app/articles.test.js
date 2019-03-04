@@ -84,15 +84,19 @@ describe('Create an Article', () => {
       expect(res.body.message).match(/empty/);
     }));
 
-  it('create an article if the user passes authentication', () => request(app)
+  it('creates an article if the user passes authentication', () => request(app)
     .post('/api/v1/articles')
     .set('x-auth-token', verifiedToken)
-    .send(validArticle)
+    .type('form')
+    .field('articleTitle', validArticle.articleTitle)
+    .field('articleBody', validArticle.articleBody)
+    .attach('image', 'server/tests/testImage/feather.jpg')
     .then((res) => {
       articleSlug = res.body.article.slug;
       articleId = res.body.article.id;
       expect(res.status).to.equal(201);
       expect(res.body.article).to.be.an('object');
+      expect(res.body.article.imageUrl).to.match(/^http/);
       expect(res.body.timeToRead).to.equal('a couple of secs');
       expect(res.body.timeToRead).to.be.a('string');
     }));
@@ -127,7 +131,7 @@ describe('Get one article', () => {
 
 describe('Update an article', () => {
   it('should return a not found error if an article requested for update was not found', () => request(app)
-    .put('/api/v1/articles/yeah-yeah-yea/update')
+    .put('/api/v1/articles/yeah-yeah-yea')
     .set('x-auth-token', verifiedToken)
     .send(articleForUpdate)
     .then((res) => {
@@ -136,12 +140,38 @@ describe('Update an article', () => {
     }));
 
   it('should update an article requested for update if found', () => request(app)
-    .put(`/api/v1/articles/${articleSlug}/update`)
+    .put(`/api/v1/articles/${articleSlug}`)
     .set('x-auth-token', verifiedToken)
-    .send(articleForUpdate)
+    .type('form')
+    .field('articleTitle', articleForUpdate.articleTitle)
+    .field('articleBody', articleForUpdate.articleBody)
+    .field('tags', articleForUpdate.tags)
+    .attach('image', 'server/tests/testImage/feather.jpg')
     .then((res) => {
       expect(res.status).to.equal(200);
       expect(res.body.article).to.be.an('object');
+      expect(res.body.article.imageUrl).to.match(/^http/);
+    }));
+});
+describe('Update an article picture', () => {
+  it('should return a not found error if an article requested for update was not found', () => request(app)
+    .patch('/api/v1/articles/yeah-yeah-yea/image')
+    .set('x-auth-token', verifiedToken)
+    .type('form')
+    .attach('image', 'server/tests/testImage/feather.jpg')
+    .then((res) => {
+      expect(res.status).to.equal(404);
+      expect(res.body.message).to.be.equal('Article not found');
+    }));
+  it('should update an article picture if article is found', () => request(app)
+    .patch(`/api/v1/articles/${articleSlug}/image`)
+    .set('x-auth-token', verifiedToken)
+    .type('form')
+    .attach('image', 'server/tests/testImage/feather.jpg')
+    .then((res) => {
+      expect(res.status).to.equal(200);
+      expect(res.body).to.be.an('object');
+      expect(res.body.picture).to.match(/^http/);
     }));
 });
 
@@ -206,7 +236,7 @@ describe('Get one article rating', () => {
     .get('/api/v1/articles/ratings/69feb295-9030-4ef4-b7d7')
     .then((res) => {
       expect(res.status).to.equal(500);
-      expect(res.body.message).match(/invalid input syntax/);
+      expect(res.body.message).to.equal('Internal server error');
     }));
 
   it('should return a "not found" response if the rating was not found', () => request(app)
@@ -282,7 +312,7 @@ describe('Search all articles', () => {
 
 describe('Delete an article', () => {
   it('should return a "not found" response if an article requested for delete was not found', () => request(app)
-    .delete('/api/v1/articles/yeah-yeah-yeah/delete')
+    .delete('/api/v1/articles/yeah-yeah-yeah')
     .set('x-auth-token', verifiedToken)
     .then((res) => {
       expect(res.status).to.equal(404);
@@ -290,7 +320,7 @@ describe('Delete an article', () => {
     }));
 
   it('should delete an article requested to be deleted if found', () => request(app)
-    .delete(`/api/v1/articles/${articleSlug}/delete`)
+    .delete(`/api/v1/articles/${articleSlug}`)
     .set('x-auth-token', verifiedToken)
     .then((res) => {
       expect(res.status).to.equal(200);

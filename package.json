@@ -52,7 +52,8 @@
     "sequelize-test-helpers": "^1.0.7",
     "sinon": "^7.2.3",
     "supertest": "^3.4.2",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",

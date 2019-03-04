@@ -187,16 +187,14 @@ If a request fails any validations, expect errors in the following format:
 
 ### Authentication:
 
-`POST /api/users/login`
+`POST /api/v1/login`
 
 Example request body:
 
 ```source-json
 {
-  "user":{
-    "email": "jake@jake.jake",
-    "password": "jakejake"
-  }
+  "email": "jake@jake.jake",
+  "password": "jakejake"
 }
 ```
 
@@ -206,17 +204,16 @@ Required fields: `email`, `password`
 
 ### Registration:
 
-`POST /api/users`
+`POST /api/v1/register`
 
 Example request body:
 
 ```source-json
 {
-  "user":{
-    "username": "Jacob",
-    "email": "jake@jake.jake",
-    "password": "jakejake"
-  }
+  "username": "Jacob",
+  "email": "jake@jake.jake",
+  "password": "jakejake"
+  
 }
 ```
 
@@ -224,11 +221,28 @@ No authentication required, returns a User
 
 Required fields: `email`, `username`, `password`
 
-### Get Current User
+### Reset Password:
 
-`GET /api/user`
+`POST /api/v1/users/reset-password`
 
-Authentication required, returns a User that's the current user
+Example request body:
+
+```source-json
+{
+  "password": "jake1234"
+  
+}
+```
+
+Authentication required, returns a message whether successful or not
+
+Required fields: `password`
+
+### Get All Users
+
+`GET /api/v1/profiles`
+
+Authentication required, returns all Users
 
 ### Update User Profile
 
@@ -238,11 +252,9 @@ Example request body:
 
 ```source-json
 {	
-  "user":{
   "name": "Cim News",
   "bio": "I like to skateboard",
   "username": "cim"
-  }	
 }	
 ```
 
@@ -252,7 +264,7 @@ Accepted fields: `name`, `username`, `bio`
 
 ### Delete User Profile
 
-`DELETE api/v1/profiles/:username/delete`
+`DELETE api/v1/profiles/:username`
 
 Authentication required, deletes a user's profile/account
 
@@ -262,7 +274,7 @@ Authentication required, deletes a user's profile/account
 
  Authentication required, returns a Profile
 
- ### Update Picture
+### Update User Picture
 
  `PATCH api/v1/profiles/image`
 
@@ -270,9 +282,9 @@ Authentication required, returns an updated Picture
 
 No additional parameters required
 
-### Unfollow user
+### Follow and Unfollow user
 
-`DELETE /api/profiles/:username/follow`
+`POST /api/v1/profiles/:username/follow`
 
 Authentication required, returns a Profile
 
@@ -280,7 +292,7 @@ No additional parameters required
 
 ### List Articles
 
-`GET /api/articles`
+`GET /api/v1/articles`
 
 Returns most recent articles globally by default, provide `tag`, `author` or `favorited` query parameter to filter results
 
@@ -318,57 +330,71 @@ Authentication required, will return multiple articles created by followed use
 
 ### Get Article
 
-`GET /api/articles/:slug`
+`GET /api/v1/articles/:slug`
 
 No authentication required, will return single article
 
 ### Create Article
 
-`POST /api/articles`
+`POST /api/v1/articles`
 
 Example request body:
 
 ```source-json
 {
-  "article": {
-    "articleTitle": "How to train your dragon",
-    "articleBody": "You have to believe",
-    "tagList": ["reactjs", "angularjs", "dragons"]
-  }
+  "articleTitle": "How to train your dragon",
+  "articleBody": "You have to believe",
+  "image": ( image file chosen ),
+  "tagList": ["reactjs", "angularjs", "dragons"]
 }
 ```
 
 Authentication required, will return an Article
 
-Required fields: `title`, `description`, `body`
+Required fields: `articleTitle`, `articleBody`
 
-Optional fields: `tagList` as an array of Strings
+Optional fields: `tagList`, `image` as an array of Strings and file
 
 
 ### Update Article
 
-`PUT /api/articles/:slug`
+`PUT /api/v1/articles/:slug`
 
 Example request body:
 
 ```source-json
 {
-  "article": {
-    "title": "Did you train your dragon?"
-  }
+  "articleTitle": "How to train your dragon",
+  "articleBody": "You have to believe",
+  "image": ( image file chosen ),
+  "tagList": ["reactjs", "angularjs", "dragons"]
 }
 ```
 
 Authentication required, returns the updated Article
 
-Optional fields: `title`, `description`, `body`
+Optional fields: `articleTitle`, `articleBody`, `image`, `tagList`
 
-The `slug` also gets updated when the `title` is changed
+### Update Article Picture
+
+`PUT /api/v1/articles/:slug/image`
+
+Example request body:
+
+```source-json
+{
+  "image": ( file chosen ),
+}
+```
+
+Authentication required, returns the updated Article Picture
+
+Optional fields: `image`
 
 
 ### Like, Unlike, Dislike an Article
 
-`POST /api/articles/:slug/reaction`
+`POST /api/v1/articles/:slug/reaction`
 
 Example request body:
 
@@ -385,14 +411,14 @@ Required field: `reactionType`
 
 ### Delete Article
 
-`DELETE /api/articles/:slug`
+`DELETE /api/v1/articles/:slug`
 
 Authentication required
 
 
 ### Add Comments to an Article
 
-`POST /api/articles/:slug/comments`
+`POST /api/v1/articles/:slug/comments`
 
 Example request body:
 
@@ -409,26 +435,26 @@ Required field: `body`
 
 ### Get Comments from an Article
 
-`GET /api/articles/:slug/comments`
+`GET /api/v1/articles/:slug/comments`
 
 Authentication optional, returns multiple comments
 
 ### Delete Comment
 
-`DELETE /api/articles/:slug/comments/:id`
+`DELETE /api/v1/articles/:slug/comments/:id`
 
 Authentication required
 
 ### Favorite Article
 
-`POST /api/articles/:slug/favorite`
+`POST /api/v1/articles/:slug/favorite`
 
 Authentication required, returns the Article
 No additional parameters required
 
 ### Unfavorite Article
 
-`DELETE /api/articles/:slug/favorite`
+`DELETE /api/v1/articles/:slug/favorite`
 
 Authentication required, returns the Article
 
