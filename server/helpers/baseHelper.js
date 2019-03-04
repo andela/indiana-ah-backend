@@ -159,7 +159,9 @@ class BaseHelper {
         url = updatedValues.dataValues.imageUrl;
       }
 
-      if (!updatedRows) return res.status(404).json({ message: `${model === 'Users' ? 'User' : 'Article'} not found` });
+      const modelName = model.name.slice(0, -1);
+
+      if (!updatedRows) return res.status(404).json({ message: `${modelName} not found` });
       return res.status(200).json({
         picture: url
       });
