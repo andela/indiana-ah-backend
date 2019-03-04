@@ -181,7 +181,9 @@ class BaseHelper {
       const updatedRows = updatedModel[0];
       const updatedValues = updatedModel[1][0];
 
-      if (!updatedRows) return res.status(404).json({ message: `${model === 'Users' ? 'User' : 'Article'} not found` });
+      const modelName = model.name.slice(0, -1);
+
+      if (!updatedRows) return res.status(404).json({ message: `${modelName} not found` });
       return res.status(200).json({
         message: 'Picture updated successfully',
         data: updatedValues

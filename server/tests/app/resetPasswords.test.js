@@ -45,7 +45,7 @@ describe('Password reset funcionality for users', () => {
       expect(res.statusCode).to.equal(400);
       expect(res.body.message).to.equal('Password should be Alphanumeric');
     }));
-  it('should return an error if password passed is atleast 8 characters long', () => request(app)
+  it('should return an error if password passed is not atleast 8 characters long', () => request(app)
     .patch('/api/v1/users/reset-password')
     .set('x-auth-token', token.token)
     .send(shortPassword)

@@ -8,7 +8,8 @@ import {
   articleForUpdate,
   user1,
   user2,
-  user3
+  user3,
+  userAgare
 } from './mockData/articlesMockData';
 
 const { Users } = models;
@@ -23,6 +24,7 @@ let ratingId;
 before(async () => {
   await Users.create(user1);
   await Users.create(user3);
+  await Users.create(userAgare);
   return request(app)
     .post('/api/v1/login')
     .set('content-type', 'application/json')
@@ -328,7 +330,7 @@ describe('Search all articles', () => {
 
 describe('Delete an article', () => {
   it('should return a "not found" response if an article requested for delete was not found', () => request(app)
-    .delete('/api/v1/articles/yeah-yeah-yeah/delete')
+    .delete('/api/v1/articles/yeah-yeah-yeah')
     .set('x-auth-token', verifiedToken)
     .then((res) => {
       expect(res.status).to.equal(404);
@@ -336,7 +338,7 @@ describe('Delete an article', () => {
     }));
 
   it('should delete an article requested to be deleted if found', () => request(app)
-    .delete(`/api/v1/articles/${articleSlug}/delete`)
+    .delete(`/api/v1/articles/${articleSlug}`)
     .set('x-auth-token', verifiedToken)
     .then((res) => {
       expect(res.status).to.equal(200);

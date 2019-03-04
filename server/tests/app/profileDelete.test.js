@@ -38,7 +38,7 @@ describe('Delete a profile', () => {
     }));
 
   it('should delete the user\'s profile if the user passes authentication', () => request(app)
-    .put(`/api/v1/profiles/${user1.username}/delete`)
+    .put(`/api/v1/profiles/${user1.username}`)
     .set('x-auth-token', userToken)
     .send({ password: 'baleesecret48' })
     .then((res) => {

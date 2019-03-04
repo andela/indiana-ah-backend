@@ -45,7 +45,13 @@ export default (sequelize, DataTypes) => {
     source: ['articleTitle']
   });
   Articles.associate = ({
-    Users, Comments, Reactions, Reports, Bookmarks, Ratings
+    Users,
+    Comments,
+    Reactions,
+    Reports,
+    Bookmarks,
+    Ratings,
+    Highlights
   }) => {
     Articles.belongsTo(Users, {
       foreignKey: 'userId',
@@ -65,6 +71,9 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'articleId'
     });
     Articles.hasMany(Ratings, {
+      foreignKey: 'articleId'
+    });
+    Articles.hasMany(Highlights, {
       foreignKey: 'articleId'
     });
   };

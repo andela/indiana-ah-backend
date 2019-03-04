@@ -83,6 +83,10 @@ export const badBio = {
   bio: 34
 };
 
+export const badEmail = {
+  email: 'tiku.yahoo'
+};
+
 export const mockData = {
   bio: 'I am a boy',
   name: 'Emeka',
@@ -128,3 +132,4 @@ export const registeredEmail = {
   email: 'balee@gmail.com',
   password: 'Arukwe1234'
 };
+
