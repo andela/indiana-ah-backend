@@ -14,8 +14,9 @@ const {
   getOneArticle,
   getAllUserArticles,
   deleteArticle,
+  searchArticles,
   updateArticlePicture,
-  searchArticles
+  removeArticlePicture
 } = ArticleController;
 
 const { createOrRemoveBookmark } = BookmarkController;
@@ -38,7 +39,9 @@ router.post('/:articleId/bookmark', authUser, createOrRemoveBookmark);
 router.get('/', getAllArticles);
 router.get('/comments/:commentId/history', authUser, getCommentEditHistory);
 router.get('/user/:username', getAllUserArticles);
-router.put('/:slug', authUser, parser.single('image'), updateArticle);
+router.put('/:slug/update', authUser, parser.single('image'), updateArticle);
+router.patch('/:slug/image', authUser, parser.single('image'), updateArticlePicture);
+router.patch('/:slug/remove-image', authUser, removeArticlePicture);
 router.get('/search', searchArticles);
 router.get('/:slug/comments', getAllArticleComments);
 router.get('/:slug', getOneArticle);
@@ -48,5 +51,6 @@ router.patch('/:slug/image', authUser, parser.single('image'), updateArticlePict
 router.get('/:slug/comments', getAllArticleComments);
 router.post('/:slug/comments', authUser, createComment);
 router.put('/comments/:commentId', authUser, updateComment);
+
 
 export default router;

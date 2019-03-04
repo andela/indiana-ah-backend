@@ -144,7 +144,10 @@ class UserController extends BaseHelper {
       const {
         email: dbEmail, username, name, role, isVerified, id
       } = newUser;
-      const decodedPassword = await newUser.validatePassword(password);
+
+      const { password: dbPassword } = newUser.dataValues;
+      const decodedPassword = UserController.validatePassword(password, dbPassword);
+
       if (dbEmail && decodedPassword) {
         const payload = {
           email: dbEmail,
@@ -228,12 +231,90 @@ class UserController extends BaseHelper {
    * @static uploadUserPicture - the method that handles editing user picture
    * @param {object} req - the request object
    * @param {object} res - the response object
-   *
+   * @param {function} next
    * @memberOf UserController class
    */
   static async uploadUserPicture(req, res, next) {
-    const { id } = req.user;
-    UserController.uploadPicture(req, res, Users, { id }, next);
+    try {
+      const { username } = req.params;
+      await UserController.uploadPicture(req, res, Users, { username });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   *
+   *
+   * @static removeUserPicture - the method that handles editing user picture
+   * @param {object} req - the request object
+   * @param {object} res - the response object
+   * @param {function} next
+   * @memberOf UserController class
+   */
+  static async removeUserPicture(req, res, next) {
+    const { username } = req.params;
+
+    const user = await UserController.checkIfExists(username);
+    if (user) {
+      try {
+        user.update({
+          imageUrl: 'http://s3.amazonaws.com/37assets/svn/765-default-avatar.png'
+        });
+        return res.status(200).json({
+          message: 'Profile Pic deleted successfully'
+        });
+      } catch (error) {
+        next(error);
+      }
+    }
+    return errorMessage(res, 404, 'User not found');
+  }
+
+  /**
+   *
+   *
+   * @static updatePassword - the method that handles updating user password
+   * @param {object} req - the request object
+   * @param {object} res - the response object
+   *
+   * @memberOf UserController class
+   */
+  static async updatePassword(req, res, next) {
+    const { username } = req.params;
+    const { currentPassword, newPassword } = req.body;
+
+    const user = await UserController.checkIfExists(username);
+
+    if (user) {
+      const { password: dbPassword } = user.dataValues;
+      const samePassword = await UserController.validatePassword(currentPassword, dbPassword);
+
+      try {
+        if (samePassword) {
+          const updatedUser = await Users.update(
+            {
+              password: newPassword
+            },
+            {
+              where: { username },
+              returning: true
+            }
+          );
+          const updatedRows = updatedUser[0];
+
+          if (updatedRows) {
+            return res.status(200).json({
+              message: 'Password successfully updated'
+            });
+          }
+        }
+        return errorMessage(res, 401, 'Error updating password');
+      } catch (error) {
+        next(error);
+      }
+    }
+    return errorMessage(res, 404, 'User not found');
   }
 
   /**
@@ -245,14 +326,21 @@ class UserController extends BaseHelper {
    *
    * @memberOf UserController class
    */
-  static async editUserProfile(req, res) {
-    const { name, bio, password } = req.body;
+  static async editUserProfile(req, res, next) {
+    const {
+      name, bio, username
+    } = req.body;
     const user = req.params.username;
-    const { username } = req.user;
+    let foundUsername;
 
-    const profile = await Users.findOne({
-      where: { username: user }
-    });
+    if (username) {
+      foundUsername = await UserController.checkIfExists(username);
+    }
+
+    if (foundUsername) {
+      return errorMessage(res, 409, 'This username already exists');
+    }
+    const profile = await UserController.checkIfExists(user);
     if (profile) {
       try {
         const updatedUser = await Users.update(
@@ -260,32 +348,23 @@ class UserController extends BaseHelper {
             name: name || profile.dataValues.name,
             username: username || profile.dataValues.username,
             bio: bio || profile.dataValues.bio,
-            password: password || profile.dataValues.password
           },
           {
-            where: { username },
+            where: { username: user },
             returning: true
           }
         );
-        const updatedRows = updatedUser[0];
         const updatedUserValues = updatedUser[1][0].dataValues;
-        if (!UserController.checkIfDataExist(updatedRows)) {
-          return res.status(404).json({
-            message: 'User not found'
-          });
-        }
         return res.status(200).json({
           profile: {
             name: updatedUserValues.name,
             username: updatedUserValues.username,
-            email: updatedUserValues.email,
             bio: updatedUserValues.bio,
-            imageUrl: updatedUserValues.imageUrl,
             createdAt: updatedUserValues.createdAt
           }
         });
       } catch (error) {
-        return errorMessage(res, 500, 'Internal server error');
+        return next(error);
       }
     }
     return errorMessage(res, 404, 'User not found');
@@ -297,24 +376,31 @@ class UserController extends BaseHelper {
    * @static deleteUserProfile - the method that handles deleting a user profile
    * @param {object} req - the request object
    * @param {object} res - the response object
-   *
+   * @param {function} next
    * @memberOf UserController class
    */
   static async deleteUserProfile(req, res, next) {
-    const user = req.params.username;
+    const { username } = req.params;
+    const { password } = req.body;
 
-    try {
-      const response = await Users.findOne({
-        where: { username: user }
-      });
-      if (!response) return errorMessage(res, 404, 'User not found');
-      await Users.destroy({
-        where: { username: user },
-      });
-      return res.status(200).json({ message: 'Profile successfully deleted' });
-    } catch (error) {
-      return next(error);
+    const user = await UserController.checkIfExists(username);
+    if (user) {
+      const { password: dbPassword } = user.dataValues;
+      const samePassword = await UserController.validatePassword(password, dbPassword);
+
+      try {
+        if (samePassword) {
+          await Users.destroy({
+            where: { username },
+          });
+          return res.status(200).json({ message: 'Profile successfully deleted' });
+        }
+        return errorMessage(res, 401, 'Error deleting user');
+      } catch (error) {
+        next(error);
+      }
     }
+    return errorMessage(res, 404, 'User not found');
   }
 
 

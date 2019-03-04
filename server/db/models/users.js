@@ -93,10 +93,6 @@ export default (sequelize, DataTypes) => {
     }
   );
 
-  Users.prototype.validatePassword = function validatePassword(passwordInput) {
-    return bcrypt.compare(passwordInput, this.dataValues.password);
-  };
-
   Users.associate = ({
     Articles,
     Comments,

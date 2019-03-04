@@ -131,8 +131,43 @@ class ArticleController extends BaseHelper {
    * @memberOf ArticleController class
    */
   static async updateArticlePicture(req, res, next) {
-    const { slug } = req.params;
-    ArticleController.uploadPicture(req, res, Articles, { slug }, next);
+    try {
+      const { slug } = req.params;
+      await ArticleController.uploadPicture(req, res, Articles, { slug });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   *@description controller method for removing article picture
+   * @static
+   * @param {object} req - the request object
+   * @param {object} res - the response object
+   * @param {function} next passes control to the next function
+   * @returns {Object} a response object
+   * @memberOf ArticleController class
+   */
+  static async removeArticlePicture(req, res, next) {
+    try {
+      const { slug } = req.params;
+      const { id: userId } = req.user;
+      const response = await Articles.update(
+        {
+          imageUrl: null
+        },
+        {
+          where: { slug, userId },
+          returning: true
+        }
+      );
+
+      if (response[0] === 0) return Response(res, 404, 'Article not found');
+      const article = response[1][0];
+      return res.status(200).json({ message: 'Article Picture successfully removed', article });
+    } catch (error) {
+      return next(error);
+    }
   }
 
   /**

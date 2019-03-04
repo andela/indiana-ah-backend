@@ -1,7 +1,12 @@
 export const data = {
   bio: 'I am a boy',
+  name: 'Emeka'
+};
+
+export const data1 = {
+  bio: 'I am a boy',
   name: 'Emeka',
-  password: 'sammy12345'
+  username: 'cim'
 };
 
 export const badName = {
@@ -28,12 +33,58 @@ export const shortPassword = {
   password: 'sammy1'
 };
 
-export const badEmail = {
-  email: 'tiku.yahoo'
+export const incorrectPasswordData = {
+  currentPassword: 'tiku1234',
+  newPassword: 'sammy1234',
+  confirmPassword: 'sammy1234'
+};
+
+export const badPasswordData1 = {
+  currentPassword: 'cim23000',
+  newPassword: 'sammyiiiii',
+  confirmPassword: 'sammyiiiii'
+};
+
+export const badPasswordData2 = {
+  currentPassword: 'cim23000',
+  newPassword: 'sammy1234',
+  confirmPassword: 'sammy123'
+};
+
+
+export const badPasswordData3 = {
+  currentPassword: 'cim23000',
+  newPassword: 'sammy12',
+  confirmPassword: 'sammy12'
+};
+
+export const badPasswordData4 = {
+  currentPassword: 'cim2300',
+  newPassword: 'sammy12',
+  confirmPassword: 'sammy12'
+};
+
+export const badPasswordData5 = {
+  currentPassword: 'cim23000',
+  confirmPassword: 'sammy12'
+};
+
+export const badPasswordData6 = {
+  newPassword: 'sammy12',
+  confirmPassword: 'sammy12'
+};
+
+export const badPasswordData7 = {
+  currentPassword: 'cim23000',
+  newPassword: 'sammy123',
 };
 
 export const badBio = {
   bio: 34
+};
+
+export const badEmail = {
+  email: 'tiku.yahoo'
 };
 
 export const mockData = {
@@ -60,8 +111,17 @@ export const badPayload = {
 
 export const user1 = {
   username: 'cim',
-  email: 'cim@gmail.com',
-  password: 'baleesecret23'
+  email: 'primuse@gmail.com',
+  password: 'baleesecret123'
+};
+export const password = {
+  password: 'baleesecret123'
+};
+
+export const correctPasswordData = {
+  currentPassword: 'baleesecret123',
+  newPassword: 'sammy1234',
+  confirmPassword: 'sammy1234'
 };
 
 export const unregisteredEmail = {
@@ -72,3 +132,4 @@ export const registeredEmail = {
   email: 'balee@gmail.com',
   password: 'Arukwe1234'
 };
+

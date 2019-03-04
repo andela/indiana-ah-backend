@@ -22,11 +22,37 @@ class BaseHelper {
 
   /**
    *
+   * @param { string } passwordInput
+   * @param { string } dbPassword
+   * @return {boolean} returns a boolean
+   */
+  static validatePassword(passwordInput, dbPassword) {
+    return bcrypt.compare(passwordInput, dbPassword);
+  }
+
+  /**
+   *
    * @param { object } data
    * @returns {boolean} returns a boolean
    */
   static checkIfDataExist(data) {
     return !!data;
+  }
+
+  /**
+   *
+   * @param { string } data
+   * @returns {boolean} returns a boolean
+   */
+  static async checkIfExists(data) {
+    const user = await Users.findOne({
+      where: { username: data },
+    });
+
+    if (user) {
+      return user;
+    }
+    return false;
   }
 
   /**
@@ -137,7 +163,7 @@ class BaseHelper {
    * @param {function} next Function to pass control to the next function
    * @returns {object} a response object
    */
-  static async uploadPicture(req, res, model, modelColumnObj, next) {
+  static async uploadPicture(req, res, model, modelColumnObj) {
     const image = {};
     image.url = req.file.url;
     image.id = req.file.public_id;
@@ -154,19 +180,16 @@ class BaseHelper {
 
       const updatedRows = updatedModel[0];
       const updatedValues = updatedModel[1][0];
-      let url = '';
-      if (updatedValues) {
-        url = updatedValues.dataValues.imageUrl;
-      }
 
       const modelName = model.name.slice(0, -1);
 
       if (!updatedRows) return res.status(404).json({ message: `${modelName} not found` });
       return res.status(200).json({
-        picture: url
+        message: 'Picture updated successfully',
+        data: updatedValues
       });
     } catch (error) {
-      next(error);
+      return error;
     }
   }
 
