@@ -17,27 +17,13 @@ export default (sequelize, DataTypes) => {
     },
     {}
   );
-  readingstatistics.associate = ({
-    Users, Articles, Reactions, Bookmarks, Comments
-  }) => {
+  readingstatistics.associate = ({ Users, Articles }) => {
     readingstatistics.belongsTo(Users, {
       foreignKey: 'userId',
       onDelete: 'CASCADE'
     });
     readingstatistics.belongsTo(Articles, {
       foreignKey: 'articleId',
-      onDelete: 'CASCADE'
-    });
-    readingstatistics.belongsTo(Reactions, {
-      foreignKey: 'userId',
-      onDelete: 'CASCADE'
-    });
-    readingstatistics.belongsTo(Bookmarks, {
-      foreignKey: 'userId',
-      onDelete: 'CASCADE'
-    });
-    readingstatistics.belongsTo(Comments, {
-      foreignKey: 'userId',
       onDelete: 'CASCADE'
     });
   };
