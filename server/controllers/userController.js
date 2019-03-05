@@ -327,9 +327,7 @@ class UserController extends BaseHelper {
    * @memberOf UserController class
    */
   static async editUserProfile(req, res, next) {
-    const {
-      name, bio, username
-    } = req.body;
+    const { name, bio, username } = req.body;
     const user = req.params.username;
     let foundUsername;
 
@@ -347,7 +345,7 @@ class UserController extends BaseHelper {
           {
             name: name || profile.dataValues.name,
             username: username || profile.dataValues.username,
-            bio: bio || profile.dataValues.bio,
+            bio: bio || profile.dataValues.bio
           },
           {
             where: { username: user },
@@ -391,7 +389,7 @@ class UserController extends BaseHelper {
       try {
         if (samePassword) {
           await Users.destroy({
-            where: { username },
+            where: { username }
           });
           return res.status(200).json({ message: 'Profile successfully deleted' });
         }
@@ -402,7 +400,6 @@ class UserController extends BaseHelper {
     }
     return errorMessage(res, 404, 'User not found');
   }
-
 
   /**
    *

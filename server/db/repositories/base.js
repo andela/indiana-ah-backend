@@ -106,15 +106,17 @@ class BaseRepository {
   /**
    *
    *
-   * @param {any} userId
+   * @param {Number} userId
+   * @param {Array} includedModels
    * @returns {String} the count of the user in this model
    *
    * @memberOf BaseRepository
    */
-  async findAndCountAll(userId) {
+  async findAndCountAll(userId, includedModels) {
     try {
       const result = await this.models.findAndCountAll({
-        where: { userId }
+        where: { userId },
+        include: includedModels
       });
       return result;
     } catch (error) {

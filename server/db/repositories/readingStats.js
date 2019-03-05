@@ -1,6 +1,8 @@
 import BaseRepository from './base';
 import models from '../models/index';
 
+const { Reactions, Bookmarks, Comments } = models;
+
 /**
  *
  *
@@ -42,8 +44,9 @@ class ReadingStatistics extends BaseRepository {
    * @memberOf ReadingStatistics
    */
   async findAndCountStats(userId) {
+    const includedModels = [{ model: Reactions }, { model: Bookmarks }, { model: Comments }];
     try {
-      const { count } = await this.findAndCountAll(userId);
+      const { count } = await this.findAndCountAll(userId, includedModels);
       return count;
     } catch (error) {
       return error;
