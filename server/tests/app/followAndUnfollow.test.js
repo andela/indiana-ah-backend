@@ -3,7 +3,11 @@ import { expect } from 'chai';
 import app from '../../index';
 import models from '../../db/models';
 import {
-  userBiola, userBalogun, userAkeem, userDivine, userKelvin
+  userBiola,
+  userBalogun,
+  userAkeem,
+  userDivine,
+  userKelvin
 }
   from './mockData/userMockData';
 import { user1 } from './mockData/articlesMockData';
