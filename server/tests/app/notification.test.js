@@ -35,6 +35,7 @@ before(async () => {
     });
 });
 
+
 describe('Subscription to  notification', () => {
   it('should a user to subscribe for email notification', () => request(app)
     .patch('/api/v1/notifications/email')

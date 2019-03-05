@@ -68,3 +68,28 @@ export const userBuhari = {
   password: 'customer24',
   isVerified: true
 };
+
+export const userAndela = {
+  username: 'Andela',
+  email: 'Andela@gmail.com',
+  password: 'customer24',
+  isVerified: true
+};
+
+export const userDivine = {
+  username: 'Divine',
+  email: 'Divine@gmail.com',
+  password: 'customer24',
+  isVerified: true,
+  subscribed: true,
+  inAppNotification: true
+};
+
+export const userKelvin = {
+  username: 'KelvinOmende',
+  email: 'KelvinOmende@gmail.com',
+  password: 'customer24',
+  isVerified: true,
+  subscribed: true,
+  inAppNotification: true
+};
