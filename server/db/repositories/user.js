@@ -43,8 +43,8 @@ class UserRepository extends BaseRepository {
   /**
    *
    *
-   * @param {string} username
-   * @param {string} role
+   * @param {Object} whereClause
+   * @param {string} colToUpdate
    * @param {Object} res
    * @returns {Object} the updated user
    *
