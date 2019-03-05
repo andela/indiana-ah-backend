@@ -22,8 +22,11 @@ export default (req, res, next) => {
 
   const { error } = Joi.validate({ currentPassword, newPassword, confirmPassword }, schema);
   if (!error) {
-    if (!isAlphaNumeric(currentPassword)
-      || !isAlphaNumeric(newPassword) || !isAlphaNumeric(confirmPassword)) {
+    if (
+      !isAlphaNumeric(currentPassword)
+      || !isAlphaNumeric(newPassword)
+      || !isAlphaNumeric(confirmPassword)
+    ) {
       return errorMessage(res, 400, 'Passwords should be Alphanumeric');
     }
     if (newPassword === confirmPassword) {

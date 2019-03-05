@@ -7,6 +7,6 @@ const { authUser } = Auth;
 
 const router = Router();
 
-router.get('/reading', authUser, getReadingStatistics);
+router.get('/', authUser, getReadingStatistics);
 
 export default router;
