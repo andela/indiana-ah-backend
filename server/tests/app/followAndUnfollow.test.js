@@ -4,7 +4,8 @@ import app from '../../index';
 import models from '../../db/models';
 import {
   userBiola, userBalogun, userAkeem, userDivine, userKelvin
-} from './mockData/userMockData';
+}
+  from './mockData/userMockData';
 import { user1 } from './mockData/articlesMockData';
 
 const { Users } = models;
