@@ -35,7 +35,9 @@ class FollowController {
         attributes: ['id', 'followerId', 'authorId']
       }).spread(async (follow, created) => {
         if (created) {
-          const emailTemplate = newFollowerTemplate(req.user.username);
+          const location = req.get('host');
+          const url = `${location}/api/v1/profiles/${req.user.username}`;
+          const emailTemplate = newFollowerTemplate(req.user.username, url);
           const message = `Hi ${username}, ${req.user.username} started following you on Authors Haven`;
 
           if (subscribed) sendEmail(email, `${message}`, emailTemplate);

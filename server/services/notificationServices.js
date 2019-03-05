@@ -85,10 +85,11 @@ class NotificationServices {
  * @param {object} req client request
  *  @param {object} res server response
  * @param {string} articleId client request
+ * @param {string} slug client request
  * @returns {Object} server response object
  * @memberof NotificationServices
  */
-  static async notifyUsersWhoBookmarked(req, res, articleId) {
+  static async notifyUsersWhoBookmarked(req, res, articleId, slug) {
     try {
       // returns an array of userID who have bookmarked the article commented on
       const arrayOfUserIDs = await Bookmarks.findAll({ where: { articleId } })
@@ -111,7 +112,9 @@ class NotificationServices {
       // notify via email
       if (usersWhoBookmarkedWithEmailSub.length !== 0) {
         const emailAddresses = usersWhoBookmarkedWithEmailSub.map(each => each.email);
-        const emailTemplate = newCommentOnBookMarkedArticlesTemplate(req.user.username);
+        const location = req.get('host');
+        const url = `${location}/api/v1/articles/${slug}`;
+        const emailTemplate = newCommentOnBookMarkedArticlesTemplate(req.user.username, url);
         sendEmail(emailAddresses, 'Hi there', emailTemplate);
       }
 

@@ -76,11 +76,11 @@ describe('Email Template', () => {
     expect(newArticleTemplate('dozie', 'www.google.com')).to.include('dozie just published a new article.');
   });
   it('it should return html email when a user follows another user', () => {
-    expect(newFollowerTemplate('dozie')).to.be.a('string');
-    expect(newFollowerTemplate('dozie')).to.include('dozie is now following you on Authors Haven');
+    expect(newFollowerTemplate('dozie', 'www.google.com')).to.be.a('string');
+    expect(newFollowerTemplate('dozie', 'www.google.com')).to.include('dozie is now following you on Authors Haven');
   });
-  it('it should return html email when a bookmarked article gets new commet', () => {
-    expect(newCommentOnBookMarkedArticlesTemplate('dozie')).to.be.a('string');
-    expect(newCommentOnBookMarkedArticlesTemplate('dozie')).to.include('dozie just commented on an article you bookmarked ');
+  it('it should return html email when a bookmarked article gets new comment', () => {
+    expect(newCommentOnBookMarkedArticlesTemplate('dozie', 'www.google.com')).to.be.a('string');
+    expect(newCommentOnBookMarkedArticlesTemplate('dozie', 'www.google.com')).to.include('dozie just commented on an article you bookmarked');
   });
 });
