@@ -94,6 +94,16 @@ describe('all unregistered routes', () => {
   });
 });
 
+describe('Index route', () => {
+  it('should return a success message', () => request(app)
+    .get('/')
+    .set('content-type', 'application/json')
+    .then((res) => {
+      expect(res.status).to.equal(200);
+      expect(res.body.message).to.equal('Welcome to authors haven platform');
+    }));
+});
+
 describe('user registration', () => {
   it('should fail on registration, since the  email field was not provided', () => request(app)
     .post('/api/v1/register')

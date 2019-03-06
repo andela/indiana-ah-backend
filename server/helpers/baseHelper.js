@@ -22,16 +22,37 @@ class BaseHelper {
 
   /**
    *
-   * @param { string } req
-   * @param {string} res
-   * @param { string } data
-   * @param { string } message
+   * @param { string } passwordInput
+   * @param { string } dbPassword
+   * @return {boolean} returns a boolean
+   */
+  static validatePassword(passwordInput, dbPassword) {
+    return bcrypt.compare(passwordInput, dbPassword);
+  }
+
+  /**
+   *
+   * @param { object } data
    * @returns {boolean} returns a boolean
    */
-  static checkIfDataExist(req, res, data, message) {
-    if (!data) {
-      return res.status(404).json(message);
+  static checkIfDataExist(data) {
+    return !!data;
+  }
+
+  /**
+   *
+   * @param { string } data
+   * @returns {boolean} returns a boolean
+   */
+  static async checkIfExists(data) {
+    const user = await Users.findOne({
+      where: { username: data },
+    });
+
+    if (user) {
+      return user;
     }
+    return false;
   }
 
   /**
@@ -80,13 +101,15 @@ class BaseHelper {
    * @returns {object} a response object
    */
   static async reaction(req, res, model, modelColumnObj) {
-    const { reactionType } = req.body;
+    let { reactionType } = req.body;
+    reactionType = reactionType.toLowerCase();
     const { id: userId } = req.user;
     let deleted = false;
     let id;
     const response = await model.findOne({
       where: { ...modelColumnObj, userId }
     });
+
     if (response) {
       const dbReaction = response.dataValues;
       const { reactionType: dbReactionType, id: reactionId } = dbReaction;
@@ -130,7 +153,48 @@ class BaseHelper {
     return res.status(200).json({ message: 'Reaction successfully deleted' });
   }
 
-  /** @description helper method for searching articles
+  /**
+   * @description uploadPicture- controller method for uploading pictures
+   * @static
+   * @param {object} req Request object
+   * @param {object} res Response object
+   * @param {object} model Request object
+   * @param {object} modelColumnObj Request object
+   * @param {function} next Function to pass control to the next function
+   * @returns {object} a response object
+   */
+  static async uploadPicture(req, res, model, modelColumnObj) {
+    const image = {};
+    image.url = req.file.url;
+    image.id = req.file.public_id;
+    try {
+      const updatedModel = await model.update(
+        {
+          imageUrl: image.url
+        },
+        {
+          where: { ...modelColumnObj },
+          returning: true
+        }
+      );
+
+      const updatedRows = updatedModel[0];
+      const updatedValues = updatedModel[1][0];
+
+      const modelName = model.name.slice(0, -1);
+
+      if (!updatedRows) return res.status(404).json({ message: `${modelName} not found` });
+      return res.status(200).json({
+        message: 'Picture updated successfully',
+        data: updatedValues
+      });
+    } catch (error) {
+      return error;
+    }
+  }
+
+  /**
+   * @description helper method for searching articles
    * @static
    * @param {Object} req response object
    * @param {Object} res response object
@@ -148,8 +212,39 @@ class BaseHelper {
       }
     ];
     const articles = await paginator(Articles, req, includedModels, condition);
-    if (!articles.length) return res.status(404).json({ message: 'Couldn\'t find articles matching your search' });
     return res.status(200).json({ searchResults: articles });
+  }
+
+  /**
+   * @description helper method for extracting the number of reactions from any data
+   * @static
+   * @param {Object} data object with reactions
+   * @param {Object} reactionObj reaction object
+   * @returns {Number} number of likes and dislikes
+   * @memberOf BaseHelper
+   */
+  static getOneReactionsCount(data, reactionObj) {
+    const reactions = data[reactionObj].map(reaction => reaction.reactionType);
+    const likes = reactions.filter(reaction => reaction === 'like').length;
+    const dislikes = reactions.filter(reaction => reaction === 'dislike').length;
+    data.likes = likes;
+    data.dislikes = dislikes;
+    delete data[reactionObj];
+  }
+
+  /**
+   * @description helper method for extracting the number of reactions from a data collection
+   * @static
+   * @param {Array} dataCollection array of objects with reactions
+   * @param {Object} reactionObj reaction object
+   * @returns {Number} number of likes and dislikes
+   * @memberOf BaseHelper
+   */
+  static extractAllReactionsCount(dataCollection, reactionObj) {
+    return dataCollection.map((item) => {
+      this.getOneReactionsCount(item, reactionObj);
+      return item;
+    });
   }
 }
 

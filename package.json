@@ -8,7 +8,7 @@
     "clean": "rm -rf build",
     "build": "babel ./server/src -d ../server/dist",
     "start": "NODE_ENV=production && NODE_ENV=production npm run migrate:refresh && NODE_ENV=production babel-node ./server/index.js",
-    "dev": "nodemon bin/dev",
+    "dev": "NODE_ENV=development nodemon bin/dev",
     "coverage": "nyc report --reporter=text-lcov --reporter=html | coveralls && nyc report --reporter=lcov",
     "migrate": "sequelize db:migrate && sequelize db:seed:all",
     "clean:db": "sequelize db:migrate:undo:all",
@@ -46,13 +46,15 @@
     "passport-twitter": "^1.0.4",
     "pg": "^7.8.0",
     "pg-hstore": "^2.3.2",
+    "pusher": "^2.2.0",
     "sequelize": "^4.42.0",
     "sequelize-cli": "^5.4.0",
     "sequelize-slugify": "^0.6.1",
     "sequelize-test-helpers": "^1.0.7",
     "sinon": "^7.2.3",
     "supertest": "^3.4.2",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",

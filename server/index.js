@@ -9,11 +9,11 @@ import auth from './routes/auth';
 import google from './db/config/passportConfigs/googleStrategy';
 import facebook from './db/config/passportConfigs/facebookStrategy';
 import twitter from './db/config/passportConfigs/twitterStrategy';
+import logger from './winstonConfig';
 
 google(passport);
 facebook(passport);
 twitter(passport);
-
 
 // Create global app object
 const app = express();
@@ -26,7 +26,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.get('/', (req, res) => res.status(200).json({
-  message: 'welcome to authors haven platform'
+  message: 'Welcome to authors haven platform'
 }));
 
 app.use(session({
@@ -46,7 +46,10 @@ app.use('*', (req, res) => res.status(404).json({ error: 'route does not exist' 
 
 // / catch all unhandled errors
 /* eslint-disable-next-line */
-app.use((error, req, res, next) => errorMessage(res, 500, error.message || 'internal server error'));
+app.use((error, req, res, next) => {
+  logger.error(error);
+  errorMessage(res, 500, 'Internal server error');
+});
 
 // finally, let's start our server...
 app.listen(PORT, () => {

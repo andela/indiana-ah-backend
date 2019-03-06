@@ -3,10 +3,11 @@ import Response from '../helpers/errorHelpers';
 import models from '../db/models';
 import BaseHelper from '../helpers/baseHelper';
 import paginator from '../helpers/paginator';
+import NotificationServices from '../services/notificationServices';
 
-const {
-  Articles, Users, Comments, Reactions
-} = models;
+const { notifyViaEmailAndPush } = NotificationServices;
+
+const { Articles, Users, Reactions } = models;
 
 /**
  * @description A collection of controller methods for article CRUD operations
@@ -25,9 +26,12 @@ class ArticleController extends BaseHelper {
     try {
       const { id: userId } = req.user;
       req.body.userId = userId;
+      if (req.file) req.body.imageUrl = req.file.url;
       const userArticle = req.body.articleBody;
       const timeToRead = ArticleController.calculateTimeToRead(userArticle);
       const article = await Articles.create(req.body);
+      const { slug } = article.dataValues;
+      await notifyViaEmailAndPush(req, res, slug);
       return res.status(201).json({ article, timeToRead });
     } catch (error) {
       return next(error);
@@ -48,14 +52,14 @@ class ArticleController extends BaseHelper {
         {
           model: Users,
           as: 'author',
-          attributes: ['username', 'bio', 'imageUrl']
+          attributes: ['name', 'username', 'bio', 'imageUrl']
         },
-        { model: Comments },
         { model: Reactions }
       ];
-      const articles = await paginator(Articles, req, includedModels);
+      let articles = await paginator(Articles, req, includedModels);
       if (articles === undefined) return Response(res, 400, 'pagination error');
       if (!articles.length) return Response(res, 200, 'No articles found');
+      articles = ArticleController.extractAllReactionsCount(articles, 'Reactions');
       return res.status(200).json({ articles });
     } catch (error) {
       return next(error);
@@ -76,12 +80,20 @@ class ArticleController extends BaseHelper {
       const user = await Users.findOne({ where: { username } });
       if (!user) return Response(res, 404, 'User not found');
       const { id: userId } = user;
-      const includedModels = [{ model: Comments }, { model: Reactions }];
-      const articles = await paginator(Articles, req, includedModels, {
+      const includedModels = [
+        {
+          model: Users,
+          as: 'author',
+          attributes: ['name', 'username', 'bio', 'imageUrl']
+        },
+        { model: Reactions }
+      ];
+      let articles = await paginator(Articles, req, includedModels, {
         userId
       });
       if (articles === undefined) return Response(res, 400, 'pagination error');
       if (!articles.length) return Response(res, 200, 'No articles found');
+      articles = ArticleController.extractAllReactionsCount(articles, 'Reactions');
       return res.status(200).json({ articles });
     } catch (error) {
       return next(error);
@@ -100,6 +112,7 @@ class ArticleController extends BaseHelper {
     try {
       const { slug } = req.params;
       const { id: userId } = req.user;
+      if (req.file) req.body.imageUrl = req.file.url;
       const response = await Articles.update(req.body, {
         where: { slug, userId },
         returning: true
@@ -108,6 +121,55 @@ class ArticleController extends BaseHelper {
       if (response[0] === 0) return Response(res, 404, 'Article requested for update not found');
       const article = response[1][0];
       return res.status(200).json({ message: 'Article successfully updated', article });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  /**
+   *@description controller method for uploading article picture
+   * @static
+   * @param {object} req - the request object
+   * @param {object} res - the response object
+   * @param {function} next passes control to the next function
+   * @returns {Object} a response object
+   * @memberOf ArticleController class
+   */
+  static async updateArticlePicture(req, res, next) {
+    try {
+      const { slug } = req.params;
+      await ArticleController.uploadPicture(req, res, Articles, { slug });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   *@description controller method for removing article picture
+   * @static
+   * @param {object} req - the request object
+   * @param {object} res - the response object
+   * @param {function} next passes control to the next function
+   * @returns {Object} a response object
+   * @memberOf ArticleController class
+   */
+  static async removeArticlePicture(req, res, next) {
+    try {
+      const { slug } = req.params;
+      const { id: userId } = req.user;
+      const response = await Articles.update(
+        {
+          imageUrl: null
+        },
+        {
+          where: { slug, userId },
+          returning: true
+        }
+      );
+
+      if (response[0] === 0) return Response(res, 404, 'Article not found');
+      const article = response[1][0];
+      return res.status(200).json({ message: 'Article Picture successfully removed', article });
     } catch (error) {
       return next(error);
     }
@@ -124,7 +186,7 @@ class ArticleController extends BaseHelper {
   static async getOneArticle(req, res, next) {
     try {
       const { slug } = req.params;
-      const article = await Articles.findOne({
+      let article = await Articles.findOne({
         where: { slug },
         include: [
           {
@@ -136,6 +198,8 @@ class ArticleController extends BaseHelper {
         ]
       });
       if (!article) return Response(res, 404, 'Article not found');
+      article = article.toJSON();
+      ArticleController.getOneReactionsCount(article, 'Reactions');
       const timeToRead = ArticleController.calculateTimeToRead(article.articleBody);
       return res.status(200).json({ article, timeToRead });
     } catch (error) {
