@@ -19,14 +19,16 @@ const paginator = async (
     return undefined;
   }
   try {
-    const { rows } = await modelName.findAndCountAll({
+    const { rows, count } = await modelName.findAndCountAll({
       limit,
       offset,
       where: whereClause,
       include: includedModels
     });
     const data = rows.map(row => row.dataValues);
-    return data;
+
+    const totalNumberOfPages = Math.ceil(count / 4);
+    return { data, totalNumberOfPages };
   } catch (error) {
     return error;
   }

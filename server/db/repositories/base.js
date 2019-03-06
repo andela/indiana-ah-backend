@@ -42,8 +42,6 @@ class BaseRepository {
    *
    * @param {Object} whereClause
    * @param {Object} colToUpdate
-   * @param {Object} res
-   * @param {Object} next
    * @return {Object} the updated user
    * @memberOf BaseRepository
    */

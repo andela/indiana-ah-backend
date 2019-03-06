@@ -107,7 +107,7 @@ describe('Get all articles', () => {
     .get('/api/v1/articles?page=1')
     .then((res) => {
       expect(res.status).to.equal(200);
-      expect(res.body.articles).to.be.an('array');
+      expect(res.body.articles).to.be.an('Array');
     }));
 });
 
@@ -198,7 +198,7 @@ describe('Get all articles for a particular user', () => {
     .get('/api/v1/articles/user/ozone4real?page=1')
     .then((res) => {
       expect(res.status).to.equal(200);
-      expect(res.body.articles).to.be.an('array');
+      expect(res.body.articles).to.be.an('Array');
     }));
 });
 
@@ -317,14 +317,14 @@ describe('Search all articles', () => {
     .get('/api/v1/articles/search?page=1&q=Andela')
     .then((res) => {
       expect(res.status).to.equal(200);
-      expect(res.body.searchResults).to.be.an('array');
+      expect(res.body.searchResults).to.be.an('Object');
     }));
 
   it('should fetch all matching articles if the search parameters are valid and matching articles were found', () => request(app)
     .get('/api/v1/articles/search?page=1&tag=yes&articleTitle=Andela')
     .then((res) => {
       expect(res.status).to.equal(200);
-      expect(res.body.searchResults).to.be.an('array');
+      expect(res.body.searchResults).to.be.an('Object');
     }));
 });
 
