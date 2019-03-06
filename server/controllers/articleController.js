@@ -61,11 +61,12 @@ class ArticleController extends BaseHelper {
         },
         { model: Reactions }
       ];
-      let articles = await paginator(Articles, req, includedModels);
-      if (articles === undefined) return Response(res, 400, 'pagination error');
-      if (!articles.length) return Response(res, 200, 'No articles found');
-      articles = ArticleController.extractAllReactionsCount(articles, 'Reactions');
-      return res.status(200).json({ articles });
+      // eslint-disable-next-line prefer-const
+      let { data, totalNumberOfPages } = await paginator(Articles, req, includedModels);
+      if (data === undefined) return Response(res, 400, 'pagination error');
+      if (!data.length) return Response(res, 200, 'No articles found');
+      data = ArticleController.extractAllReactionsCount(data, 'Reactions');
+      return res.status(200).json({ articles: data, totalNumberOfPages });
     } catch (error) {
       return next(error);
     }
@@ -93,13 +94,13 @@ class ArticleController extends BaseHelper {
         },
         { model: Reactions }
       ];
-      let articles = await paginator(Articles, req, includedModels, {
+      let { data } = await paginator(Articles, req, includedModels, {
         userId
       });
-      if (articles === undefined) return Response(res, 400, 'pagination error');
-      if (!articles.length) return Response(res, 200, 'No articles found');
-      articles = ArticleController.extractAllReactionsCount(articles, 'Reactions');
-      return res.status(200).json({ articles });
+      if (data === undefined) return Response(res, 400, 'pagination error');
+      if (!data.length) return Response(res, 200, 'No articles found');
+      data = ArticleController.extractAllReactionsCount(data, 'Reactions');
+      return res.status(200).json({ articles: data });
     } catch (error) {
       return next(error);
     }

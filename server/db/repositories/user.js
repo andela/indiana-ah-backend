@@ -21,7 +21,6 @@ class UserRepository extends BaseRepository {
    *
    *
    * @param {any} details
-   * @param {any} res
    * @returns {Object} this is the role of the user
    * @memberOf UserRepository
    */
@@ -45,7 +44,6 @@ class UserRepository extends BaseRepository {
    *
    * @param {Object} whereClause
    * @param {string} colToUpdate
-   * @param {Object} res
    * @returns {Object} the updated user
    *
    * @memberOf UserRepository
