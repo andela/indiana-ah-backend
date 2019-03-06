@@ -93,3 +93,21 @@ export const userKelvin = {
   subscribed: true,
   inAppNotification: true
 };
+
+export const userAntalaniyan = {
+  username: 'Antalaniyan',
+  email: 'Antalaniyan@gmail.com',
+  password: 'customer24',
+  isVerified: true,
+  subscribed: true,
+  inAppNotification: true
+};
+
+export const userBashorun = {
+  username: 'Bashorun',
+  email: 'Bashorun@gmail.com',
+  password: 'customer24',
+  isVerified: true,
+  subscribed: true,
+  inAppNotification: true
+};

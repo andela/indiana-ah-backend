@@ -8,12 +8,23 @@ import {
   newCommentOnBookMarkedArticlesTemplate
 } from '../../services/emailTemplates';
 
-import { userkorede, userBuhari } from './mockData/userMockData';
+import {
+  userkorede,
+  userBuhari,
+  userBashorun,
+  userAntalaniyan
+} from './mockData/userMockData';
+
+import { validArticle } from './mockData/articlesMockData';
 
 const { Users } = models;
 
 let tokenForkorede;
 let tokenForBuhari;
+let tokenForBashorun;
+let tokenForAntalaniyan;
+let articleId;
+let articleSlug;
 
 before(async () => {
   await Users.create(userkorede);
@@ -33,6 +44,49 @@ before(async () => {
     .then((res) => {
       tokenForBuhari = res.body.token;
     });
+});
+
+before(async () => {
+  await Users.create(userBashorun);
+  return request(app)
+    .post('/api/v1/login')
+    .send({ email: userBashorun.email, password: userBashorun.password })
+    .then((res) => {
+      tokenForBashorun = res.body.token;
+    });
+});
+
+before(async () => {
+  await Users.create(userAntalaniyan);
+  return request(app)
+    .post('/api/v1/login')
+    .send({ email: userAntalaniyan.email, password: userAntalaniyan.password })
+    .then((res) => {
+      tokenForAntalaniyan = res.body.token;
+    });
+});
+
+before(async () => {
+  await request(app)
+    .post('/api/v1/articles')
+    .set('x-auth-token', tokenForBashorun)
+    .send(validArticle)
+    .then((res) => {
+      articleId = res.body.article.id;
+      articleSlug = res.body.article.slug;
+    });
+});
+
+before(async () => {
+  await request(app)
+    .post(`/api/v1/articles/${articleId}/bookmark`)
+    .set('x-auth-token', tokenForBashorun);
+});
+
+before(async () => {
+  await request(app)
+    .post(`/api/v1/articles/${articleId}/bookmark`)
+    .set('x-auth-token', tokenForAntalaniyan);
 });
 
 
@@ -67,6 +121,15 @@ describe('Subscription to  notification', () => {
     .then((res) => {
       expect(res.status).to.equal(200);
       expect(res.body.message).to.equal('You will no longer receive in-app notifications from us');
+    }));
+
+  it('Should allow a verified user comment on an article', () => request(app)
+    .post(`/api/v1/articles/${articleSlug}/comments`)
+    .set('x-auth-token', tokenForBashorun)
+    .send({ commentBody: 'This is making sense part 2', articleId })
+    .then((res) => {
+      expect(res.status).to.equal(201);
+      expect(res.body.message).to.equal('Comment posted successfully');
     }));
 });
 
