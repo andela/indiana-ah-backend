@@ -18,7 +18,6 @@ class BaseRepository {
    *
    *
    * @param {string} details
-   * @param {Object} res
    * @returns {Object} returns the found user
    *
    * @memberOf BaseRepository

@@ -3,18 +3,22 @@ import Response from '../helpers/errorHelpers';
 import models from '../db/models';
 import BaseHelper from '../helpers/baseHelper';
 import paginator from '../helpers/paginator';
-import NotificationServices from '../services/notificationServices';
-
 import ReadingStatistics from '../db/repositories/readingStats';
-import ArticleRepsoitory from '../db/repositories/article';
+import ArticleRepository from '../db/repositories/article';
 import JWTHelper from '../helpers/jwtHelper';
 
+import NotificationServices from '../services/notificationServices';
+
 const { notifyViaEmailAndPush } = NotificationServices;
-const { Articles, Users, Reactions } = models;
+
 const { verifyToken } = JWTHelper;
 
 const ReadingStatRepo = new ReadingStatistics();
-const ArticleRepo = new ArticleRepsoitory();
+const ArticleRepo = new ArticleRepository();
+
+const {
+  Articles, Users, Reactions, Comments
+} = models;
 
 /**
  * @description A collection of controller methods for article CRUD operations
@@ -193,7 +197,27 @@ class ArticleController extends BaseHelper {
    */
   static async getOneArticle(req, res, next) {
     try {
+      const token = req.header('x-auth-token');
+      const decodedToken = verifyToken(token);
+      const { id: userId } = decodedToken;
       const { slug } = req.params;
+      if (!decodedToken) {
+        const article = await Articles.findOne({
+          where: { slug },
+          include: [
+            {
+              model: Users,
+              as: 'author',
+              attributes: ['username', 'bio', 'imageUrl']
+            },
+            { model: Comments },
+            { model: Reactions }
+          ]
+        });
+        if (!article) return Response(res, 404, 'Article not found');
+        const timeToRead = ArticleController.calculateTimeToRead(article.articleBody);
+        return res.status(200).json({ article, timeToRead });
+      }
       let article = await Articles.findOne({
         where: { slug },
         include: [
@@ -209,6 +233,14 @@ class ArticleController extends BaseHelper {
       article = article.toJSON();
       ArticleController.getOneReactionsCount(article, 'Reactions');
       const timeToRead = ArticleController.calculateTimeToRead(article.articleBody);
+      const userHasReadBefore = await ReadingStatRepo.checkStatForArticle({
+        userId,
+        articleId: article.dataValues.id
+      });
+      if (!userHasReadBefore) {
+        await ArticleRepo.incremented({ id: article.dataValues.id }, 'numberOfReads');
+        return ReadingStatRepo.create({ userId, articleId: article.dataValues.id });
+      }
       return res.status(200).json({ article, timeToRead });
     } catch (error) {
       return next(error);

@@ -107,7 +107,7 @@ describe('Get all articles', () => {
     .get('/api/v1/articles?page=1')
     .then((res) => {
       expect(res.status).to.equal(200);
-      expect(res.body.articles).to.be.an('Array');
+      expect(res.body.articles).to.be.an('array');
     }));
 });
 
@@ -198,7 +198,7 @@ describe('Get all articles for a particular user', () => {
     .get('/api/v1/articles/user/ozone4real?page=1')
     .then((res) => {
       expect(res.status).to.equal(200);
-      expect(res.body.articles).to.be.an('Array');
+      expect(res.body.articles).to.be.an('array');
     }));
 });
 

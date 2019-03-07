@@ -13,15 +13,15 @@ const { Users, Follows, Bookmarks } = models;
  */
 class NotificationServices {
   /**
- *
- * @description  Method to notify a user's followers via email/push when an article is published
- * @static
- * @param {object} req client request
- * @param {object} res server response
- * @param {string} slug article slug
- * @returns {Object} server response object
- * @memberof NotificationServices
- */
+   *
+   * @description  Method to notify a user's followers via email/push when an article is published
+   * @static
+   * @param {object} req client request
+   * @param {object} res server response
+   * @param {string} slug article slug
+   * @returns {Object} server response object
+   * @memberof NotificationServices
+   */
   static async notifyViaEmailAndPush(req, res, slug) {
     try {
       const myFollowers = await Follows.findAll({
@@ -30,13 +30,7 @@ class NotificationServices {
         include: [
           {
             model: Users,
-            attributes: [
-              'id',
-              'username',
-              'email',
-              'subscribed',
-              'inAppNotification'
-            ],
+            attributes: ['id', 'username', 'email', 'subscribed', 'inAppNotification'],
             as: 'followerDetails'
           }
         ]
@@ -44,21 +38,21 @@ class NotificationServices {
 
       if (myFollowers.length === 0) return;
 
-      const myFollowersWithEmailSub = myFollowers.map(item => (
-        {
+      const myFollowersWithEmailSub = myFollowers
+        .map(item => ({
           id: item.followerDetails.id,
           username: item.followerDetails.username,
           email: item.followerDetails.email,
           subscribed: item.followerDetails.subscribed
-        }
-      )).filter(eachUser => eachUser.subscribed === true);
+        }))
+        .filter(eachUser => eachUser.subscribed === true);
 
-      const myFollowersWithInAppSub = myFollowers.map(item => (
-        {
+      const myFollowersWithInAppSub = myFollowers
+        .map(item => ({
           inAppNotification: item.followerDetails.inAppNotification,
-          id: item.followerDetails.id,
-        }
-      )).filter(eachUser => eachUser.inAppNotification === true);
+          id: item.followerDetails.id
+        }))
+        .filter(eachUser => eachUser.inAppNotification === true);
 
       const message = `${req.user.username} just published an article`;
       const location = req.get('host');
@@ -79,35 +73,32 @@ class NotificationServices {
   }
 
   /**
- *
- * @description Notify users via email/push when a bookmarked article has new comment
- * @static
- * @param {object} req client request
- *  @param {object} res server response
- * @param {string} articleId client request
- * @param {string} slug client request
- * @returns {Object} server response object
- * @memberof NotificationServices
- */
+   *
+   * @description Notify users via email/push when a bookmarked article has new comment
+   * @static
+   * @param {object} req client request
+   *  @param {object} res server response
+   * @param {string} articleId client request
+   * @param {string} slug client request
+   * @returns {Object} server response object
+   * @memberof NotificationServices
+   */
   static async notifyUsersWhoBookmarked(req, res, articleId, slug) {
     try {
       // returns an array of userID who have bookmarked the article commented on
-      const arrayOfUserIDs = await Bookmarks.findAll({ where: { articleId } })
-        .map(bookmarkColumn => bookmarkColumn.dataValues.userId);
+      const arrayOfUserIDs = await Bookmarks.findAll({ where: { articleId } }).map(bookmarkColumn => bookmarkColumn.dataValues.userId);
 
       // An array of users who have subcribed to Email notification
-      const arrayOfAllUsersEmailWithEmailSub = await Users.findAll({ where: { subscribed: true }, attributes: ['id', 'email', 'subscribed'] })
-        .map(eachUserObject => (
-          {
-            id: eachUserObject.dataValues.id,
-            email: eachUserObject.dataValues.email,
-          }
-        ));
+      const arrayOfAllUsersEmailWithEmailSub = await Users.findAll({
+        where: { subscribed: true },
+        attributes: ['id', 'email', 'subscribed']
+      }).map(eachUserObject => ({
+        id: eachUserObject.dataValues.id,
+        email: eachUserObject.dataValues.email
+      }));
 
       // An array of users who have boomarked the article AND also subcribed to Email notification
-      const usersWhoBookmarkedWithEmailSub = arrayOfAllUsersEmailWithEmailSub
-        .filter((_eachUser, index) => arrayOfUserIDs
-          .includes(arrayOfAllUsersEmailWithEmailSub[index].id));
+      const usersWhoBookmarkedWithEmailSub = arrayOfAllUsersEmailWithEmailSub.filter((_eachUser, index) => arrayOfUserIDs.includes(arrayOfAllUsersEmailWithEmailSub[index].id));
 
       // notify via email
       if (usersWhoBookmarkedWithEmailSub.length !== 0) {
@@ -119,16 +110,19 @@ class NotificationServices {
       }
 
       // An array of usersID currently subcribed to In-App notification
-      const arrayOfUserIDsWithInAppNot = await Users.findAll({ where: { inAppNotification: true }, attributes: ['id', 'inAppNotification'] })
-        .map(userCol => userCol.dataValues.id);
+      const arrayOfUserIDsWithInAppNot = await Users.findAll({
+        where: { inAppNotification: true },
+        attributes: ['id', 'inAppNotification']
+      }).map(userCol => userCol.dataValues.id);
 
       // An array of usersID who have boomarked the article and are subcribed to In-app notification
-      const usersWhoBookmarkedAndHaveInAppNot = arrayOfUserIDs
-        .filter(eachId => arrayOfUserIDsWithInAppNot.indexOf(eachId) !== -1);
+      const usersWhoBookmarkedAndHaveInAppNot = arrayOfUserIDs.filter(eachId => arrayOfUserIDsWithInAppNot.indexOf(eachId) !== -1);
 
       // notify via In app
       if (usersWhoBookmarkedAndHaveInAppNot.length !== 0) {
-        usersWhoBookmarkedAndHaveInAppNot.forEach(userID => pusher.trigger('notification', userID, { message: `${req.user.username} just commented on an article you bookmarked` }));
+        usersWhoBookmarkedAndHaveInAppNot.forEach(userID => pusher.trigger('notification', userID, {
+          message: `${req.user.username} just commented on an article you bookmarked`
+        }));
       }
     } catch (error) {
       return errorMessage(res, 400, `${error}`);

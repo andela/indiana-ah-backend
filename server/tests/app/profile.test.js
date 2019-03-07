@@ -3,23 +3,10 @@ import { expect } from 'chai';
 import app from '../../index';
 import assignToken from '../../helpers/assignJwtToken';
 import {
-  data,
-  payload,
-  user1,
-  badBio,
-  badName,
-  badUsername,
-  invalidUsername,
-  invalidName,
-  data1,
-  incorrectPasswordData,
-  badPasswordData1,
-  badPasswordData2,
-  badPasswordData3,
-  badPasswordData4,
-  badPasswordData5,
-  badPasswordData6,
-  badPasswordData7,
+  data, payload, user1, badBio, badName,
+  badUsername, invalidUsername, invalidName, data1,
+  incorrectPasswordData, badPasswordData1, badPasswordData2, badPasswordData3,
+  badPasswordData4, badPasswordData5, badPasswordData6, badPasswordData7,
   correctPasswordData
 } from './mockData/profileMockData';
 

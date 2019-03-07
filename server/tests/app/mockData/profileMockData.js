@@ -10,19 +10,19 @@ export const data1 = {
 };
 
 export const badName = {
-  name: 'E'
+  name: 'E',
 };
 
 export const invalidName = {
-  name: 177
+  name: 177,
 };
 
 export const badUsername = {
-  username: 'Er'
+  username: 'Er',
 };
 
 export const invalidUsername = {
-  username: 24
+  username: 24,
 };
 
 export const badPassword = {
@@ -51,6 +51,7 @@ export const badPasswordData2 = {
   confirmPassword: 'sammy123'
 };
 
+
 export const badPasswordData3 = {
   currentPassword: 'cim23000',
   newPassword: 'sammy12',
@@ -75,7 +76,7 @@ export const badPasswordData6 = {
 
 export const badPasswordData7 = {
   currentPassword: 'cim23000',
-  newPassword: 'sammy123'
+  newPassword: 'sammy123',
 };
 
 export const badBio = {
@@ -131,3 +132,4 @@ export const registeredEmail = {
   email: 'balee@gmail.com',
   password: 'Arukwe1234'
 };
+
