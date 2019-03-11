@@ -1,0 +1,1470 @@
+openapi: "3.0.0"
+info:
+  title: Authors haven
+  version: "1.0.0"
+  contact:
+    name: Developers
+    email: divinelove.chukwuemeka@andela.com
+servers:
+  - url: https://indiana-ah-staging.herokuapp.com/api/v1/
+    description: Production server
+  
+  - url: https://indiana-ah-staging.herokuapp.com
+    description: Social login/signup Production server
+  
+  - url: http://localhost:3000
+    description: Social login/signup Development server
+    
+  - url: http://localhost:3000/api/v1
+    description: Development server
+    templates:
+      scheme:
+        enum:
+          - http
+          - https
+        default: http
+tags:
+  - name: Signup/Login
+    description: Signup or Login endpoint
+  - name: Users
+    description: User-related endpoints
+  - name: Profile
+    description: Profile-related endpoints
+  - name: Admin
+    description: Admin-related endpoints
+  - name: Comments
+    description: Comment-related endpoints
+  - name: Highlight
+    description: Highlight-related endpoints
+  - name: ReportArticles
+    description: ReportArticle-related endpoints
+components:
+  schemas:
+    Error:
+      properties:
+        message:
+          description: Error message
+          type: string
+    Profile:
+      title: User Profile
+      type: object
+      properties:
+        name:
+          type: string
+        username:
+          type: string
+        bio:
+          type: string
+      additionalProperties: false
+  responses:
+    Success:
+      description: Success
+    Created:
+      description: Created
+      content:
+        text/plain:
+          schema:
+            type: string
+    LoginSuccess:
+      description: Logged In Successfully
+      content:
+        text/plain:
+          schema:
+            type: string
+    ErrorConflict:
+      description: Email or username already exists
+      content:
+        text/plain:
+          schema:
+            type: string
+    SignupSuccess:
+      description: Signed Up Successfully
+      content:
+        text/plain:
+          schema:
+            type: string
+    UserRetrieved:
+      description: User Retrieved
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UserLimited"
+    UsersRetrieved:
+      description: Users Retrieved from Search Operation
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/UserLimited"
+    ErrorBadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    ErrorUnauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    ErrorForbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    ErrorNotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    ErrorUnsupportedMediaType:
+      description: Unsupported Media Type
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    ErrorInternalServer:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+  securitySchemes:
+    token:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+paths:
+  /login:
+    post:
+      tags:
+        - Signup/Login
+      summary: Login a user
+      description: Returns a JWT upon success
+      requestBody:
+        description: User Credentials
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        "200":
+          $ref: "#/components/responses/LoginSuccess"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /register:
+    post:
+      tags:
+        - Signup/Login
+      summary: Register a new user
+      description: Returns a JWT upon success
+      requestBody:
+        description: User Credentials
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        "201":
+          $ref: "#/components/responses/SignupSuccess"
+        "400":
+          $ref: "#/components/responses/ErrorBadRequest"
+        "409":
+          $ref: "#/components/responses/ErrorConflict"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /auth/google:
+    post:
+      tags:
+        - Signup/Login
+      summary: Login using a Google account
+      description: Redirects to Google and returns a JWT upon success
+      responses:
+        "200":
+          $ref: "#/components/responses/LoginSuccess"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /auth/facebook:
+    post:
+      tags:
+        - Signup/Login
+      summary: Login using a Facebook account
+      description: Redirects to Facebook and returns a JWT upon success
+      responses:
+        "200":
+          $ref: "#/components/responses/LoginSuccess"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /auth/twitter:
+    post:
+      tags:
+        - Signup/Login
+      summary: Login using a Twitter account
+      description: Redirects to Twitter and returns a JWT upon success
+      responses:
+        "200":
+          $ref: "#/components/responses/LoginSuccess"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /users/verify:
+    patch:
+      tags:
+        - Users
+      summary: Verify a users email
+      security:
+        - token: []
+      parameters:
+        - name: token
+          in: path
+          description: JWT token
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorized"
+  /users/begin-password-reset:
+    post:
+      tags:
+        - Users
+      summary: Send password reset link
+      description: Sends a password reset link to specified email address
+      requestBody:
+        description: User email
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+                  format: email
+      security:
+        - token: []
+      parameters:
+        - name: token
+          in: path
+          description: JWT token
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+  /users/reset-password:
+    patch:
+      tags:
+        - Users
+      summary: Reset a user's password
+      requestBody:
+        description: User password
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                password:
+                  type: string
+      security:
+        - token: []
+      parameters:
+        - name: token
+          in: path
+          description: JWT token
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorized"
+  /users/bookmarks:
+    get:
+      tags:
+        - Users
+      summary: Retrieves a user's bookmarked articles
+      security:
+        - token: []
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /admin/role:
+    post:
+      tags:
+        - Admin
+      summary: Updates a users role
+      security:
+        - token: []
+      requestBody:
+        description: An object with username and role fields
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                username:
+                  type: string
+                role:
+                  type: string
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorConflict"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /articles/{articleid}/ratings:
+    post:
+      tags:
+        - Articles
+      summary: Rate an article
+      security:
+        - token: []
+      parameters:
+        - name: articleid
+          in: path
+          description: article id
+          required: true
+          schema:
+            type: number
+      requestBody:
+        description: A rating field
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                rating:
+                  type: number
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "400":
+          $ref: "#/components/responses/ErrorBadRequest"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+    get:
+      tags:
+        - Articles
+      summary: Get all the ratings for an article
+      security:
+        - token: []
+      parameters:
+        - name: articleid
+          in: path
+          description: article id
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "400":
+          $ref: "#/components/responses/ErrorBadRequest"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /articles/ratings/{ratingid}:
+    get:
+      tags:
+        - Articles
+      summary: Get a single article rating
+      security:
+        - token: []
+      parameters:
+        - name: ratingid
+          in: path
+          description: rating id
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "400":
+          $ref: "#/components/responses/ErrorBadRequest"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /articles/ratings/{ratingid}/cancel:
+    delete:
+      tags:
+        - Articles
+      summary: Cancel an article rating
+      security:
+        - token: []
+      parameters:
+        - name: ratingid
+          in: path
+          description: rating id
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "400":
+          $ref: "#/components/responses/ErrorBadRequest"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /articles:
+    post:
+      tags:
+        - Articles
+      summary: User creating Articles
+      description: Enables user to write and post Article
+      security:
+        - token: []
+      requestBody:
+        description: Article highlight and comment
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                articleTitle:
+                  type: string
+                articleBody:
+                  type: string
+                image:
+                  type: string
+                tagList:
+                  type: string
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+    get:
+      tags:
+        - Articles
+      summary: User getting all Articles
+      description: Enables user to get all Article on the application
+      responses:
+        "200":
+          $ref: "#/components/responses/Created"
+        401:
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "500":
+  /articles/{slug}/comments:
+    post:
+      tags:
+        - Articles
+      summary: User post comments on an Article
+      description: Enables user to write comment on an Article
+      security:
+        - token: []
+      parameters:
+        - name: slug
+          in: path
+          description: slug from the article
+          required: true
+          schema:
+            type: string
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { message:'Comment posted successfully' }
+        401:
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+    get:
+      tags:
+        - Articles
+      summary: User get comments on an Article
+      description: Enables user to write comment on an Article
+      parameters:
+        - name: slug
+          in: path
+          description: slug from the article
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { message:'Comments retrieved successfully' }
+        401:
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /articles/{commentId}/history:
+    post:
+      tags:
+        - Articles
+      summary: User post comments on an Article
+      description: Enables user to write comment on an Article
+      security:
+        - token: []
+      parameters:
+        - name: commentId
+          in: path
+          description: commentId for that comment to be edited
+          required: true
+          schema:
+            type: string
+      responses:
+        201:
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {}
+        401:
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /articles/comments/{commentId}:
+    put:
+      tags:
+        - Articles
+      summary: User Edit comment on Articles
+      description: Enables user to edit their comment on Articles
+      security:
+        - token: []
+      parameters:
+        - name: commentId
+          in: path
+          description: Id from the article
+          required: true
+          schema:
+            type: string
+      responses:
+        201:
+          description: Edit comment
+          content:
+            application/json:
+              schema:
+                type: object
+                example: message:'Article bookmarked successfully'
+        401:
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /articles/user/{username}:
+    get:
+      tags:
+        - Articles
+      summary: User gets all his Articles
+      description: Enables user to get all their created Article
+      security:
+        - token: []
+      parameters:
+        - name: username
+          in: path
+          description: username of the user
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: User retreived their Article
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {}
+        401:
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /articles/{articleId}/bookmark:
+    post:
+      tags:
+        - Articles
+      summary: User creating Articles
+      description: Enables user to write and post Article
+      security:
+        - token: []
+      parameters:
+        - name: articleId
+          in: path
+          description: Id from the article
+          required: true
+          schema:
+            type: string
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { message:'Article bookmarked successfully' }
+        401:
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /articles/{slug}/update:
+    put:
+      tags:
+        - Articles
+      summary: User Update Articles
+      description: Enables user to edit their Article
+      security:
+        - token: []
+      parameters:
+        - name: slug
+          in: path
+          description: slug from the article
+          required: true
+          schema:
+            type: string
+      responses:
+        201:
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {}
+        401:
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /articles/{slug}/image:
+    patch:
+      tags:
+        - Articles
+      summary: User Update Aricle picture
+      description: Enables user to edit photos on their Article
+      security:
+        - token: []
+      parameters:
+        - name: slug
+          in: path
+          description: slug from the article
+          required: true
+          schema:
+            type: string
+      responses:
+        201:
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {}
+        401:
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /articles/{slug}/remove-image:
+    patch:
+      tags:
+        - Articles
+      summary: User remove Article Image from Article
+      description: Enables user remove article images
+      security:
+        - token: []
+      parameters:
+        - name: slug
+          in: path
+          description: slug from the article
+          required: true
+          schema:
+            type: string
+      responses:
+        201:
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {}
+        401:
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /articles/{slug}/reaction:
+    post:
+      tags:
+        - Articles
+      summary: User add a reaction to an Article [like/dislike]
+      description: Enables user to like or dislike an article
+      security:
+        - token: []
+      parameters:
+        - name: slug
+          in: path
+          description: slug from the article
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {}
+        401:
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /articles/{slug}:
+    get:
+      tags:
+        - Articles
+      summary: User get an Article from the Application
+      description: Enables user get an Article
+      parameters:
+        - name: slug
+          in: path
+          description: slug from the article
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {}
+        401:
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+    delete:
+      tags:
+        - Articles
+      summary: User deletes Article from the Application
+      description: Enables user delete an Article
+      security:
+        - token: []
+      parameters:
+        - name: slug
+          in: path
+          description: slug from the article
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {}
+        401:
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /articles/search:
+    get:
+      tags:
+        - Articles
+      summary: User search for Article in the Application
+      description: Enables user search for all article
+      responses:
+        200:
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {}
+        401:
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /articles/{slug}/highlights:
+    post:
+      tags:
+        - Highlight
+      summary: Users highlights on an Articles
+      description: Enables user to highlight text
+      security:
+        - token: []
+      parameters:
+        - name: slug
+          in: path
+          description: Slug from the article
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Article highlight and comment
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                highlight:
+                  type: string
+                comment:
+                  type: string
+      responses:
+        201:
+          $ref: "#/components/responses/ArticlePostSuccess"
+        401:
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+    get:
+      tags:
+        - Highlight
+      summary: Users get all highlights on an Articles
+      description: Enables user to highlight text
+      security:
+        - token: []
+      parameters:
+        - name: slug
+          in: path
+          description: Slug from the article
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        401:
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /articles/{slug}/highlights/{id}:
+    patch:
+      tags:
+        - Highlight
+      summary: Users highlights on an Articles
+      description: Enables user to highlight text
+      security:
+        - token: []
+      parameters:
+        - name: slug
+          in: path
+          description: Slug from the article
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: Slug from the article
+          required: true
+          schema:
+            type: number
+      requestBody:
+        description: Article highlight and comment
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                highlight:
+                  type: string
+                comment:
+                  type: string
+      responses:
+        "200":
+          $ref: "#/components/responses/Created"
+        401:
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+    delete:
+      tags:
+        - Highlight
+      summary: Users highlights on an Articles
+      description: Enables user to highlight text
+      security:
+        - token: []
+      parameters:
+        - name: slug
+          in: path
+          description: Slug from the article
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: Slug from the article
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        401:
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /articles/{slug}/reports:
+    post:
+      tags:
+        - ReportArticles
+      summary: Users can report an Article
+      description: Enables user to report an article
+      security:
+        - token: []
+      parameters:
+        - name: slug
+          in: path
+          description: Slug from the article
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Article Reports
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                reportBody:
+                  type: string
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { message: "Article reported successfully" }
+        401:
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+    get:
+      tags:
+        - ReportArticles
+      summary: Admin get a single report  on an Article
+      description: Enables an Admin to a single report on an article
+      security:
+        - token: []
+      parameters:
+        - name: slug
+          in: path
+          description: Slug from the article
+          required: true
+          schema:
+            type: string
+      responses:
+        201:
+          description: Retrieved reports
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { message: "Report retrieved successfully" }
+        401:
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /articles/reports:
+    get:
+      tags:
+        - ReportArticles
+      summary: Admin get all reports  on an Article
+      description: Enables an Admin to get all reports on an article
+      security:
+        - token: []
+      parameters:
+        - name: slug
+          in: path
+          description: Slug from the article
+          required: true
+          schema:
+            type: string
+      responses:
+        201:
+          description: Retrieved reports
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { message: "Reports retrieved successfully" }
+        401:
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /comments/reaction:
+    post:
+      tags:
+        - Comments
+      summary: Like or dislike comments
+      security:
+        - token: []
+      requestBody:
+        description: An Object with commentId and reactionType fields
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                commentId:
+                  type: string
+                reactionType:
+                  type: string
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "400":
+          $ref: "#/components/responses/ErrorBadRequest"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /comments/{id}:
+    get:
+      tags:
+        - Comments
+      summary: Delete a comment
+      security:
+        - token: []
+      parameters:
+        - name: id
+          in: path
+          description: comment id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /profiles/{username}:
+    get:
+      tags:
+        - Profile
+      summary: Retrieves a User profile details
+      parameters:
+        - name: username
+          in: path
+          description: username of the user to retrieve
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+    put:
+      tags:
+        - Profile
+      summary: Deletes the user profile
+      security:
+        - token: []
+      parameters:
+        - name: username
+          in: path
+          description: username of the user
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: The user's password
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                password:
+                  type: string
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "400":
+          $ref: "#/components/responses/ErrorBadRequest"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /profiles:
+    get:
+      tags:
+        - Profile
+      summary: Retrieves all users profiles
+      security:
+        - token: []
+      responses:
+        "200":
+          $ref: "#/components/responses/UserRetrieved"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /profiles/{username}/update:
+    patch:
+      tags:
+        - Profile
+      summary: Update the Profile of the User
+      security:
+        - token: []
+      parameters:
+        - name: username
+          in: path
+          description: username of the User
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: An object representing the fields in the Profile to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Profile"
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "400":
+          $ref: "#/components/responses/ErrorBadRequest"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "415":
+          $ref: "#/components/responses/ErrorUnsupportedMediaType"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /profiles/{username}/remove-image:
+    patch:
+      tags:
+        - Profile
+      summary: Remove the users image
+      security:
+        - token: []
+      parameters:
+        - name: username
+          in: path
+          description: username of the User
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "400":
+          $ref: "#/components/responses/ErrorBadRequest"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /profiles/{username}/password:
+    patch:
+      tags:
+        - Profile
+      summary: Update the user's password
+      security:
+        - token: []
+      parameters:
+        - name: username
+          in: path
+          description: username of the user
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: An object containing fields to be provided
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                currentPassword:
+                  type: string
+                newPassword:
+                  type: string
+                confirmPassword:
+                  type: string
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "400":
+          $ref: "#/components/responses/ErrorBadRequest"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /profiles/{username}/follow:
+    post:
+      tags:
+        - Profile
+      summary: Follow and unfollow a user
+      security:
+        - token: []
+      parameters:
+        - name: username
+          in: path
+          description: username of the user
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorConflict"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /profiles/users/following:
+    get:
+      tags:
+        - Profile
+      summary: Retrieves all users I follow
+      security:
+        - token: []
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /profiles/users/followers:
+    get:
+      tags:
+        - Profile
+      summary: Retrieves all users who follow me
+      security:
+        - token: []
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
+  /profiles/{username}/image:
+    patch:
+      tags:
+        - Profile
+      summary: Update the users image
+      security:
+        - token: []
+      parameters:
+        - name: username
+          in: path
+          description: username of the user
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: New image to be inserted
+        required: true
+        content:
+          formData:
+            schema:
+              properties:
+                image:
+                  type: string
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorized"
+        "403":
+          $ref: "#/components/responses/ErrorForbidden"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
+        "500":
+          $ref: "#/components/responses/ErrorInternalServer"
