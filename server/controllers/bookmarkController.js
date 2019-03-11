@@ -25,7 +25,7 @@ class BookmarkController {
       if (!foundArticle) errorMessage(res, 404, 'Article not found');
 
       const [bookmark, created] = await Bookmarks.findOrCreate({
-        where: { articleId },
+        where: { articleId, userId },
         defaults: { userId }
       });
       if (created) {

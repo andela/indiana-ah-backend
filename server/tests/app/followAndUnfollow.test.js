@@ -2,12 +2,22 @@ import request from 'supertest';
 import { expect } from 'chai';
 import app from '../../index';
 import models from '../../db/models';
-import { userBiola, userBalogun, userAkeem } from './mockData/userMockData';
+import {
+  userBiola,
+  userBalogun,
+  userAkeem,
+  userDivine,
+  userKelvin
+}
+  from './mockData/userMockData';
+import { user1 } from './mockData/articlesMockData';
 
 const { Users } = models;
 
 let tokenForBalogun;
 let tokenForBiola;
+let tokenForDivine;
+let tokenForKevin;
 
 before(async () => {
   await Users.create(userBalogun);
@@ -26,6 +36,26 @@ before(async () => {
     .send({ email: userBiola.email, password: userBiola.password })
     .then((res) => {
       tokenForBiola = res.body.token;
+    });
+});
+
+before(async () => {
+  await Users.create(userDivine);
+  return request(app)
+    .post('/api/v1/login')
+    .send({ email: userDivine.email, password: userDivine.password })
+    .then((res) => {
+      tokenForDivine = res.body.token;
+    });
+});
+
+before(async () => {
+  await Users.create(userKelvin);
+  return request(app)
+    .post('/api/v1/login')
+    .send({ email: userKelvin.email, password: userKelvin.password })
+    .then((res) => {
+      tokenForKevin = res.body.token;
     });
 });
 
@@ -59,6 +89,23 @@ describe('Follow  and Unfollow Feature', () => {
     .then((res) => {
       expect(res.status).to.equal(200);
       expect(res.body.message).to.equal(`You are now following ${userAkeem.username}`);
+    }));
+
+
+  it('should allow a user to follow an existing user', () => request(app)
+    .post(`/api/v1/profiles/${user1.username}/follow`)
+    .set('x-auth-token', tokenForDivine)
+    .then((res) => {
+      expect(res.status).to.equal(200);
+      expect(res.body.message).to.equal(`You are now following ${user1.username}`);
+    }));
+
+  it('should allow a user to follow an existing user', () => request(app)
+    .post(`/api/v1/profiles/${user1.username}/follow`)
+    .set('x-auth-token', tokenForKevin)
+    .then((res) => {
+      expect(res.status).to.equal(200);
+      expect(res.body.message).to.equal(`You are now following ${user1.username}`);
     }));
 
   it('should allow a user to unfollow a currently follwed user', () => request(app)
