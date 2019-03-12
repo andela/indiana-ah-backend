@@ -20,8 +20,8 @@ const paginator = async (
   }
   try {
     const { rows, count } = await modelName.findAndCountAll({
-      limit,
-      offset,
+      limit: page ? limit : undefined,
+      offset: page ? offset : undefined,
       where: whereClause,
       include: includedModels
     });

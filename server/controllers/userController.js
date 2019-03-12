@@ -41,7 +41,7 @@ class UserController extends BaseHelper {
         {
           _options: { isNewRecord },
           dataValues: {
-            username: dbUsername, email: dbEmail, id, role
+            username: dbUsername, email: dbEmail, id, role, imageUrl
           }
         },
         created
@@ -56,10 +56,11 @@ class UserController extends BaseHelper {
           id,
           username: dbUsername,
           email: dbEmail,
-          role
+          role,
+          profileImage: imageUrl
         };
         const token = assignToken(payload);
-        const location = req.get('host');
+        const location = 'https://indiana-ah-frontend-staging.herokuapp.com/verifyUser';
         const url = '/api/v1/users/verify';
         const link = UserController.generateEmailLink(location, url, token);
         const message = `<h1 style='color: Goldenrod' > Welcome to Author's Haven</h1><hr/>
@@ -115,7 +116,6 @@ class UserController extends BaseHelper {
     const newToken = assignToken(payload);
     return res.status(200).json({
       message: 'User Successfully Verified',
-      data: user[1][0],
       token: newToken
     });
   }
@@ -188,7 +188,18 @@ class UserController extends BaseHelper {
         where: {
           username
         },
-        attributes: ['name', 'username', 'email', 'bio', 'imageUrl', 'createdAt']
+        attributes: [
+          'name',
+          'username',
+          'email',
+          'bio',
+          'imageUrl',
+          'isVerified',
+          'role',
+          'subscribed',
+          'inAppNotification',
+          'createdAt'
+        ]
       });
       if (!UserController.checkIfDataExist(user)) {
         return res.status(404).json({
