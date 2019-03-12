@@ -508,7 +508,7 @@ class UserController extends BaseHelper {
       isVerified
     };
     const token = assignToken(payload);
-    return res.redirect(`/?token=${token}`);
+    return res.redirect(`${process.env.FRONTEND_URL}/?token=${token}`);
   }
 
   /**
