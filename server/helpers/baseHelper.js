@@ -46,7 +46,7 @@ class BaseHelper {
    */
   static async checkIfExists(data) {
     const user = await Users.findOne({
-      where: { username: data },
+      where: { username: data }
     });
 
     if (user) {
