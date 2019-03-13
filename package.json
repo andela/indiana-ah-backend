@@ -7,7 +7,7 @@
     "test": "NODE_ENV=test npm run migrate:refresh && cross-env NODE_ENV=test nyc mocha --require @babel/register --require @babel/polyfill ./server/tests/**/*.test.js --timeout 10000  --exit && NODE_ENV=test npm run clean:db",
     "clean": "rm -rf build",
     "build": "babel ./server -d dist",
-    "start": "NODE_ENV=production && NODE_ENV=production npm run migrate:refresh && NODE_ENV=production node ./dist/index.js",
+    "start": "NODE_ENV=production node ./dist/index.js",
     "dev": "NODE_ENV=development nodemon bin/dev",
     "coverage": "nyc report --reporter=text-lcov --reporter=html | coveralls && nyc report --reporter=lcov",
     "migrate": "sequelize db:migrate && sequelize db:seed:all",
