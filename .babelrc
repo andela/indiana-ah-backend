@@ -1,8 +1,7 @@
 {
-  "presets": [
-    "@babel/env"
-  ], // "@babel/preset-env"
+  "presets": ["@babel/env"],
   "plugins": [
-    "@babel/transform-arrow-functions"
-  ] // same as "@babel/plugin-transform-arrow-functions"
+    "@babel/transform-arrow-functions",
+    "@babel/plugin-transform-runtime"
+  ]
 }
