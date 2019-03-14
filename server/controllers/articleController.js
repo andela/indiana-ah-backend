@@ -3,11 +3,22 @@ import Response from '../helpers/errorHelpers';
 import models from '../db/models';
 import BaseHelper from '../helpers/baseHelper';
 import paginator from '../helpers/paginator';
+import ReadingStatistics from '../db/repositories/readingStats';
+import ArticleRepository from '../db/repositories/article';
+import JWTHelper from '../helpers/jwtHelper';
+
 import NotificationServices from '../services/notificationServices';
 
 const { notifyViaEmailAndPush } = NotificationServices;
 
-const { Articles, Users, Reactions } = models;
+const { verifyToken } = JWTHelper;
+
+const ReadingStatRepo = new ReadingStatistics();
+const ArticleRepo = new ArticleRepository();
+
+const {
+  Articles, Users, Reactions, Comments
+} = models;
 
 /**
  * @description A collection of controller methods for article CRUD operations
@@ -56,11 +67,12 @@ class ArticleController extends BaseHelper {
         },
         { model: Reactions }
       ];
-      let articles = await paginator(Articles, req, includedModels);
-      if (articles === undefined) return Response(res, 400, 'pagination error');
-      if (!articles.length) return Response(res, 200, 'No articles found');
-      articles = ArticleController.extractAllReactionsCount(articles, 'Reactions');
-      return res.status(200).json({ articles });
+      // eslint-disable-next-line prefer-const
+      let { data, totalNumberOfPages } = await paginator(Articles, req, includedModels);
+      if (data === undefined) return Response(res, 400, 'pagination error');
+      if (!data.length) return Response(res, 200, 'No articles found');
+      data = ArticleController.extractAllReactionsCount(data, 'Reactions');
+      return res.status(200).json({ articles: data, totalNumberOfPages });
     } catch (error) {
       return next(error);
     }
@@ -88,13 +100,13 @@ class ArticleController extends BaseHelper {
         },
         { model: Reactions }
       ];
-      let articles = await paginator(Articles, req, includedModels, {
+      let { data } = await paginator(Articles, req, includedModels, {
         userId
       });
-      if (articles === undefined) return Response(res, 400, 'pagination error');
-      if (!articles.length) return Response(res, 200, 'No articles found');
-      articles = ArticleController.extractAllReactionsCount(articles, 'Reactions');
-      return res.status(200).json({ articles });
+      if (data === undefined) return Response(res, 400, 'pagination error');
+      if (!data.length) return Response(res, 200, 'No articles found');
+      data = ArticleController.extractAllReactionsCount(data, 'Reactions');
+      return res.status(200).json({ articles: data });
     } catch (error) {
       return next(error);
     }
@@ -185,7 +197,27 @@ class ArticleController extends BaseHelper {
    */
   static async getOneArticle(req, res, next) {
     try {
+      const token = req.header('x-auth-token');
+      const decodedToken = verifyToken(token);
+      const { id: userId } = decodedToken;
       const { slug } = req.params;
+      if (!decodedToken) {
+        const article = await Articles.findOne({
+          where: { slug },
+          include: [
+            {
+              model: Users,
+              as: 'author',
+              attributes: ['username', 'bio', 'imageUrl']
+            },
+            { model: Comments },
+            { model: Reactions }
+          ]
+        });
+        if (!article) return Response(res, 404, 'Article not found');
+        const timeToRead = ArticleController.calculateTimeToRead(article.articleBody);
+        return res.status(200).json({ article, timeToRead });
+      }
       let article = await Articles.findOne({
         where: { slug },
         include: [
@@ -201,6 +233,14 @@ class ArticleController extends BaseHelper {
       article = article.toJSON();
       ArticleController.getOneReactionsCount(article, 'Reactions');
       const timeToRead = ArticleController.calculateTimeToRead(article.articleBody);
+      const userHasReadBefore = await ReadingStatRepo.checkStatForArticle({
+        userId,
+        articleId: article.dataValues.id
+      });
+      if (!userHasReadBefore) {
+        await ArticleRepo.incremented({ id: article.dataValues.id }, 'numberOfReads');
+        return ReadingStatRepo.create({ userId, articleId: article.dataValues.id });
+      }
       return res.status(200).json({ article, timeToRead });
     } catch (error) {
       return next(error);

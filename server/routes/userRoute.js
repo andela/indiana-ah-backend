@@ -1,5 +1,6 @@
 import express from 'express';
 import UserController from '../controllers/userController';
+import ReadingStatisticsController from '../controllers/ReadingStatisticsController';
 import signUpValidator from '../middlewares/validators/signUpValidator';
 import resetPasswordValidator from '../middlewares/validators/resetPasswordValidator';
 import updatePasswordValidator from '../middlewares/validators/updatePasswordValidator';
@@ -11,6 +12,7 @@ import BookmarkController from '../controllers/bookmarkController';
 import validateUser from '../middlewares/verifyUser';
 
 const { follow, fetchFollowing, fetchFollowers } = followAndUnfollow;
+const { getReadingStatistics } = ReadingStatisticsController;
 
 const router = express.Router();
 const {
@@ -64,5 +66,6 @@ router.post('/profiles/:username/follow', jwtAuth.authUser, follow);
 router.get('/profiles/users/following', jwtAuth.authUser, fetchFollowing);
 router.get('/profiles/users/followers', jwtAuth.authUser, fetchFollowers);
 router.get('/users/bookmarks', jwtAuth.authUser, getUserBookmarkedArticles);
+router.get('/users/statistics', jwtAuth.authUser, getReadingStatistics);
 
 export default router;

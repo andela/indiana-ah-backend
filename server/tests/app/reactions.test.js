@@ -59,12 +59,12 @@ describe('Article Likes and dislikes', () => {
       expect(res.body.message).to.equal('Reaction created');
     }));
   it('should successfully dislike an article if user is authenticated', () => request(app)
-    .post(`/api/v1/articles/${articleSlug}/reaction`)
+    .post('/api/v1/articles/my-first-article/reaction')
     .set('x-auth-token', userToken)
     .send({ reactionType: 'dislike' })
     .then((res) => {
       expect(res.status).to.equal(200);
-      expect(res.body.message).to.equal('Reaction updated');
+      expect(res.body.message).to.equal('Reaction created');
     }));
   it('should successfully delete a reaction if user is authenticated', () => request(app)
     .post(`/api/v1/articles/${articleSlug}/reaction`)
@@ -72,7 +72,7 @@ describe('Article Likes and dislikes', () => {
     .send({ reactionType: 'dislike' })
     .then((res) => {
       expect(res.status).to.equal(200);
-      expect(res.body.message).to.equal('Reaction successfully deleted');
+      expect(res.body.message).to.equal('Reaction updated');
     }));
   it('should successfully like an article if user is authenticated', () => request(app)
     .post(`/api/v1/articles/${articleSlug}/reaction`)
@@ -80,6 +80,6 @@ describe('Article Likes and dislikes', () => {
     .send({ reactionType: 'like' })
     .then((res) => {
       expect(res.status).to.equal(200);
-      expect(res.body.message).to.equal('Reaction created');
+      expect(res.body.message).to.equal('Reaction updated');
     }));
 });

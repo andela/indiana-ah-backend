@@ -24,11 +24,21 @@ class RoleAssignController {
     const Allowedroles = ['admin', 'user'];
     if (Allowedroles.includes(role)) {
       try {
-        const existingRole = await usersRepo.role(username, res);
+        const existingRole = await usersRepo.role({ username });
         if (existingRole === role) {
-          return errorMessage(res, 401, `this user is already a/an ${role}`);
+          return errorMessage(res, 400, `this user is already a/an ${role}`);
         }
-        await usersRepo.updated(username, role, res);
+        if (existingRole === null) {
+          return errorMessage(res, 400, 'username not found');
+        }
+        const updatedUser = await usersRepo.updated(username, role);
+        if (updatedUser) {
+          return res.status(200).json({
+            message: 'successfully updated user role',
+            updatedUser: updatedUser[1][0].dataValues
+          });
+        }
+        return errorMessage(res, 400, 'could not update user');
       } catch (error) {
         return next(error);
       }
