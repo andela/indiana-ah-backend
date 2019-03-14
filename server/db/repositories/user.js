@@ -20,16 +20,19 @@ class UserRepository extends BaseRepository {
   /**
    *
    *
-   * @param {any} username
-   * @param {any} res
+   * @param {any} details
    * @returns {Object} this is the role of the user
    * @memberOf UserRepository
    */
-  async role(username, res) {
+  async role(details) {
     try {
+      const result = await this.findOne(details);
+      if (result === null) {
+        return null;
+      }
       const {
         dataValues: { role }
-      } = await this.findOne(username, res);
+      } = result;
       return role;
     } catch (error) {
       return error;
@@ -39,17 +42,16 @@ class UserRepository extends BaseRepository {
   /**
    *
    *
-   * @param {string} username
-   * @param {string} role
-   * @param {Object} res
+   * @param {Object} whereClause
+   * @param {string} colToUpdate
    * @returns {Object} the updated user
    *
    * @memberOf UserRepository
    */
-  async updated(username, role, res) {
+  async updated(whereClause, colToUpdate) {
     try {
-      const updatedUser = await this.update(username, role, res);
-      return updatedUser;
+      const updated = await this.update(whereClause, colToUpdate);
+      return updated;
     } catch (error) {
       return error;
     }

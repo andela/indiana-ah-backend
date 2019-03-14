@@ -41,7 +41,7 @@ class UserController extends BaseHelper {
         {
           _options: { isNewRecord },
           dataValues: {
-            username: dbUsername, email: dbEmail, id, role
+            username: dbUsername, email: dbEmail, id, role, imageUrl
           }
         },
         created
@@ -56,10 +56,11 @@ class UserController extends BaseHelper {
           id,
           username: dbUsername,
           email: dbEmail,
-          role
+          role,
+          profileImage: imageUrl
         };
         const token = assignToken(payload);
-        const location = req.get('host');
+        const location = 'https://indiana-ah-frontend-staging.herokuapp.com/verifyUser';
         const url = '/api/v1/users/verify';
         const link = UserController.generateEmailLink(location, url, token);
         const message = `<h1 style='color: Goldenrod' > Welcome to Author's Haven</h1><hr/>
@@ -115,7 +116,6 @@ class UserController extends BaseHelper {
     const newToken = assignToken(payload);
     return res.status(200).json({
       message: 'User Successfully Verified',
-      data: user[1][0],
       token: newToken
     });
   }
@@ -188,7 +188,18 @@ class UserController extends BaseHelper {
         where: {
           username
         },
-        attributes: ['name', 'username', 'email', 'bio', 'imageUrl', 'createdAt']
+        attributes: [
+          'name',
+          'username',
+          'email',
+          'bio',
+          'imageUrl',
+          'isVerified',
+          'role',
+          'subscribed',
+          'inAppNotification',
+          'createdAt'
+        ]
       });
       if (!UserController.checkIfDataExist(user)) {
         return res.status(404).json({
@@ -215,11 +226,11 @@ class UserController extends BaseHelper {
   static async getAllUsersProfile(req, res, next) {
     try {
       const includedModels = [{ model: Articles }];
-      const profiles = await paginator(Users, req, includedModels);
-      if (!profiles) {
+      const { data } = await paginator(Users, req, includedModels);
+      if (!data) {
         return res.status(200).json('There are no users to display');
       }
-      return res.status(200).json({ profiles });
+      return res.status(200).json({ profiles: data });
     } catch (error) {
       return next(error);
     }
@@ -327,9 +338,7 @@ class UserController extends BaseHelper {
    * @memberOf UserController class
    */
   static async editUserProfile(req, res, next) {
-    const {
-      name, bio, username
-    } = req.body;
+    const { name, bio, username } = req.body;
     const user = req.params.username;
     let foundUsername;
 
@@ -347,7 +356,7 @@ class UserController extends BaseHelper {
           {
             name: name || profile.dataValues.name,
             username: username || profile.dataValues.username,
-            bio: bio || profile.dataValues.bio,
+            bio: bio || profile.dataValues.bio
           },
           {
             where: { username: user },
@@ -391,7 +400,7 @@ class UserController extends BaseHelper {
       try {
         if (samePassword) {
           await Users.destroy({
-            where: { username },
+            where: { username }
           });
           return res.status(200).json({ message: 'Profile successfully deleted' });
         }
@@ -402,7 +411,6 @@ class UserController extends BaseHelper {
     }
     return errorMessage(res, 404, 'User not found');
   }
-
 
   /**
    *
@@ -508,7 +516,7 @@ class UserController extends BaseHelper {
       isVerified
     };
     const token = assignToken(payload);
-    return res.redirect(`/?token=${token}`);
+    return res.redirect(`${process.env.FRONTEND_URL}/social-auth?token=${token}`);
   }
 
   /**

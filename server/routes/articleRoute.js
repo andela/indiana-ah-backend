@@ -52,5 +52,4 @@ router.get('/:slug/comments', getAllArticleComments);
 router.post('/:slug/comments', authUser, createComment);
 router.put('/comments/:commentId', authUser, updateComment);
 
-
 export default router;

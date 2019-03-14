@@ -8,7 +8,7 @@ router.get('/google', passport.authenticate('google', { scope: ['profile', 'emai
 
 router.get(
   '/google/callback',
-  passport.authenticate('google', { session: false, failureRedirect: '/login' }),
+  passport.authenticate('google', { session: false, failureRedirect: '/' }),
   UserController.socialAuthRedirect
 );
 
@@ -18,7 +18,7 @@ router.get(
   '/facebook/callback',
   passport.authenticate('facebook', {
     session: false,
-    failureRedirect: '/login'
+    failureRedirect: '/'
   }),
   UserController.socialAuthRedirect
 );
@@ -27,7 +27,7 @@ router.get('/twitter', passport.authenticate('twitter'));
 
 router.get(
   '/twitter/callback',
-  passport.authenticate('twitter', { session: false, failureRedirect: '/login' }),
+  passport.authenticate('twitter', { session: false, failureRedirect: '/' }),
   UserController.socialAuthRedirect
 );
 export default router;

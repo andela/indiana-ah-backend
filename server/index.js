@@ -1,5 +1,8 @@
 import express from 'express';
+import cors from 'cors';
 import bodyParser from 'body-parser';
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
 import morgan from 'morgan';
 import passport from 'passport';
 import session from 'express-session';
@@ -11,16 +14,22 @@ import facebook from './db/config/passportConfigs/facebookStrategy';
 import twitter from './db/config/passportConfigs/twitterStrategy';
 import logger from './winstonConfig';
 
+
 google(passport);
 facebook(passport);
 twitter(passport);
+
+const swaggerDocument = YAML.load('swagger.yaml');
 
 // Create global app object
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Normal express config defaults
+app.use(cors());
 app.use(morgan('dev'));
+
+app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -28,6 +37,7 @@ app.use(bodyParser.json());
 app.get('/', (req, res) => res.status(200).json({
   message: 'Welcome to authors haven platform'
 }));
+
 
 app.use(session({
   secret: 'secret',
