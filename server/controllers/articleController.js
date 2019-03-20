@@ -69,11 +69,15 @@ class ArticleController extends BaseHelper {
         { model: Comments }
       ];
       // eslint-disable-next-line prefer-const
-      let { data, totalNumberOfPages } = await paginator(Articles, req, includedModels);
+      let { data, totalNumberOfPages, count: totalCount } = await paginator(
+        Articles,
+        req,
+        includedModels
+      );
       if (data === undefined) return Response(res, 400, 'pagination error');
       if (!data.length) return Response(res, 200, 'No articles found');
       data = ArticleController.extractAllReactionsCount(data, 'Reactions');
-      return res.status(200).json({ articles: data, totalNumberOfPages });
+      return res.status(200).json({ articles: data, totalNumberOfPages, totalCount });
     } catch (error) {
       return next(error);
     }
@@ -102,13 +106,18 @@ class ArticleController extends BaseHelper {
         { model: Reactions },
         { model: Comments }
       ];
-      const { data, totalNumberOfPages } = await paginator(Articles, req, includedModels, {
-        userId
-      });
+      const { data, totalNumberOfPages, count: totalCount } = await paginator(
+        Articles,
+        req,
+        includedModels,
+        {
+          userId
+        }
+      );
       if (data === undefined) return Response(res, 400, 'pagination error');
       if (!data.length) return Response(res, 200, 'No articles found');
       const responseData = ArticleController.extractAllReactionsCount(data, 'Reactions');
-      return res.status(200).json({ articles: responseData, totalNumberOfPages });
+      return res.status(200).json({ articles: responseData, totalNumberOfPages, totalCount });
     } catch (error) {
       return next(error);
     }

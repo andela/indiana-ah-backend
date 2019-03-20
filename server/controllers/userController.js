@@ -229,11 +229,15 @@ class UserController extends BaseHelper {
   static async getAllUsersProfile(req, res, next) {
     try {
       const includedModels = [{ model: Articles }];
-      const { data, totalNumberOfPages } = await paginator(Users, req, includedModels);
+      const { data, totalNumberOfPages, count: dataCount } = await paginator(
+        Users,
+        req,
+        includedModels
+      );
       if (!data) {
         return res.status(200).json('There are no users to display');
       }
-      return res.status(200).json({ profiles: data, totalNumberOfPages });
+      return res.status(200).json({ profiles: data, totalNumberOfPages, dataCount });
     } catch (error) {
       return next(error);
     }

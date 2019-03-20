@@ -53,7 +53,8 @@ class BookmarkController {
     try {
       const { id: userId } = req.user;
       const userBookmarks = await Bookmarks.findAll({
-        where: { userId }
+        where: { userId },
+        include: [{ model: Articles }]
       });
       if (userBookmarks.length === 0) return res.status(200).json({ message: 'You do not have any bookmarked article' });
       return res.status(200).json({
