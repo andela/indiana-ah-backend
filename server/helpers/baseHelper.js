@@ -3,7 +3,7 @@ import models from '../db/models';
 import paginator from './paginator';
 
 const {
-  Articles, Users, Comments, Reactions
+  Articles, Users
 } = models;
 
 /**

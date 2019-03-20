@@ -102,13 +102,13 @@ class ArticleController extends BaseHelper {
         { model: Reactions },
         { model: Comments }
       ];
-      let { data, totalNumberOfPages } = await paginator(Articles, req, includedModels, {
+      const { data, totalNumberOfPages } = await paginator(Articles, req, includedModels, {
         userId
       });
       if (data === undefined) return Response(res, 400, 'pagination error');
       if (!data.length) return Response(res, 200, 'No articles found');
-      data = ArticleController.extractAllReactionsCount(data, 'Reactions');
-      return res.status(200).json({ articles: data, totalNumberOfPages });
+      const responseData = ArticleController.extractAllReactionsCount(data, 'Reactions');
+      return res.status(200).json({ articles: responseData, totalNumberOfPages });
     } catch (error) {
       return next(error);
     }
