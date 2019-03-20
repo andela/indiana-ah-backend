@@ -30,7 +30,7 @@ before(async () => request(app)
 describe('Create an Article for comment', () => {
   it('Should create an article if the user passes authentication', () => request(app)
     .post('/api/v1/articles')
-    .set('x-auth-token', verifiedToken)
+    .set('x-auth-token', secondVerifiedToken)
     .send(validArticle)
     .then((res) => {
       articleSlug = res.body.article.slug;
@@ -48,7 +48,6 @@ describe('Create an Article for comment', () => {
       expect(res.body.article).to.be.an('object');
     }));
 });
-
 describe('Create an Highlight text for an Article', () => {
   it('Should not create an highlight if Article doesn\'t exist', () => request(app)
     .post(`/api/v1/articles/${wrongArticleSlug}/highlights`)

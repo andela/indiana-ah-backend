@@ -2,7 +2,9 @@ import bcrypt from 'bcrypt';
 import models from '../db/models';
 import paginator from './paginator';
 
-const { Articles, Users } = models;
+const {
+  Articles, Users
+} = models;
 
 /**
  * @class BaseHelper
@@ -209,10 +211,10 @@ class BaseHelper {
         model: Users,
         as: 'author',
         attributes: ['name', 'username', 'bio', 'imageUrl']
-      }
+      },
     ];
-    const articles = await paginator(Articles, req, includedModels, condition);
-    return res.status(200).json({ searchResults: articles });
+    const { data, totalNumberOfPages } = await paginator(Articles, req, includedModels, condition);
+    return res.status(200).json({ searchResults: data, totalNumberOfPages });
   }
 
   /**
@@ -229,7 +231,6 @@ class BaseHelper {
     const dislikes = reactions.filter(reaction => reaction === 'dislike').length;
     data.likes = likes;
     data.dislikes = dislikes;
-    delete data[reactionObj];
   }
 
   /**

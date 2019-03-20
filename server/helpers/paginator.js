@@ -28,7 +28,7 @@ const paginator = async (
     const data = rows.map(row => row.dataValues);
 
     const totalNumberOfPages = Math.ceil(count / 4);
-    return { data, totalNumberOfPages };
+    return { data, totalNumberOfPages, count };
   } catch (error) {
     return error;
   }
