@@ -63,9 +63,10 @@ class ArticleController extends BaseHelper {
         {
           model: Users,
           as: 'author',
-          attributes: ['name', 'username', 'bio', 'imageUrl']
+          attributes: ['name', 'username', 'bio', 'imageUrl', 'id']
         },
-        { model: Reactions }
+        { model: Reactions },
+        { model: Comments }
       ];
       // eslint-disable-next-line prefer-const
       let { data, totalNumberOfPages } = await paginator(Articles, req, includedModels);
@@ -96,17 +97,18 @@ class ArticleController extends BaseHelper {
         {
           model: Users,
           as: 'author',
-          attributes: ['name', 'username', 'bio', 'imageUrl']
+          attributes: ['name', 'username', 'bio', 'imageUrl', 'id']
         },
-        { model: Reactions }
+        { model: Reactions },
+        { model: Comments }
       ];
-      let { data } = await paginator(Articles, req, includedModels, {
+      let { data, totalNumberOfPages } = await paginator(Articles, req, includedModels, {
         userId
       });
       if (data === undefined) return Response(res, 400, 'pagination error');
       if (!data.length) return Response(res, 200, 'No articles found');
       data = ArticleController.extractAllReactionsCount(data, 'Reactions');
-      return res.status(200).json({ articles: data });
+      return res.status(200).json({ articles: data, totalNumberOfPages });
     } catch (error) {
       return next(error);
     }
@@ -202,19 +204,21 @@ class ArticleController extends BaseHelper {
       const { id: userId } = decodedToken;
       const { slug } = req.params;
       if (!decodedToken) {
-        const article = await Articles.findOne({
+        let article = await Articles.findOne({
           where: { slug },
           include: [
             {
               model: Users,
               as: 'author',
-              attributes: ['username', 'bio', 'imageUrl']
+              attributes: ['username', 'bio', 'imageUrl', 'id', 'name']
             },
             { model: Comments },
             { model: Reactions }
           ]
         });
         if (!article) return Response(res, 404, 'Article not found');
+        article = article.toJSON();
+        ArticleController.getOneReactionsCount(article, 'Reactions');
         const timeToRead = ArticleController.calculateTimeToRead(article.articleBody);
         return res.status(200).json({ article, timeToRead });
       }
@@ -224,7 +228,7 @@ class ArticleController extends BaseHelper {
           {
             model: Users,
             as: 'author',
-            attributes: ['username', 'bio', 'imageUrl']
+            attributes: ['username', 'bio', 'imageUrl', 'id', 'name']
           },
           { model: Reactions }
         ]
@@ -235,11 +239,11 @@ class ArticleController extends BaseHelper {
       const timeToRead = ArticleController.calculateTimeToRead(article.articleBody);
       const userHasReadBefore = await ReadingStatRepo.checkStatForArticle({
         userId,
-        articleId: article.dataValues.id
+        articleId: article.id
       });
       if (!userHasReadBefore) {
-        await ArticleRepo.incremented({ id: article.dataValues.id }, 'numberOfReads');
-        return ReadingStatRepo.create({ userId, articleId: article.dataValues.id });
+        await ArticleRepo.incremented({ id: article.id }, 'numberOfReads');
+        return ReadingStatRepo.create({ userId, articleId: article.id });
       }
       return res.status(200).json({ article, timeToRead });
     } catch (error) {

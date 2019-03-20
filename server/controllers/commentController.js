@@ -44,7 +44,7 @@ class CommentController extends BaseHelper {
         where: { articleId: article.id },
         include: [
           { model: CommentReactions },
-          { model: Users, as: 'commenter', attributes: ['name', 'username', 'imageUrl'] }
+          { model: Users, as: 'commenter', attributes: ['name', 'username', 'imageUrl', 'id'] }
         ]
       });
 
