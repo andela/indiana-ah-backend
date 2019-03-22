@@ -140,7 +140,7 @@ class UserController extends BaseHelper {
       });
       if (!UserController.checkIfDataExist(newUser)) {
         return res.status(404).json({
-          message: 'error logging in'
+          message: 'Invalid Email or Password'
         });
       }
       const {
