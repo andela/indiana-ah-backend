@@ -10,7 +10,7 @@ describe('bcrypt hash', () => {
 
 describe('Calculate time to read an article', () => {
   it('should calculate the time it takes to read an article', () => {
-    expect(baseHelpers.calculateTimeToRead('Heya')).to.equal('a couple of secs');
+    expect(baseHelpers.calculateTimeToRead('Heya')).to.equal('Less than a minute read');
   });
   it('it should throw an error if there is no parameter in the calculate time to read function', () => {
     expect(baseHelpers.calculateTimeToRead()).to.equal(false);
