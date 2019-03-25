@@ -136,15 +136,15 @@ class UserController extends BaseHelper {
     try {
       const newUser = await Users.findOne({
         where: { email },
-        attributes: ['name', 'username', 'email', 'password', 'role', 'isVerified', 'id']
+        attributes: ['name', 'username', 'email', 'password', 'role', 'isVerified', 'id', 'imageUrl']
       });
       if (!UserController.checkIfDataExist(newUser)) {
         return res.status(404).json({
-          message: 'error logging in'
+          message: 'Invalid Email or Password'
         });
       }
       const {
-        email: dbEmail, username, name, role, isVerified, id
+        email: dbEmail, username, name, role, isVerified, id, imageUrl
       } = newUser;
 
       const { password: dbPassword } = newUser.dataValues;
@@ -157,7 +157,8 @@ class UserController extends BaseHelper {
           name,
           role,
           isVerified,
-          id
+          id,
+          imageUrl
         };
         const token = assignToken(payload);
         return res

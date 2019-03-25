@@ -69,7 +69,7 @@ class BaseHelper {
       // average word per minute for reading
       const wpm = 150;
       const time = Math.round(numberOfWords / wpm);
-      const timeToRead = time < 1 ? 'a couple of secs' : `${time} min read`;
+      const timeToRead = time < 1 ? 'Less than a minute read' : `${time} min read`;
       return timeToRead;
     }
     return false;

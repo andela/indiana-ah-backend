@@ -252,7 +252,7 @@ class ArticleController extends BaseHelper {
       });
       if (!userHasReadBefore) {
         await ArticleRepo.incremented({ id: article.id }, 'numberOfReads');
-        return ReadingStatRepo.create({ userId, articleId: article.id });
+        ReadingStatRepo.create({ userId, articleId: article.id });
       }
       return res.status(200).json({ article, timeToRead });
     } catch (error) {
