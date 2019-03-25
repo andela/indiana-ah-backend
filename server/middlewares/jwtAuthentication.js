@@ -25,6 +25,23 @@ class Auth {
     req.user = decodedToken;
     next();
   }
+
+  /**
+   *
+   * @param {object} req - client request
+   * @param {object} res - server object
+   * @param {function} next - passes control to the next middleware or route handler
+   * @returns {Object} a response object
+   */
+  static authUserEmail(req, res, next) {
+    const token = req.header('x-auth-token');
+    const decodedToken = verifyToken(token);
+    if (!decodedToken) {
+      return errorResponse(res, 401, 'Access denied. You are not authorized to access this route');
+    }
+    req.user = decodedToken;
+    next();
+  }
 }
 
 export default Auth;

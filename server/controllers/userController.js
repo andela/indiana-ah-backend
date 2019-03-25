@@ -136,7 +136,16 @@ class UserController extends BaseHelper {
     try {
       const newUser = await Users.findOne({
         where: { email },
-        attributes: ['name', 'username', 'email', 'password', 'role', 'isVerified', 'id', 'imageUrl']
+        attributes: [
+          'name',
+          'username',
+          'email',
+          'password',
+          'role',
+          'isVerified',
+          'id',
+          'imageUrl'
+        ]
       });
       if (!UserController.checkIfDataExist(newUser)) {
         return res.status(404).json({
@@ -558,6 +567,40 @@ class UserController extends BaseHelper {
       return res.status(200).json({ message: 'Password reset successfully', updatedUser });
     } catch (resetError) {
       return next(resetError);
+    }
+  }
+
+  /**
+   * @static sendVerifyEmail - the method that resend email verification link to user
+   * @param {object} req - client request
+   * @param {object} res - server response
+   * @param {function} next - call the next middleware
+   */
+  static async sendVerifyEmail(req, res) {
+    const {
+      id, name, username, email, role
+    } = req.user;
+    try {
+      const payload = {
+        id,
+        username,
+        email,
+        role,
+        name
+      };
+      const token = assignToken(payload);
+      const location = 'https://indiana-ah-frontend-staging.herokuapp.com/verifyUser';
+      const link = UserController.generateEmailLink(location, '', token);
+      const message = `<h1 style='color: Goldenrod' > Welcome to Author's Haven</h1><hr/>
+          <p>Please click this link to verify your Author's Haven account
+          <a href=${link}>link</a></p>`;
+      sendEmail(email, 'Verify your Author\'s haven account', message);
+      return res.status(201).json({
+        message: 'Kindly check your email to verify your account',
+        token
+      });
+    } catch (error) {
+      return errorMessage(res, 500, 'internal server error');
     }
   }
 }
