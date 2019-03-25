@@ -24,7 +24,7 @@ describe('Delete a profile', () => {
       articleId = res.body.article.id;
       expect(res.status).to.equal(201);
       expect(res.body.article).to.be.an('object');
-      expect(res.body.timeToRead).to.equal('a couple of secs');
+      expect(res.body.timeToRead).to.equal('Less than a minute read');
       expect(res.body.timeToRead).to.be.a('string');
     }));
 

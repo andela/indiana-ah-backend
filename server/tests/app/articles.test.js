@@ -97,7 +97,7 @@ describe('Create an Article', () => {
       expect(res.status).to.equal(201);
       expect(res.body.article).to.be.an('object');
       expect(res.body.article.imageUrl).to.match(/^http/);
-      expect(res.body.timeToRead).to.equal('a couple of secs');
+      expect(res.body.timeToRead).to.equal('Less than a minute read');
       expect(res.body.timeToRead).to.be.a('string');
     }));
 });
@@ -124,7 +124,7 @@ describe('Get one article', () => {
     .then((res) => {
       expect(res.status).to.equal(200);
       expect(res.body.article).to.be.an('object');
-      expect(res.body.timeToRead).to.equal('a couple of secs');
+      expect(res.body.timeToRead).to.equal('Less than a minute read');
       expect(res.body.timeToRead).to.be.a('string');
     }));
 });
@@ -317,14 +317,14 @@ describe('Search all articles', () => {
     .get('/api/v1/articles/search?page=1&q=Andela')
     .then((res) => {
       expect(res.status).to.equal(200);
-      expect(res.body.searchResults).to.be.an('Object');
+      expect(res.body.searchResults).to.be.an('Array');
     }));
 
   it('should fetch all matching articles if the search parameters are valid and matching articles were found', () => request(app)
     .get('/api/v1/articles/search?page=1&tag=yes&articleTitle=Andela')
     .then((res) => {
       expect(res.status).to.equal(200);
-      expect(res.body.searchResults).to.be.an('Object');
+      expect(res.body.searchResults).to.be.an('Array');
     }));
 });
 

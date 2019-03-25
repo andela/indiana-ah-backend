@@ -82,15 +82,15 @@ describe('Edit user profile', () => {
       expect(res.body.message).to.equal('Access denied. You are not authorized to access this route');
     }));
   it('should return an error when invalid ID passed', () => request(app)
-    .patch('/api/v1/profiles/tiku/update')
+    .patch('/api/v1/profiles/cim/update')
     .set('x-auth-token', falseToken)
     .send(data)
     .then((res) => {
-      expect(res.status).to.equal(404);
-      expect(res.body.message).to.equal('User not found');
+      expect(res.status).to.equal(403);
+      expect(res.body.message).to.equal('User not authorized');
     }));
   it('should return an error when a user who is not the owner of the profile tries to visit the route', () => request(app)
-    .patch('/api/v1/profiles/king/update')
+    .patch('/api/v1/profiles/columba/update')
     .set('x-auth-token', secondToken)
     .send(data)
     .then((res) => {
@@ -157,7 +157,7 @@ describe('Edit user profile', () => {
 
 describe('Update user password', () => {
   it('should return an error when the user is not authorized', () => request(app)
-    .patch('/api/v1/profiles/king/password')
+    .patch('/api/v1/profiles/columba/password')
     .set('x-auth-token', secondToken)
     .send(incorrectPasswordData)
     .then((res) => {
@@ -266,7 +266,7 @@ describe('Edit user picture', () => {
 
 describe('Delete user picture', () => {
   it('should return an error if user is not authorized', () => request(app)
-    .patch('/api/v1/profiles/king/remove-image')
+    .patch('/api/v1/profiles/columba/remove-image')
     .set('x-auth-token', secondToken)
     .then((res) => {
       expect(res.status).to.equal(403);

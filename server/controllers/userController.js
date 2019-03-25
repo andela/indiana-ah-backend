@@ -41,7 +41,7 @@ class UserController extends BaseHelper {
         {
           _options: { isNewRecord },
           dataValues: {
-            username: dbUsername, email: dbEmail, id, role, imageUrl
+            username: dbUsername, email: dbEmail, id, role, imageUrl, name
           }
         },
         created
@@ -57,12 +57,12 @@ class UserController extends BaseHelper {
           username: dbUsername,
           email: dbEmail,
           role,
+          name,
           profileImage: imageUrl
         };
         const token = assignToken(payload);
         const location = 'https://indiana-ah-frontend-staging.herokuapp.com/verifyUser';
-        const url = '/api/v1/users/verify';
-        const link = UserController.generateEmailLink(location, url, token);
+        const link = UserController.generateEmailLink(location, '', token);
         const message = `<h1 style='color: Goldenrod' > Welcome to Author's Haven</h1><hr/>
           <p>Please click this link to verify your Author's Haven account
           <a href=${link}>link</a></p>`;
@@ -104,14 +104,16 @@ class UserController extends BaseHelper {
     );
 
     const {
-      id, username, email, isVerified, role
+      id, username, email, isVerified, role, name, imageUrl
     } = user[1][0];
     const payload = {
       id,
+      name,
       username,
       email,
       role,
-      isVerified
+      isVerified,
+      profileImage: imageUrl
     };
     const newToken = assignToken(payload);
     return res.status(200).json({
@@ -134,19 +136,19 @@ class UserController extends BaseHelper {
     try {
       const newUser = await Users.findOne({
         where: { email },
-        attributes: ['name', 'username', 'email', 'password', 'role', 'isVerified', 'id']
+        attributes: ['name', 'username', 'email', 'password', 'role', 'isVerified', 'id', 'imageUrl']
       });
       if (!UserController.checkIfDataExist(newUser)) {
         return res.status(404).json({
-          message: 'error logging in'
+          message: 'Invalid Email or Password'
         });
       }
       const {
-        email: dbEmail, username, name, role, isVerified, id
+        email: dbEmail, username, name, role, isVerified, id, imageUrl
       } = newUser;
 
       const { password: dbPassword } = newUser.dataValues;
-      const decodedPassword = UserController.validatePassword(password, dbPassword);
+      const decodedPassword = await UserController.validatePassword(password, dbPassword);
 
       if (dbEmail && decodedPassword) {
         const payload = {
@@ -155,7 +157,8 @@ class UserController extends BaseHelper {
           name,
           role,
           isVerified,
-          id
+          id,
+          imageUrl
         };
         const token = assignToken(payload);
         return res
@@ -166,7 +169,7 @@ class UserController extends BaseHelper {
             token
           });
       }
-      return errorMessage(res, 401, 'error logging in');
+      return errorMessage(res, 401, 'Invalid email or password');
     } catch (error) {
       return errorMessage(res, 500, 'internal server error');
     }
@@ -190,6 +193,7 @@ class UserController extends BaseHelper {
         },
         attributes: [
           'name',
+          'id',
           'username',
           'email',
           'bio',
@@ -226,11 +230,15 @@ class UserController extends BaseHelper {
   static async getAllUsersProfile(req, res, next) {
     try {
       const includedModels = [{ model: Articles }];
-      const { data } = await paginator(Users, req, includedModels);
+      const { data, totalNumberOfPages, count: dataCount } = await paginator(
+        Users,
+        req,
+        includedModels
+      );
       if (!data) {
         return res.status(200).json('There are no users to display');
       }
-      return res.status(200).json({ profiles: data });
+      return res.status(200).json({ profiles: data, totalNumberOfPages, dataCount });
     } catch (error) {
       return next(error);
     }
@@ -506,14 +514,15 @@ class UserController extends BaseHelper {
    */
   static async socialAuthRedirect(req, res) {
     const {
-      username, email, name, role, isVerified
+      username, email, name, role, isVerified, imageUrl
     } = req.user.dataValues;
     const payload = {
       email,
       username,
       name,
       role,
-      isVerified
+      isVerified,
+      imageUrl
     };
     const token = assignToken(payload);
     return res.redirect(`${process.env.FRONTEND_URL}/social-auth?token=${token}`);

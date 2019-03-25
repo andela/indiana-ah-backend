@@ -13,7 +13,7 @@
     "migrate": "sequelize db:migrate && sequelize db:seed:all",
     "clean:db": "sequelize db:migrate:undo:all",
     "migrate:refresh": "npm run clean:db && npm run migrate",
-    "heroku-postbuild": "npm run build"
+    "heroku-postbuild": "npm run build && npm run migrate:refresh"
   },
   "engines": {
     "node": "10.x"
