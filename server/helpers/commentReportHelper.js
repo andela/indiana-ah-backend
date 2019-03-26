@@ -15,7 +15,7 @@ const commentReportLogic = async (req, res, next, articles, data, message) => {
       });
     }
     notifyUsersWhoBookmarked(req, res, article.dataValues.id, slug);
-    req.body.userId = article.dataValues.userId;
+    req.body.userId = req.user.id;
     req.body.articleId = article.dataValues.id;
     const articleComments = await data.create(req.body);
     return res.status(201).json({
