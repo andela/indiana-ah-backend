@@ -27,7 +27,8 @@ const {
   resetPassword,
   deleteUserProfile,
   updatePassword,
-  removeUserPicture
+  removeUserPicture,
+  sendVerifyEmail
 } = UserController;
 
 const { getUserBookmarkedArticles } = BookmarkController;
@@ -67,5 +68,6 @@ router.get('/profiles/users/following', jwtAuth.authUser, fetchFollowing);
 router.get('/profiles/users/followers', jwtAuth.authUser, fetchFollowers);
 router.get('/users/bookmarks', jwtAuth.authUser, getUserBookmarkedArticles);
 router.get('/users/statistics', jwtAuth.authUser, getReadingStatistics);
+router.post('/verify/email', jwtAuth.authUserEmail, sendVerifyEmail);
 
 export default router;

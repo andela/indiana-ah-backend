@@ -1468,3 +1468,27 @@ paths:
           $ref: "#/components/responses/ErrorNotFound"
         "500":
           $ref: "#/components/responses/ErrorInternalServer"
+  
+  /verify/email:
+    post:
+      tags:
+        - Users
+      summary: Send Email Verification link
+      description: Send Email Verification link to unVerified users
+      requestBody:
+        description: User email
+        required: true
+      security:
+        - token: []
+      parameters:
+        - name: token
+          in: path
+          description: JWT token
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "404":
+          $ref: "#/components/responses/ErrorNotFound"
