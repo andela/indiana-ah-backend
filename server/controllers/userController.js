@@ -524,9 +524,10 @@ class UserController extends BaseHelper {
    */
   static async socialAuthRedirect(req, res) {
     const {
-      username, email, name, role, isVerified, imageUrl
+      id, username, email, name, role, isVerified, imageUrl
     } = req.user.dataValues;
     const payload = {
+      id,
       email,
       username,
       name,
