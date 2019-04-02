@@ -498,7 +498,6 @@ class UserController extends BaseHelper {
       const url = '/reset-password';
       // define sendEmail parameter list
       const link = UserController.generateEmailLink(location, url, token);
-      console.log(link);
       const subject = 'Authors\' Haven password reset';
       const message = `<h1 style='color: Goldenrod' > Password Reset </h1><hr/>
       <p>Please reset your Author's Haven password with this 
