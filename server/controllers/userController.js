@@ -494,10 +494,11 @@ class UserController extends BaseHelper {
         email
       };
       const token = assignToken(payload, jwtKey, jwtDuration);
-      const location = 'https://indiana-ah-frontend-staging.herokuapp.com';
+      const location = process.env.FRONTEND_URL;
       const url = '/reset-password';
       // define sendEmail parameter list
       const link = UserController.generateEmailLink(location, url, token);
+      console.log(link);
       const subject = 'Authors\' Haven password reset';
       const message = `<h1 style='color: Goldenrod' > Password Reset </h1><hr/>
       <p>Please reset your Author's Haven password with this 
