@@ -494,8 +494,8 @@ class UserController extends BaseHelper {
         email
       };
       const token = assignToken(payload, jwtKey, jwtDuration);
-      const location = req.get('host');
-      const url = '/api/v1/users/reset-password';
+      const location = 'https://indiana-ah-frontend-staging.herokuapp.com';
+      const url = '/reset-password';
       // define sendEmail parameter list
       const link = UserController.generateEmailLink(location, url, token);
       const subject = 'Authors\' Haven password reset';

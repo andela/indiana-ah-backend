@@ -3,7 +3,7 @@ import models from '../db/models';
 import paginator from './paginator';
 
 const {
-  Articles, Users
+  Articles, Users, Reactions, Comments
 } = models;
 
 /**
@@ -212,9 +212,16 @@ class BaseHelper {
         as: 'author',
         attributes: ['name', 'username', 'bio', 'imageUrl']
       },
+      {
+        model: Comments
+      },
+      {
+        model: Reactions
+      }
     ];
     const { data, totalNumberOfPages } = await paginator(Articles, req, includedModels, condition);
-    return res.status(200).json({ searchResults: data, totalNumberOfPages });
+    const responseData = this.extractAllReactionsCount(data, 'Reactions');
+    return res.status(200).json({ searchResults: responseData, totalNumberOfPages });
   }
 
   /**
