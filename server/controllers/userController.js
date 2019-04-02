@@ -61,8 +61,9 @@ class UserController extends BaseHelper {
           profileImage: imageUrl
         };
         const token = assignToken(payload);
-        const location = 'https://indiana-ah-frontend-staging.herokuapp.com/verifyUser';
-        const link = UserController.generateEmailLink(location, '', token);
+        const location = process.env.FRONTEND_URL;
+        const url = '/verifyUser';
+        const link = UserController.generateEmailLink(location, url, token);
         const message = `<h1 style='color: Goldenrod' > Welcome to Author's Haven</h1><hr/>
           <p>Please click this link to verify your Author's Haven account
           <a href=${link}>link</a></p>`;
@@ -494,8 +495,8 @@ class UserController extends BaseHelper {
         email
       };
       const token = assignToken(payload, jwtKey, jwtDuration);
-      const location = req.get('host');
-      const url = '/api/v1/users/reset-password';
+      const location = process.env.FRONTEND_URL;
+      const url = '/reset-password';
       // define sendEmail parameter list
       const link = UserController.generateEmailLink(location, url, token);
       const subject = 'Authors\' Haven password reset';
@@ -589,8 +590,9 @@ class UserController extends BaseHelper {
         name
       };
       const token = assignToken(payload);
-      const location = 'https://indiana-ah-frontend-staging.herokuapp.com/verifyUser';
-      const link = UserController.generateEmailLink(location, '', token);
+      const location = process.env.FRONTEND_URL;
+      const url = '/verifyUser';
+      const link = UserController.generateEmailLink(location, url, token);
       const message = `<h1 style='color: Goldenrod' > Welcome to Author's Haven</h1><hr/>
           <p>Please click this link to verify your Author's Haven account
           <a href=${link}>link</a></p>`;

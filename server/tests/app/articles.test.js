@@ -314,7 +314,7 @@ describe('Search all articles', () => {
     }));
 
   it('should fetch all matching articles if found', () => request(app)
-    .get('/api/v1/articles/search?page=1&q=Andela')
+    .get('/api/v1/articles/search?&q=Andela')
     .then((res) => {
       expect(res.status).to.equal(200);
       expect(res.body.searchResults).to.be.an('Array');

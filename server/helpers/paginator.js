@@ -4,7 +4,7 @@ const paginator = async (
   includedModels,
   whereClause
 ) => {
-  const MAX = 8;
+  const MAX = 10;
   if (limit > MAX) {
     limit = MAX;
   }
