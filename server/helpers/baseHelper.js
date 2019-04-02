@@ -220,6 +220,7 @@ class BaseHelper {
       }
     ];
     const { data, totalNumberOfPages } = await paginator(Articles, req, includedModels, condition);
+
     const responseData = this.extractAllReactionsCount(data, 'Reactions');
     return res.status(200).json({ searchResults: responseData, totalNumberOfPages });
   }
