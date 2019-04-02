@@ -42,6 +42,9 @@ class CommentController extends BaseHelper {
       if (!article) return errorMessage(res, 404, 'Article not found');
       let articleComments = await Comments.findAll({
         where: { articleId: article.id },
+        order: [
+          ['createdAt', 'DESC'],
+        ],
         include: [
           { model: CommentReactions },
           { model: Users, as: 'commenter', attributes: ['name', 'username', 'imageUrl', 'id'] }
@@ -106,7 +109,10 @@ class CommentController extends BaseHelper {
       const { commentId } = req.params;
       const { id: userId } = req.user;
       const commentEditHistory = await CommentEditHistories.findAll({
-        where: { commentId, userId }
+        where: { commentId, userId },
+        order: [
+          ['createdAt', 'DESC'],
+        ],
       });
       return res.status(200).json({ commentEditHistory });
     } catch (error) {
