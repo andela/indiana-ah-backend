@@ -39,7 +39,7 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.UUID
       }
     },
-    { paranoid: true }
+    {}
   );
   SequelizeSlugify.slugifyModel(Articles, {
     source: ['articleTitle']
