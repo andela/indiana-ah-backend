@@ -19,7 +19,7 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING
       }
     },
-    { paranoid: true }
+    {}
   );
   Comments.associate = (models) => {
     Comments.belongsTo(models.Users, {
