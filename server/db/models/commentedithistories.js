@@ -25,7 +25,7 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.DATE
       }
     },
-    { paranoid: true }
+    { }
   );
   CommentEditHistories.associate = (models) => {
     CommentEditHistories.belongsTo(models.Comments, {

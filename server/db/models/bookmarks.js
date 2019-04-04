@@ -9,13 +9,13 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.UUID
       },
       articleId: {
-        type: DataTypes.UUID,
+        type: DataTypes.UUID
       },
       userId: {
-        type: DataTypes.UUID,
+        type: DataTypes.UUID
       }
     },
-    { paranoid: true }
+    {}
   );
   Bookmarks.associate = ({ Users, Articles }) => {
     Bookmarks.belongsTo(Users, {

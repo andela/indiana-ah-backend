@@ -12,7 +12,7 @@ export default (sequelize, DataTypes) => {
       articleId: { type: DataTypes.UUID },
       rating: { type: DataTypes.INTEGER, allowNull: false }
     },
-    { paranoid: true }
+    { }
   );
   Ratings.associate = ({ Users, Articles }) => {
     Ratings.belongsTo(Users, {

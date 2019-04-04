@@ -20,7 +20,7 @@ export default (sequelize, DataTypes) => {
         values: ['like', 'dislike']
       }
     },
-    { paranoid: true }
+    {}
   );
   Reactions.associate = ({ Users, Articles }) => {
     Reactions.belongsTo(Users, {
